@@ -1,0 +1,16 @@
+{
+  "Landingnav": {
+    "pricing": "Pricing",
+    "login": "Login",
+    "getstarted": "Get Started",
+    "english": "English",
+    "german": "German"
+  },
+  "Landingmain": {
+    "badge": "ProjSync is public now!",
+    "heading1": "Keep your Clients",
+    "heading2": "Up to Date",
+    "heading3": "at all times.",
+    "description": "ProjSync makes it effortless to keep all clients updated and fosters seamless communication. With its intuitive design and real-time updates, it ensures everyone is on the same page, eliminating misunderstandings and increasing productivity. Say goodbye to the days of endless back-and-forths and welcome streamlined, effective communication with ProjSync."
+  }
+}
