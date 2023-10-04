@@ -1,7 +1,11 @@
 'use client';
+import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@radix-ui/react-label';
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import { getServerSession } from 'next-auth/next';
+import { getProviders, signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 // import { createUserSchema } from '@/schema/user.schema';
 // import { CreateUserFormData } from '@/types/user.types';
