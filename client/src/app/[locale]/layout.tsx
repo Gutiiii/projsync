@@ -1,3 +1,4 @@
+import Providers from '@/providers/Provider';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { Inter } from 'next/font/google';
@@ -34,9 +35,11 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <body>
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          {children}
-        </NextIntlClientProvider>
+        <Providers>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <div className="bg-gray-200">{children}</div>
+          </NextIntlClientProvider>
+        </Providers>
       </body>
     </html>
   );

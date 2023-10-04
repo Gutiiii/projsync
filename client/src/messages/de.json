@@ -12,5 +12,16 @@
     "heading2": "immer",
     "heading3": "auf dem neuesten Stand.",
     "description": "ProjSync macht es mühelos, alle Kunden auf dem neuesten Stand zu halten und die Kommunikation zu vereinfachen. Mit seinem intuitiven Design und Echtzeit-Updates stellt es sicher, dass jeder auf dem gleichen Stand ist, wodurch Missverständnisse vermieden und die Produktivität gesteigert werden. Verabschieden Sie sich von endlosen Hin-und-Her-Kommunikationen und begrüßen Sie effiziente, klare Kommunikation mit ProjSync."
+  },
+  "Register": {
+    "header": "Ein ProjSync-Konto erstellen",
+    "firstname": "Vorname",
+    "lastname": "Nachname",
+    "password": "Passwort",
+    "email": "Email",
+    "createaccount": "Konto erstellen",
+    "isregistered": "Haben Sie bereits ein Konto?",
+    "login": "Anmelden",
+    "or": "ODER"
   }
 }

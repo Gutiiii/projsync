@@ -1,9 +1,11 @@
 import { BACKEND_URL } from "@/lib/constants"
+import env from "@/lib/env"
 import { NextAuthOptions } from "next-auth"
 import { JWT } from "next-auth/jwt"
 import NextAuth from "next-auth/next"
 import CredentialsProvider from "next-auth/providers/credentials"
-
+import GithubProvider from "next-auth/providers/github"
+import GoogleProvider from "next-auth/providers/google"
 // async function refreshToken(token: JWT): Promise<JWT> {
 //     const res = await fetch(BACKEND_URL + "/auth/refresh", {
 //         method: "POST",
@@ -58,10 +60,24 @@ export const authOptions: NextAuthOptions = {
 
                 const user = await res.json()
 
+                if (!user) return null
+
                 return user
-            }
+            },
+        }),
+        GoogleProvider({
+            clientId: env.GOOGLE_CLIENT_ID,
+            clientSecret: env.GOOGLE_CLIENT_SECRET
+        }),
+        GithubProvider({
+            clientId: env.GITHUB_ID,
+            clientSecret: env.GITHUB_SECRET
         })
     ],
+    pages: {
+        signIn: "/signin",
+        newUser: "/signup"
+    }
 
     // callbacks: {
     //     async jwt({ token, user }) {

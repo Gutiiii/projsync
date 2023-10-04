@@ -29,7 +29,7 @@ const ChangeLanguage: FC = () => {
           ) : (
             <div className="flex items-center text-center  ">
               <US className="h-5 mx-2" />
-              <div className="">EN</div>
+              <div>EN</div>
               <ChevronDown className="group-active:rotate-180 transition-all duration-300" />
             </div>
           )}
