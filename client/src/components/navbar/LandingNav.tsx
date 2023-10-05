@@ -5,9 +5,7 @@ import ChangeLanguage from '../ChangeLanguage';
 import SignInButton from '../auth/button/SignInButton';
 import Hamburger from './Hamburger';
 
-interface LandingNavProps {}
-
-const LandingNav: FC<LandingNavProps> = ({}) => {
+const LandingNav = ({}) => {
   const t = useTranslations('Landingnav');
   return (
     <div className="h-12 pt-2 sticky top-0 inset-x-0 z-10">

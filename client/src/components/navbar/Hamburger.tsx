@@ -1,7 +1,8 @@
-"use client";
-import { Menu } from "lucide-react";
-import { useState } from "react";
-import LandingNavMobile from "./LandingNavMobile";
+'use client';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Menu } from 'lucide-react';
+import { useState } from 'react';
+import LandingNavMobile from './LandingNavMobile';
 
 const Hamburger = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -13,7 +14,18 @@ const Hamburger = () => {
   return (
     <div className="h-full">
       <Menu width={30} height={30} onClick={handleToggle} />
-      {isVisible && <LandingNavMobile onClose={handleToggle} />}
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+          >
+            <LandingNavMobile onClose={handleToggle} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
