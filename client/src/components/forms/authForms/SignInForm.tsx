@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@radix-ui/react-label';
 import { signIn, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { BsGithub } from 'react-icons/bs';
 import { FaGoogle } from 'react-icons/fa';
 // import { createUserSchema } from '@/schema/user.schema';
 // import { CreateUserFormData } from '@/types/user.types';
@@ -13,15 +12,11 @@ import { FaGoogle } from 'react-icons/fa';
 // import axios from 'axios';
 // import { hash } from 'bcrypt';
 import { FRONTEND_URL } from '@/lib/constants';
-import { redirect } from 'next/navigation';
-import { env } from 'process';
-import { FC } from 'react';
 // import { useForm } from 'react-hook-form';
 // import { toast } from 'react-toastify';
 
-const SignUpForm = () => {
-  const { data: session } = useSession();
-
+const SignInForm = () => {
+  const t = useTranslations('Login');
   const handleGoogleSignin = async () => {
     signIn('google', {
       callbackUrl: FRONTEND_URL + '/dashboard',
@@ -29,14 +24,13 @@ const SignUpForm = () => {
     });
   };
 
-  // const handleGitHubSignin = async () => {
-  //   signIn('github', {
-  //     callbackUrl: FRONTEND_URL + '/dashboard',
-  //     redirect: true,
-  //   });
-  // };
+  const handleGitHubSignin = async () => {
+    signIn('github', {
+      callbackUrl: FRONTEND_URL + '/dashboard',
+      redirect: true,
+    });
+  };
 
-  const t = useTranslations('Register');
   //   const { data, isLoading, isError } = useQuery({
   //     queryFn: async () => {
   //       const data = await axios.get(
@@ -109,23 +103,17 @@ const SignUpForm = () => {
   return (
     <main className="font-light">
       <div className="mb-2">Logo.(REPLACE)</div>
-      <h1 className="text-2xl mb-2">{t('header')}</h1>
+      <h1 className="text-xl mb-2">{t('header')}</h1>
       <div className="flex text-md">
         <p className="mr-1">{t('isregistered')}</p>
         <div className="text-blue-600 cursor-pointer hover:underline">
-          <a href="/signin">{t('login')}.</a>
+          <a href="/signup">{t('register')}.</a>
         </div>
       </div>
       <div className="mt-4">
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label className="ml-1" htmlFor="fullname">
-            {t('fullname')}
-          </Label>
-          <Input type="text" id="fullname" placeholder={t('fullname')} />
-        </div>
         <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
           <Label className="ml-1" htmlFor="email">
-            Email
+            {t('email')}
           </Label>
           <Input type="email" id="email" placeholder={t('email')} />
         </div>
@@ -134,7 +122,7 @@ const SignUpForm = () => {
           <Input type="password" id="password" placeholder={t('password')} />
         </div>
       </div>
-      <Button className="w-full h-10 mt-4">{t('createaccount')}</Button>
+      <Button className="w-full h-10 mt-4">{t('login')}</Button>
       <div className="flex mt-8">
         <p className="line w-1/2 h-px bg-black" />
         <p className="inline text-sm mx-3 -mt-[10px]">{t('or')}</p>
@@ -166,4 +154,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default SignInForm;

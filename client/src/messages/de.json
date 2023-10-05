@@ -15,13 +15,25 @@
   },
   "Register": {
     "header": "Ein ProjSync-Konto erstellen",
-    "firstname": "Vorname",
-    "lastname": "Nachname",
+    "fullname": "Voller Name",
     "password": "Passwort",
     "email": "Email",
     "createaccount": "Konto erstellen",
     "isregistered": "Haben Sie bereits ein Konto?",
     "login": "Anmelden",
-    "or": "ODER"
+    "or": "ODER",
+    "githubsignup": "Mit GitHub anmelden",
+    "googlesignup": "Mit Google anmelden"
+  },
+  "Login": {
+    "header": "Melden Sie sich bei Ihrem ProjSync-Konto an",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "isregistered": "Noch kein Konto?",
+    "register": "Registrieren",
+    "login": "Anmelden",
+    "or": "ODER",
+    "githubsignup": "Mit GitHub anmelden",
+    "googlesignup": "Mit Google anmelden"
   }
 }

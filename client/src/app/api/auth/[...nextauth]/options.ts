@@ -39,6 +39,7 @@ export const authOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
+                console.log("CRE: ", credentials)
                 if (!credentials?.email || !credentials?.password) return null
 
                 const { email, password } = credentials
@@ -69,27 +70,33 @@ export const authOptions: NextAuthOptions = {
             clientId: process.env.GOOGLE_CLIENT_ID as string,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
         }),
-        GithubProvider({
-            clientId: process.env.GITHUB_ID as string,
-            clientSecret: process.env.GITHUB_SECRET as string
-        })
+        // GithubProvider({
+        //     clientId: process.env.GITHUB_ID as string,
+        //     clientSecret: process.env.GITHUB_SECRET as string
+        // })
     ],
     pages: {
         signIn: "/signin",
+    },
+    callbacks: {
+        async signIn({ user, account }) {
+            console.log("HELLO")
+            console.log(user)
+            console.log(account)
+            return user
+        }
+
+        //     async jwt({ token, user }) {
+        //         if (user) return { ...token, ...user }
+
+        //         if (new Date().getTime() < token.backendTokens.expiresIn) return token
+
+        //         return await refreshToken(token)
+        //     },
+        //     async session({ token, session }) {
+        //         session.user = token.user
+        //         session.backendTokens = token.backendTokens
+        //         return session
+        //     }
     }
-
-    // callbacks: {
-    //     async jwt({ token, user }) {
-    //         if (user) return { ...token, ...user }
-
-    //         if (new Date().getTime() < token.backendTokens.expiresIn) return token
-
-    //         return await refreshToken(token)
-    //     },
-    //     async session({ token, session }) {
-    //         session.user = token.user
-    //         session.backendTokens = token.backendTokens
-    //         return session
-    //     }
-    // }
 }

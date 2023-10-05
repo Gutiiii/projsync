@@ -12,12 +12,13 @@ datasource db {
 
 model User {
   id String @id @default(uuid())
-  firstname String 
-  lastname String
+  fullname String 
   email String @unique
-  password String 
+  password String? 
   ROLE UserRole @default(USER)
   userProject User_Project[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum UserRole {
@@ -29,6 +30,8 @@ model Project {
   id String @id @default(uuid())
   userProject User_Project[]
   invitation Invitation[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User_Project {
@@ -38,6 +41,8 @@ model User_Project {
   project Project @relation(fields: [projectId], references: [id])
   projectId String
   ROLE ProjectRole @default(VIEWER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum ProjectRole {
@@ -52,6 +57,8 @@ model Invitation {
   project Project @relation(fields: [projectId], references: [id])
   projectId String
   ROLE InvitationRole @default(VIEWER) 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum InvitationRole {
