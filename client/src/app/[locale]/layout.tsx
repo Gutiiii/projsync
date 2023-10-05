@@ -1,11 +1,15 @@
+import { cn } from '@/lib/utils';
 import Providers from '@/providers/Provider';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { Inter } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: '300',
+});
 
 export const metadata: Metadata = {
   title: 'Project Sync',
@@ -34,10 +38,10 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
-      <body>
+      <body className="bg-gray-200">
         <Providers>
           <NextIntlClientProvider locale={locale} messages={messages}>
-            <div className="bg-gray-200">{children}</div>
+            <div className={roboto.className}>{children}</div>
           </NextIntlClientProvider>
         </Providers>
       </body>

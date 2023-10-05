@@ -22,9 +22,15 @@ const LandingNavMobile: FC<LandingNavMobileProps> = ({ onClose }) => {
           <X height={30} width={30} className="mr-2" />
         </div>
       </div>
-      <ul className="space-y-5 text-xl">
-        <li className="cursor-pointer">{landingnav('pricing')}</li>
-        <li className="cursor-pointer">{landingnav('login')}</li>
+      <ul className="space-y-5">
+        <div className="group mx-auto">
+          <li className="cursor-pointer">{landingnav('pricing')}</li>
+          <div className="line h-px group-hover:w-16 w-0 bg-black mx-auto transition-all duration-300" />
+        </div>
+        <div className="group">
+          <li className="cursor-pointer">{landingnav('login')}</li>
+          <div className="line h-px group-hover:w-12 w-0 bg-black mx-auto transition-all duration-300" />
+        </div>
         <li className="cursor-pointer">
           {' '}
           <Button size="sm" className="mx-auto">

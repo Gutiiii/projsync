@@ -1,4 +1,3 @@
-import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { FC } from 'react';
 import { Button } from '../Button';
@@ -15,10 +14,16 @@ const LandingNav: FC<LandingNavProps> = ({}) => {
       <div className="flex text-xl text-center items-center sm:justify-around justify-between mx-4">
         <button className="flex text-center items-center">ProjSync.</button>
         <div className="items-center text-center hidden sm:flex">
-          <button>{t('pricing')}</button>
+          <div className="group mx-auto">
+            <button>{t('pricing')}</button>
+            <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
+          </div>
         </div>
         <div className="sm:flex space-x-4 hidden">
-          <SignInButton />
+          <div className="group mx-auto mt-1.5">
+            <SignInButton />
+            <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
+          </div>
           <Button>
             <a href="/signup" className="flex items-center ">
               {t('getstarted')}

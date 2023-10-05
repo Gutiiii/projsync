@@ -1,5 +1,4 @@
 'use client';
-import { Button } from '@/components/Button';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import React from 'react';
