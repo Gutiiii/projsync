@@ -84,9 +84,6 @@ export const authOptions: NextAuthOptions = {
             const name = user.name
             const email = user.email
             const provider = account?.provider.toUpperCase()
-            const values = {
-                name, email, provider
-            }
 
             const res = await fetch("http://localhost:8000/auth/provider", {
                 method: "POST",
@@ -97,13 +94,7 @@ export const authOptions: NextAuthOptions = {
                     "Content-Type": "application/json"
                 }
             })
-            console.log(res.status)
-            // const result = await axios.post("http://localhost:8000/auth/provider", values, {
-            //     headers: {
-            //         "Content-Type": "application/json"
-            //     }
-            // })
-            return res
+            return true
         }
 
         //     async jwt({ token, user }) {

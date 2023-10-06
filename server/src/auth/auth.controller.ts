@@ -13,7 +13,6 @@ export class AuthController {
 
     @Post('signup')
     async signup(@Body() dto: RegisterDto) {
-        console.log("SIGNUp")
         return null
     }
 

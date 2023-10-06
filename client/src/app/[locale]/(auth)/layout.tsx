@@ -1,12 +1,18 @@
+import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import ChangeLanguage from '@/components/ChangeLanguage';
 import HomeComponent from '@/components/HomeComponent';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
 import { FC } from 'react';
 
 interface layoutProps {
   children: React.ReactNode;
 }
 
-const layout: FC<layoutProps> = ({ children }) => {
+const layout: FC<layoutProps> = async ({ children }) => {
+  const session = await getServerSession(authOptions);
+  console.log(session);
+  if (session) redirect('/dashboard');
   return (
     <main>
       <div className="absolute top-0 left-0 mt-3 ml-3">
