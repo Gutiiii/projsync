@@ -1,7 +1,6 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { emit } from 'process';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { RegisterDto } from './dto/auth.dto';
+import { ProviderDto, RegisterDto } from './dto/auth.dto';
 
 @Injectable()
 
@@ -17,25 +16,38 @@ export class AuthService {
         })
         if (user) throw new UnauthorizedException("User already exists")
 
-        if (dto.password) {
-            const newUser = await this.prisma.user.create({
-                data: {
-                    fullname: dto.fullname,
-                    email: dto.email,
-                    password: dto.password
-                }
-            })
-            const { password, ...result } = newUser
+        const newUser = await this.prisma.user.create({
+            data: {
+                name: dto.name,
+                email: dto.email,
+                password: dto.password,
+                provider: dto.provider
+            }
+        })
+        const { password, ...result } = newUser
 
-            return result
-        } else {
+        return result
+    }
+
+    async provider(dto: ProviderDto) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email: dto.email
+            }
+        })
+        if (user) return user
+
+        if (!user) {
             const newUser = await this.prisma.user.create({
                 data: {
-                    fullname: dto.fullname,
+                    name: dto.name,
                     email: dto.email,
+                    provider: dto.provider
                 }
             })
             return newUser
         }
+
+        throw new BadRequestException("Something went wrong!")
     }
 }

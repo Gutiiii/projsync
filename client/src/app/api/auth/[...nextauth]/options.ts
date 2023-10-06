@@ -1,5 +1,6 @@
 import { BACKEND_URL } from "@/lib/constants"
 import env from "@/lib/env"
+import axios from "axios"
 import { NextAuthOptions } from "next-auth"
 import { JWT } from "next-auth/jwt"
 import NextAuth from "next-auth/next"
@@ -80,10 +81,29 @@ export const authOptions: NextAuthOptions = {
     },
     callbacks: {
         async signIn({ user, account }) {
-            console.log("HELLO")
-            console.log(user)
-            console.log(account)
-            return user
+            const name = user.name
+            const email = user.email
+            const provider = account?.provider.toUpperCase()
+            const values = {
+                name, email, provider
+            }
+
+            const res = await fetch("http://localhost:8000/auth/provider", {
+                method: "POST",
+                body: JSON.stringify({
+                    name, email, provider
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            console.log(res.status)
+            // const result = await axios.post("http://localhost:8000/auth/provider", values, {
+            //     headers: {
+            //         "Content-Type": "application/json"
+            //     }
+            // })
+            return res
         }
 
         //     async jwt({ token, user }) {
