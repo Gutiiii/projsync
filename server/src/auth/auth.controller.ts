@@ -13,7 +13,7 @@ export class AuthController {
 
     @Post('signup')
     async signup(@Body() dto: RegisterDto) {
-        return null
+        return await this.authService.signup(dto)
     }
 
 

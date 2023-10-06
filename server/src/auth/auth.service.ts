@@ -21,7 +21,7 @@ export class AuthService {
                 name: dto.name,
                 email: dto.email,
                 password: dto.password,
-                provider: dto.provider
+                provider: "CREDENTIALS"
             }
         })
         const { password, ...result } = newUser

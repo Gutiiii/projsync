@@ -95,19 +95,18 @@ export const authOptions: NextAuthOptions = {
                 }
             })
             return true
-        }
+        },
+        // async jwt({ token, user }) {
+        //     if (user) return { ...token, ...user }
 
-        //     async jwt({ token, user }) {
-        //         if (user) return { ...token, ...user }
+        //     // if (new Date().getTime() < token.backendTokens.expiresIn) return token
 
-        //         if (new Date().getTime() < token.backendTokens.expiresIn) return token
-
-        //         return await refreshToken(token)
-        //     },
-        //     async session({ token, session }) {
-        //         session.user = token.user
-        //         session.backendTokens = token.backendTokens
-        //         return session
-        //     }
+        //     // return await refreshToken(token)
+        // },
+        // async session({ token, session }) {
+        //     session.user = token.user
+        //     session.backendTokens = token.backendTokens
+        //     return session
+        // }
     }
 }

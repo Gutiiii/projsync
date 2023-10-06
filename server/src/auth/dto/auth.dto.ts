@@ -5,7 +5,6 @@ import { z } from 'nestjs-zod/z';
 const RegisterSchema = z.object({
     name: z.string(),
     email: z.string().email(),
-    provider: z.enum(["CREDENTIALS", "GOOGLE"]),
     password: z.string().min(8).max(64)
 });
 

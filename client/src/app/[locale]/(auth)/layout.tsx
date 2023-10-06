@@ -11,7 +11,6 @@ interface layoutProps {
 
 const layout: FC<layoutProps> = async ({ children }) => {
   const session = await getServerSession(authOptions);
-  console.log(session);
   if (session) redirect('/dashboard');
   return (
     <main>
