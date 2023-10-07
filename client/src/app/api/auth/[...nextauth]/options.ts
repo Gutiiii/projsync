@@ -5,7 +5,6 @@ import { NextAuthOptions } from "next-auth"
 import { JWT } from "next-auth/jwt"
 import NextAuth from "next-auth/next"
 import CredentialsProvider from "next-auth/providers/credentials"
-import GithubProvider from "next-auth/providers/github"
 import GoogleProvider from "next-auth/providers/google"
 // async function refreshToken(token: JWT): Promise<JWT> {
 //     const res = await fetch(BACKEND_URL + "/auth/refresh", {
@@ -68,13 +67,9 @@ export const authOptions: NextAuthOptions = {
             },
         }),
         GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID as string,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+            clientId: env.GOOGLE_CLIENT_ID,
+            clientSecret: env.GOOGLE_CLIENT_SECRET
         }),
-        // GithubProvider({
-        //     clientId: process.env.GITHUB_ID as string,
-        //     clientSecret: process.env.GITHUB_SECRET as string
-        // })
     ],
     pages: {
         signIn: "/signin",
@@ -85,7 +80,7 @@ export const authOptions: NextAuthOptions = {
             const email = user.email
             const provider = account?.provider.toUpperCase()
 
-            const res = await fetch("http://localhost:8000/auth/provider", {
+            const res = await fetch(BACKEND_URL + "/auth/provider", {
                 method: "POST",
                 body: JSON.stringify({
                     name, email, provider

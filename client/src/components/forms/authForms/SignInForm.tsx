@@ -24,13 +24,6 @@ const SignInForm = () => {
     });
   };
 
-  const handleGitHubSignin = async () => {
-    signIn('github', {
-      callbackUrl: FRONTEND_URL + '/dashboard',
-      redirect: true,
-    });
-  };
-
   //   const { data, isLoading, isError } = useQuery({
   //     queryFn: async () => {
   //       const data = await axios.get(
@@ -139,17 +132,6 @@ const SignInForm = () => {
           <p>{t('googlesignup')}</p>
         </div>
       </button>
-      {/* <button
-        className="w-full h-10 outline outline-1 rounded-md mt-4 hover:bg-gray-100"
-        onClick={() => handleGitHubSignin()}
-      >
-        <div className="flex text-center items-center justify-center">
-          <div className="mr-2 mb-0.5">
-            <BsGithub />
-          </div>
-          <p>{t('githubsignup')}</p>
-        </div>
-      </button> */}
     </main>
   );
 };

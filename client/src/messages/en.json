@@ -35,5 +35,13 @@
     "or": "OR",
     "githubsignup": "Log in with Github",
     "googlesignup": "Log in with Google"
+  },
+  "Toaster": {
+    "register": "Successfully registered!",
+    "registerdescription": "You will be redirected",
+    "login": "Sucessfully logged in!",
+    "logindescription": "You will be redirected",
+    "error": "Something went wrong!",
+    "errordescription": "Please Try again later"
   }
 }

@@ -1,26 +1,23 @@
 'use client';
 import { Button } from '@/components/Button';
+import FormError from '@/components/FormError';
 import { Input } from '@/components/ui/input';
+import { BACKEND_URL, FRONTEND_URL } from '@/lib/constants';
+import { registerUserSchema } from '@/schemas/user.schema';
+import { RegisterUserFormData } from '@/types/user.types';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@radix-ui/react-label';
-import { signIn, useSession } from 'next-auth/react';
+import axios from 'axios';
+import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { BsGithub } from 'react-icons/bs';
-import { FaGoogle } from 'react-icons/fa';
-// import { createUserSchema } from '@/schema/user.schema';
-// import { CreateUserFormData } from '@/types/user.types';
-// import { zodResolver } from '@hookform/resolvers/zod';
-// import { useQuery, useQueryClient } from '@tanstack/react-query';
-// import axios from 'axios';
-// import { hash } from 'bcrypt';
-import { FRONTEND_URL } from '@/lib/constants';
 import { redirect } from 'next/navigation';
-import { env } from 'process';
-import { FC } from 'react';
-// import { useForm } from 'react-hook-form';
-// import { toast } from 'react-toastify';
+import { useForm } from 'react-hook-form';
+import { FaGoogle } from 'react-icons/fa';
+import { toast } from 'sonner';
 
 const SignUpForm = () => {
-  const { data: session } = useSession();
+  const t = useTranslations('Register');
+  const toaster = useTranslations('Toaster');
 
   const handleGoogleSignin = async () => {
     signIn('google', {
@@ -29,82 +26,51 @@ const SignUpForm = () => {
     });
   };
 
-  // const handleGitHubSignin = async () => {
-  //   signIn('github', {
-  //     callbackUrl: FRONTEND_URL + '/dashboard',
-  //     redirect: true,
-  //   });
-  // };
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<RegisterUserFormData>({
+    resolver: zodResolver(registerUserSchema),
+  });
 
-  const t = useTranslations('Register');
-  //   const { data, isLoading, isError } = useQuery({
-  //     queryFn: async () => {
-  //       const data = await axios.get(
-  //         `http://localhost:3000/api/findcustomerbyexportcode`,
-  //         { params: { exportcode: exportCode } },
-  //       );
-  //       return data.data['customer'];
-  //     },
-  //   });
-  //   const queryClient = useQueryClient();
-  //   const {
-  //     register,
-  //     handleSubmit,
-  //     formState: { errors },
-  //   } = useForm<CreateUserFormData>({
-  //     resolver: zodResolver(createUserSchema),
-  //   });
-
-  //   const submitData = async (formData: CreateUserFormData) => {
-  //     const username = data?.firstname + ' ' + data?.lastname;
-  //     const email = data?.email.replace(/\s/g, '');
-  //     const customerId = data?.id;
-  //     const password = await hash(formData['password'], 10);
-  //     console.log('PASSS', password);
-  //     const values = {
-  //       username,
-  //       email,
-  //       customerId,
-  //       password,
-  //     };
-  //     const response = await axios
-  //       .post(`http://localhost:3000/api/auth/signup`, values, {
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           Accept: 'application/json',
-  //         },
-  //       })
-  //       .then((response: any) => response)
-  //       .catch((error: any) => error.response.data);
-  //     if (response['status'] === 200) {
-  //       toast.success('Benutzer erfolgreich erstellt', {
-  //         position: 'top-center',
-  //         autoClose: 2500,
-  //         hideProgressBar: false,
-  //         closeOnClick: true,
-  //         pauseOnHover: false,
-  //         progress: undefined,
-  //         theme: 'colored',
-  //       });
-  //       queryClient.invalidateQueries({ queryKey: ['getAllCustomers'] });
-  //       setTimeout(() => {
-  //         window.location.href = '/signin';
-  //       }, 2800);
-  //     } else {
-  //       toast.error('Something went wrong, please try again', {
-  //         position: 'top-center',
-  //         autoClose: 2500,
-  //         hideProgressBar: false,
-  //         closeOnClick: true,
-  //         pauseOnHover: false,
-  //         progress: undefined,
-  //         theme: 'colored',
-  //       });
-  //       setTimeout(() => {
-  //         window.location.reload();
-  //       }, 2800);
-  //     }
-  //   };
+  const submitData = async (formData: RegisterUserFormData) => {
+    console.log('HELOLO');
+    const name = formData['name'];
+    const email = formData['email'];
+    const password = formData['password'];
+    const values = {
+      name,
+      email,
+      password,
+    };
+    console.log(values);
+    const response = await axios
+      .post(BACKEND_URL + '/auth/signup', values, {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      })
+      .then((response: any) => response)
+      .catch((error: any) => error.response.data);
+    if (response['status'] === 201) {
+      toast.success(`${toaster('register')}`, {
+        description: `${toaster('registerdescription')}`,
+        duration: 2000,
+      });
+      setTimeout(() => {
+        window.location.href = '/signin';
+      }, 2000);
+    } else {
+      toast.error(`${toaster('error')}`, {
+        description: `${toaster('errordescription')}`,
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    }
+  };
   //TODO Replace Logo
   return (
     <main className="font-light">
@@ -116,25 +82,49 @@ const SignUpForm = () => {
           <a href="/signin">{t('login')}.</a>
         </div>
       </div>
-      <div className="mt-4">
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label className="ml-1" htmlFor="fullname">
-            {t('fullname')}
-          </Label>
-          <Input type="text" id="fullname" placeholder={t('fullname')} />
+      <form onSubmit={handleSubmit(submitData)}>
+        <div className="mt-4">
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <Label className="ml-1" htmlFor="fullname">
+              {t('fullname')}
+            </Label>
+            <Input
+              type="text"
+              id="fullname"
+              className={errors.name ? 'border-red-500' : ''}
+              placeholder={t('fullname')}
+              {...register('name')}
+            />
+            {errors.name && <FormError error={errors.name.message} />}
+          </div>
+          <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
+            <Label className="ml-1" htmlFor="email">
+              Email
+            </Label>
+            <Input
+              id="email"
+              className={errors.email ? 'border-red-500' : ''}
+              placeholder={t('email')}
+              {...register('email')}
+            />
+            {errors.email && <FormError error={errors.email.message} />}
+          </div>
+          <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
+            <Label className="ml-1">{t('password')}</Label>
+            <Input
+              type="password"
+              id="password"
+              className={errors.password ? 'border-red-500' : ''}
+              placeholder={t('password')}
+              {...register('password')}
+            />
+            {errors.password && <FormError error={errors.password.message} />}
+          </div>
         </div>
-        <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
-          <Label className="ml-1" htmlFor="email">
-            Email
-          </Label>
-          <Input type="email" id="email" placeholder={t('email')} />
-        </div>
-        <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
-          <Label className="ml-1">{t('password')}</Label>
-          <Input type="password" id="password" placeholder={t('password')} />
-        </div>
-      </div>
-      <Button className="w-full h-10 mt-4">{t('createaccount')}</Button>
+        <Button className="w-full h-10 mt-4" type="submit">
+          {t('createaccount')}
+        </Button>
+      </form>
       <div className="flex mt-8">
         <p className="line w-1/2 h-px bg-black" />
         <p className="inline text-sm mx-3 -mt-[10px]">{t('or')}</p>
@@ -151,17 +141,6 @@ const SignUpForm = () => {
           <p>{t('googlesignup')}</p>
         </div>
       </button>
-      {/* <button
-        className="w-full h-10 outline outline-1 rounded-md mt-4 hover:bg-gray-100"
-        onClick={() => handleGitHubSignin()}
-      >
-        <div className="flex text-center items-center justify-center">
-          <div className="mr-2 mb-0.5">
-            <BsGithub />
-          </div>
-          <p>{t('githubsignup')}</p>
-        </div>
-      </button> */}
     </main>
   );
 };

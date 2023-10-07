@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { hash } from "bcrypt";
 import { PrismaService } from 'src/prisma.service';
 import { ProviderDto, RegisterDto } from './dto/auth.dto';
 
@@ -20,7 +21,7 @@ export class AuthService {
             data: {
                 name: dto.name,
                 email: dto.email,
-                password: dto.password,
+                password: await Bun.password.hash(dto.password),
                 provider: "CREDENTIALS"
             }
         })
