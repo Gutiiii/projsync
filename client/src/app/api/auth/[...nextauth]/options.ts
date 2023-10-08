@@ -39,12 +39,12 @@ export const authOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                console.log("CRE: ", credentials)
+                console.log("AUTHORIZE")
                 if (!credentials?.email || !credentials?.password) return null
 
                 const { email, password } = credentials
 
-                const res = await fetch(BACKEND_URL + "/auth/login", {
+                const res = await fetch(BACKEND_URL + "/auth/signin", {
                     method: "POST",
                     body: JSON.stringify({
                         email, password
@@ -58,7 +58,6 @@ export const authOptions: NextAuthOptions = {
 
                     return null
                 }
-
                 const user = await res.json()
 
                 if (!user) return null
@@ -68,14 +67,16 @@ export const authOptions: NextAuthOptions = {
         }),
         GoogleProvider({
             clientId: env.GOOGLE_CLIENT_ID,
-            clientSecret: env.GOOGLE_CLIENT_SECRET
+            clientSecret: env.GOOGLE_CLIENT_SECRET,
+            // profile(profile) {
+            //     console.log("Profile: ", profile)
+            //     return { role: profile.role ?? "user", ...profile }
+            // },
         }),
     ],
-    pages: {
-        signIn: "/signin",
-    },
     callbacks: {
         async signIn({ user, account }) {
+            console.log("SIGNIN")
             const name = user.name
             const email = user.email
             const provider = account?.provider.toUpperCase()
@@ -91,17 +92,21 @@ export const authOptions: NextAuthOptions = {
             })
             return true
         },
-        // async jwt({ token, user }) {
-        //     if (user) return { ...token, ...user }
+        async jwt({ token, user }) {
+            return { ...token, ...user }
 
-        //     // if (new Date().getTime() < token.backendTokens.expiresIn) return token
+            // if (new Date().getTime() < token.backendTokens.expiresIn) return token
 
-        //     // return await refreshToken(token)
-        // },
-        // async session({ token, session }) {
-        //     session.user = token.user
-        //     session.backendTokens = token.backendTokens
-        //     return session
-        // }
-    }
+            // return await refreshToken(token)
+        },
+        async session({ token, session, user }) {
+            session.user = token.user
+            session.backendTokens = token.backendTokens
+            return session
+        }
+    },
+    pages: {
+        signIn: "/signin",
+    },
+
 }

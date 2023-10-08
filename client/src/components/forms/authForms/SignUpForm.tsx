@@ -2,6 +2,7 @@
 import { Button } from '@/components/Button';
 import FormError from '@/components/FormError';
 import { Input } from '@/components/ui/input';
+import { useRegisterUser } from '@/hooks/useRegisterUser';
 import { BACKEND_URL, FRONTEND_URL } from '@/lib/constants';
 import { registerUserSchema } from '@/schemas/user.schema';
 import { RegisterUserFormData } from '@/types/user.types';
@@ -33,9 +34,45 @@ const SignUpForm = () => {
   } = useForm<RegisterUserFormData>({
     resolver: zodResolver(registerUserSchema),
   });
+  //TODO Check why response is idle
 
+  // const submitData = async (formData: RegisterUserFormData) => {
+  //   const name = formData['name'];
+  //   const email = formData['email'];
+  //   const password = formData['password'];
+  //   const values = {
+  //     name,
+  //     email,
+  //     password,
+  //   };
+  //   const response = await axios
+  //     .post(BACKEND_URL + '/auth/signup', values, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Accept: 'application/json',
+  //       },
+  //     })
+  //     .then((response: any) => response)
+  //     .catch((error: any) => error.response.data);
+  //   if (response['status'] === 201) {
+  //     toast.success(`${toaster('register')}`, {
+  //       description: `${toaster('registerdescription')}`,
+  //       duration: 2000,
+  //     });
+  //     setTimeout(() => {
+  //       window.location.href = '/signin';
+  //     }, 2000);
+  //   } else {
+  //     toast.error(`${toaster('error')}`, {
+  //       description: `${toaster('errordescription')}`,
+  //     });
+  //     setTimeout(() => {
+  //       window.location.reload();
+  //     }, 2000);
+  //   }
+  // };
+  const { mutateAsync, isSuccess, isError, status } = useRegisterUser();
   const submitData = async (formData: RegisterUserFormData) => {
-    console.log('HELOLO');
     const name = formData['name'];
     const email = formData['email'];
     const password = formData['password'];
@@ -44,17 +81,19 @@ const SignUpForm = () => {
       email,
       password,
     };
-    console.log(values);
-    const response = await axios
-      .post(BACKEND_URL + '/auth/signup', values, {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      })
-      .then((response: any) => response)
-      .catch((error: any) => error.response.data);
-    if (response['status'] === 201) {
+    mutateAsync(values);
+    console.log('SUC: ', isSuccess);
+    console.log('STATUS', status);
+    // const response = await axios
+    //   .post(BACKEND_URL + '/auth/signup', values, {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       Accept: 'application/json',
+    //     },
+    //   })
+    //   .then((response: any) => response)
+    //   .catch((error: any) => error.response.data);
+    if (isSuccess) {
       toast.success(`${toaster('register')}`, {
         description: `${toaster('registerdescription')}`,
         duration: 2000,
@@ -62,7 +101,7 @@ const SignUpForm = () => {
       setTimeout(() => {
         window.location.href = '/signin';
       }, 2000);
-    } else {
+    } else if (isError) {
       toast.error(`${toaster('error')}`, {
         description: `${toaster('errordescription')}`,
       });

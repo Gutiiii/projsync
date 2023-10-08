@@ -14,5 +14,12 @@ const ProviderSchema = z.object({
     provider: z.enum(["CREDENTIALS", "GOOGLE"]),
 });
 
+const SigninSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(8).max(64)
+})
+
 export class RegisterDto extends createZodDto(RegisterSchema) { }
 export class ProviderDto extends createZodDto(ProviderSchema) { }
+
+export class SigninDto extends createZodDto(SigninSchema) { }

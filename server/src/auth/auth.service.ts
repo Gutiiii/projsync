@@ -1,54 +1,153 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { hash } from "bcrypt";
+import { JwtService } from '@nestjs/jwt';
+import { compare, hash } from "bcrypt";
+import env from 'lib/env';
 import { PrismaService } from 'src/prisma.service';
-import { ProviderDto, RegisterDto } from './dto/auth.dto';
+import { UserService } from 'src/user/user.service';
+import { ProviderDto, RegisterDto, SigninDto } from './dto/auth.dto';
+
+
+const EXPIRE_TIME = 10800000
 
 @Injectable()
-
 export class AuthService {
-    constructor(private prisma: PrismaService) { }
+    constructor(private prismaService: PrismaService, private userService: UserService, private jwtService: JwtService) { }
 
 
     async signup(dto: RegisterDto) {
-        const user = await this.prisma.user.findUnique({
-            where: {
-                email: dto.email
-            }
-        })
-        if (user) throw new UnauthorizedException("User already exists")
+        const res = await this.userService.findByEmail(dto.email)
 
-        const newUser = await this.prisma.user.create({
+        if (res) throw new UnauthorizedException("User already exists")
+
+        const newUser = await this.prismaService.user.create({
             data: {
                 name: dto.name,
                 email: dto.email,
-                password: await Bun.password.hash(dto.password),
+                password: await hash(dto.password, 10),
                 provider: "CREDENTIALS"
             }
         })
-        const { password, ...result } = newUser
+        const { password, ...user } = newUser
 
-        return result
+        return user
     }
 
     async provider(dto: ProviderDto) {
-        const user = await this.prisma.user.findUnique({
-            where: {
-                email: dto.email
-            }
-        })
-        if (user) return user
+        const res = await this.userService.findByEmail(dto.email)
+        if (res) {
 
-        if (!user) {
-            const newUser = await this.prisma.user.create({
+            const payload = {
+                name: res.name,
+                email: res.email,
+                role: res.role,
+                provider: res.provider,
+                sub: {
+                    createdAt: res.createdAt,
+                    updatedAt: res.updatedAt
+                }
+            }
+
+            const { password, ...user } = res
+
+
+            return {
+                user,
+                backendTokens: {
+                    accessToken: await this.jwtService.signAsync(payload, {
+                        expiresIn: "3h",
+                        secret: env.jwtSecretKey
+                    }),
+                    refreshToken: await this.jwtService.signAsync(payload, {
+                        expiresIn: "7d",
+                        secret: env.jwtRefreshTokenKey
+                    }),
+                    expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME)
+                }
+
+            }
+        }
+
+        if (!res) {
+            const newUser = await this.prismaService.user.create({
                 data: {
                     name: dto.name,
                     email: dto.email,
                     provider: dto.provider
                 }
             })
-            return newUser
+
+            const { password, ...user } = newUser
+
+            const payload = {
+                name: res.name,
+                email: res.email,
+                role: res.role,
+                provider: res.provider,
+                sub: {
+                    createdAt: res.createdAt,
+                    updatedAt: res.updatedAt
+                }
+            }
+
+            return {
+                user,
+                backendTokens: {
+                    accessToken: await this.jwtService.signAsync(payload, {
+                        expiresIn: "3h",
+                        secret: env.jwtSecretKey
+                    }),
+                    refreshToken: await this.jwtService.signAsync(payload, {
+                        expiresIn: "7d",
+                        secret: env.jwtRefreshTokenKey
+                    }),
+                    expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME)
+                }
+            }
         }
 
         throw new BadRequestException("Something went wrong!")
+    }
+
+    async signin(dto: SigninDto) {
+        const user = await this.validateUser(dto)
+
+        const payload = {
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            provider: user.provider,
+            sub: {
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt
+            }
+        }
+
+        return {
+            user,
+            backendTokens: {
+                accessToken: await this.jwtService.signAsync(payload, {
+                    expiresIn: "3h",
+                    secret: env.jwtSecretKey
+                }),
+                refreshToken: await this.jwtService.signAsync(payload, {
+                    expiresIn: "7d",
+                    secret: env.jwtRefreshTokenKey
+                }),
+                expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME)
+            }
+        }
+    }
+
+    async validateUser(dto: SigninDto) {
+        const user = await this.userService.findByEmail(dto.email)
+
+
+        if (user && (await compare(dto.password, user.password))) {
+            const { password, ...result } = user
+
+            return result
+        }
+
+        throw new UnauthorizedException()
     }
 }

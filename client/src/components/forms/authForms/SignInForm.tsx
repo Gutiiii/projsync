@@ -1,5 +1,6 @@
 'use client';
 import { Button } from '@/components/Button';
+import FormError from '@/components/FormError';
 import { Input } from '@/components/ui/input';
 import { Label } from '@radix-ui/react-label';
 import { signIn, useSession } from 'next-auth/react';
@@ -11,17 +12,60 @@ import { FaGoogle } from 'react-icons/fa';
 // import { useQuery, useQueryClient } from '@tanstack/react-query';
 // import axios from 'axios';
 // import { hash } from 'bcrypt';
-import { FRONTEND_URL } from '@/lib/constants';
+import { BACKEND_URL, FRONTEND_URL } from '@/lib/constants';
+import { signinUserSchema } from '@/schemas/user.schema';
+import { SigninUserFormData } from '@/types/user.types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 // import { useForm } from 'react-hook-form';
 // import { toast } from 'react-toastify';
 
 const SignInForm = () => {
   const t = useTranslations('Login');
+  const toaster = useTranslations('Toaster');
+
   const handleGoogleSignin = async () => {
     signIn('google', {
       callbackUrl: FRONTEND_URL + '/dashboard',
       redirect: true,
     });
+  };
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<SigninUserFormData>({
+    resolver: zodResolver(signinUserSchema),
+  });
+
+  const submitData = async (formData: SigninUserFormData) => {
+    const email = formData['email'];
+    const password = formData['password'];
+    const result = await signIn('credentials', {
+      redirect: false,
+      email,
+      password,
+    });
+    console.log('RESULT: ', result);
+    if (result?.error) {
+      toast.error(`${toaster('error')}`, {
+        description: `${toaster('errordescription')}`,
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } else {
+      toast.success(`${toaster('register')}`, {
+        description: `${toaster('registerdescription')}`,
+        duration: 2000,
+      });
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 2000);
+    }
   };
 
   //   const { data, isLoading, isError } = useQuery({
@@ -103,24 +147,41 @@ const SignInForm = () => {
           <a href="/signup">{t('register')}.</a>
         </div>
       </div>
-      <div className="mt-4">
-        <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
-          <Label className="ml-1" htmlFor="email">
-            {t('email')}
-          </Label>
-          <Input type="email" id="email" placeholder={t('email')} />
+      <form onSubmit={handleSubmit(submitData)}>
+        <div className="mt-4">
+          <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
+            <Label className="ml-1" htmlFor="email">
+              {t('email')}
+            </Label>
+            <Input
+              type="text"
+              id="email"
+              placeholder={t('email')}
+              {...register('email')}
+            />
+            {errors.email && <FormError error={errors.email.message} />}
+          </div>
+          <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
+            <Label className="ml-1">{t('password')}</Label>
+            <Input
+              type="password"
+              id="password"
+              placeholder={t('password')}
+              {...register('password')}
+            />
+            {errors.password && <FormError error={errors.password.message} />}
+          </div>
         </div>
-        <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
-          <Label className="ml-1">{t('password')}</Label>
-          <Input type="password" id="password" placeholder={t('password')} />
-        </div>
-      </div>
-      <Button className="w-full h-10 mt-4">{t('login')}</Button>
+        <Button className="w-full h-10 mt-4" type="submit">
+          {t('login')}
+        </Button>
+      </form>
       <div className="flex mt-8">
         <p className="line w-1/2 h-px bg-black" />
         <p className="inline text-sm mx-3 -mt-[10px]">{t('or')}</p>
         <p className="line w-1/2 h-px bg-black" />
       </div>
+
       <button
         className="w-full h-10 outline outline-1 rounded-md mt-4 hover:bg-gray-100"
         onClick={() => handleGoogleSignin()}

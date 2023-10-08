@@ -5,10 +5,10 @@ declare module "next-auth" {
         user: {
             id: string;
             email: string;
-            username: string
+            name: string
             role: string
+            provider: string
         };
-
         backendTokens: {
             accessToken: string
             refreshToken: string
@@ -24,10 +24,10 @@ declare module "next-auth/jwt" {
         user: {
             id: string;
             email: string;
-            username: string
+            name: string
             role: string
+            provider: string
         };
-
         backendTokens: {
             accessToken: string
             refreshToken: string

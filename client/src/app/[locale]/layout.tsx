@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import Providers from '@/providers/Provider';
+import Providers from '@/providers/Providers';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { Roboto } from 'next/font/google';
