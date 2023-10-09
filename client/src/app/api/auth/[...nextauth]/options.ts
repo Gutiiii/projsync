@@ -3,9 +3,11 @@ import env from "@/lib/env"
 import axios from "axios"
 import { NextAuthOptions } from "next-auth"
 import { JWT } from "next-auth/jwt"
-import NextAuth from "next-auth/next"
+import NextAuth, { getServerSession } from "next-auth/next"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
+import { useSession } from "next-auth/react"
+import { redirect } from "next/navigation"
 // async function refreshToken(token: JWT): Promise<JWT> {
 //     const res = await fetch(BACKEND_URL + "/auth/refresh", {
 //         method: "POST",
@@ -75,23 +77,23 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async signIn({ user, account }) {
-            console.log("SIGNIN")
-            const name = user.name
-            const email = user.email
-            const provider = account?.provider.toUpperCase()
+        // async signIn({ user, account }) {
+        //     console.log("SIGNIN")
+        //     const name = user.name
+        //     const email = user.email
+        //     const provider = account?.provider.toUpperCase()
 
-            const res = await fetch(BACKEND_URL + "/auth/provider", {
-                method: "POST",
-                body: JSON.stringify({
-                    name, email, provider
-                }),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            return true
-        },
+        //     const res = await fetch(BACKEND_URL + "/auth/provider", {
+        //         method: "POST",
+        //         body: JSON.stringify({
+        //             name, email, provider
+        //         }),
+        //         headers: {
+        //             "Content-Type": "application/json"
+        //         }
+        //     })
+        //     return true
+        // },
         async jwt({ token, user }) {
             return { ...token, ...user }
 
