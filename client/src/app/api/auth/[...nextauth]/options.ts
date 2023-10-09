@@ -77,23 +77,23 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        // async signIn({ user, account }) {
-        //     console.log("SIGNIN")
-        //     const name = user.name
-        //     const email = user.email
-        //     const provider = account?.provider.toUpperCase()
+        async signIn({ user, account }) {
+            console.log("SIGNIN")
+            const name = user.name
+            const email = user.email
+            const provider = account?.provider.toUpperCase()
 
-        //     const res = await fetch(BACKEND_URL + "/auth/provider", {
-        //         method: "POST",
-        //         body: JSON.stringify({
-        //             name, email, provider
-        //         }),
-        //         headers: {
-        //             "Content-Type": "application/json"
-        //         }
-        //     })
-        //     return true
-        // },
+            const res = await fetch(BACKEND_URL + "/auth/provider", {
+                method: "POST",
+                body: JSON.stringify({
+                    name, email, provider
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            return true
+        },
         async jwt({ token, user }) {
             return { ...token, ...user }
 
