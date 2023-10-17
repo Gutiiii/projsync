@@ -4,5 +4,5 @@ import { redirect } from 'next/navigation';
 
 export async function useSigninRequiredServer() {
   const session = await getServerSession(authOptions);
-  if (!session) return redirect('/');
+  if (!session) return redirect('/signin');
 }

@@ -5,6 +5,6 @@ export function useSigninRequiredClient() {
   const session = useSession();
   const router = useRouter();
   if (typeof window !== 'undefined') {
-    if (!session) router.push('/');
+    if (!session) router.push('/signin');
   }
 }

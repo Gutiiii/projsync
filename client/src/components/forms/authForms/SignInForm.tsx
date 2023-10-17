@@ -58,8 +58,8 @@ const SignInForm = () => {
         window.location.reload();
       }, 2000);
     } else {
-      toast.success(`${toaster('register')}`, {
-        description: `${toaster('registerdescription')}`,
+      toast.success(`${toaster('login')}`, {
+        description: `${toaster('logindescription')}`,
         duration: 2000,
       });
       setTimeout(() => {
