@@ -6,10 +6,13 @@ export class UserService {
     constructor(private prismaService: PrismaService) { }
 
     async findByEmail(email: string) {
-        return await this.prismaService.user.findUnique({
+        return await this.prismaService.user.findFirst({
             where: {
-                email: email
-            }
+                email: {
+                    equals: email,
+                    mode: 'insensitive'
+                }
+            },
         })
     }
 }

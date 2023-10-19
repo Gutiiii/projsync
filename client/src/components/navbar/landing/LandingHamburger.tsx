@@ -4,7 +4,7 @@ import { Menu } from 'lucide-react';
 import { useState } from 'react';
 import LandingNavMobile from './LandingNavMobile';
 
-const Hamburger = () => {
+const LandingHamburger = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const handleToggle = () => {
@@ -30,4 +30,4 @@ const Hamburger = () => {
   );
 };
 
-export default Hamburger;
+export default LandingHamburger;

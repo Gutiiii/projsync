@@ -1,5 +1,5 @@
 import LandingMain from '@/components/LandingMain';
-import LandingNav from '@/components/navbar/LandingNav';
+import LandingNav from '@/components/navbar/landing/LandingNav';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]/options';
 

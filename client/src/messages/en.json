@@ -43,5 +43,9 @@
     "logindescription": "You will be redirected",
     "error": "Something went wrong!",
     "errordescription": "Please Try again later"
+  },
+  "Admin": {
+    "projects": "Projects",
+    "users": "Users"
   }
 }

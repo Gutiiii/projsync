@@ -1,4 +1,4 @@
-import AdminNavbar from '../navbar/AdminNavbar';
+import AdminNavbar from '../navbar/admin/AdminNavbar';
 
 const AdminDashboard = () => {
   return (

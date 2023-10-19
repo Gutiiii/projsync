@@ -43,5 +43,9 @@
     "logindescription": "Sie werden weitergeleitet",
     "error": "Etwas ist schiefgelaufen!",
     "errordescription": "Bitte versuchen Sie es später erneut"
+  },
+  "Admin": {
+    "projects": "Projekte",
+    "users": "Benutzer"
   }
 }

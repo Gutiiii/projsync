@@ -1,11 +1,11 @@
 import { useTranslations } from 'next-intl';
 import { FC } from 'react';
-import { Button } from '../Button';
-import ChangeLanguage from '../ChangeLanguage';
-import SignInButton from '../auth/button/SignInButton';
-import Hamburger from './Hamburger';
+import { Button } from '../../Button';
+import ChangeLanguage from '../../ChangeLanguage';
+import SignInButton from '../../auth/button/SignInButton';
+import LandingHamburger from './LandingHamburger';
 
-const AdminNavbar = ({}) => {
+const LandingNav = ({}) => {
   const t = useTranslations('Landingnav');
   return (
     <div className="h-12 pt-2 sticky top-0 inset-x-0 z-10">
@@ -48,11 +48,11 @@ const AdminNavbar = ({}) => {
           </div>
         </div>
         <div className="sm:hidden flex cursor-pointer">
-          <Hamburger />
+          <LandingHamburger />
         </div>
       </div>
     </div>
   );
 };
 
-export default AdminNavbar;
+export default LandingNav;

@@ -10,7 +10,7 @@ import { ChevronDown } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next-intl/link';
 import { usePathname } from 'next/navigation';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 const ChangeLanguage: FC = () => {
   const t = useTranslations('Landingnav');

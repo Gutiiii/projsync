@@ -1,5 +1,5 @@
 import React from 'react';
-import UserNavbar from '../navbar/UseNavbar';
+import UserNavbar from '../navbar/user/UserNavbar';
 
 const UserDashboard = () => {
   return (
