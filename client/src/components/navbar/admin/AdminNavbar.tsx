@@ -1,9 +1,11 @@
 import ChangeLanguage from '@/components/ChangeLanguage';
+import UserAvatar from '@/components/auth/UserAvatar';
 import { useTranslations } from 'next-intl';
-import { default as AdminHamburger } from './AdminHamburger';
+import AdminHamburger from './AdminHamburger';
 
 const AdminNavbar = ({}) => {
   const t = useTranslations('Admin');
+
   return (
     <div className="h-12 pt-2 sticky top-0 inset-x-0 z-10">
       <div className="flex text-xl text-center items-center sm:justify-around justify-between mx-4">
@@ -22,11 +24,18 @@ const AdminNavbar = ({}) => {
               </button>
               <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
             </div>
+            <div className="group mx-auto">
+              <button>
+                <a href="/pricing">{t('pricing')}</a>
+              </button>
+              <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
+            </div>
           </div>
         </div>
         <div className="sm:flex space-x-4 hidden">
-          <div className="items-end flex">
+          <div className="items-end flex space-x-6">
             <ChangeLanguage />
+            <UserAvatar />
           </div>
         </div>
         <div className="sm:hidden flex cursor-pointer">

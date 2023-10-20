@@ -15,6 +15,7 @@ import { FC } from 'react';
 const ChangeLanguage: FC = () => {
   const t = useTranslations('Landingnav');
   const pathName = usePathname();
+  const modifiedPathName = pathName.replace('/de', ''); // This will remove '/de' if it is included
 
   return (
     <div id="dropdown">
@@ -38,13 +39,13 @@ const ChangeLanguage: FC = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem>
-            <Link href="/" locale="en" className="flex">
+            <Link href={modifiedPathName} locale="en" className="flex">
               <US className="h-5 mx-2" />
               <p>{t('english')}</p>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="/" locale="de" className="flex">
+            <Link href={modifiedPathName} locale="de" className="flex">
               <DE className="h-5 mx-2" />
               <p>{t('german')}</p>
             </Link>

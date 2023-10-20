@@ -42,10 +42,15 @@
     "login": "Sucessfully logged in!",
     "logindescription": "You will be redirected",
     "error": "Something went wrong!",
-    "errordescription": "Please Try again later"
+    "errordescription": "Please Try again later",
+    "passwordchangegoogle": "Password Change Unavailable!",
+    "passwordchangegoogledescription": "It appears you signed in with Google. Please change your password on Google",
+    "passwordchangecredentials": "Password Change Initialised!",
+    "passwordchangecredentialsdescription": "You have just received an email with instructions to update your password."
   },
   "Admin": {
     "projects": "Projects",
-    "users": "Users"
+    "users": "Users",
+    "pricing": "Pricing"
   }
 }

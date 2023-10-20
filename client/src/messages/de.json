@@ -42,10 +42,15 @@
     "login": "Erfolgreich eingeloggt!",
     "logindescription": "Sie werden weitergeleitet",
     "error": "Etwas ist schiefgelaufen!",
-    "errordescription": "Bitte versuchen Sie es später erneut"
+    "errordescription": "Bitte versuchen Sie es später erneut",
+    "passwordchangegoogle": "Passwortänderung nicht verfügbar!",
+    "passwordchangegoogledescription": "Es scheint, als hätten Sie sich mit Google angemeldet. Bitte ändern Sie Ihr Passwort auf Google",
+    "passwordchangecredentials": "Passwort Änderung Initialisiert!",
+    "passwordchangecredentialsdescription": "Sie haben gerade eine E-Mail mit Anweisungen zur Aktualisierung Ihres Passworts erhalten."
   },
   "Admin": {
     "projects": "Projekte",
-    "users": "Benutzer"
+    "users": "Benutzer",
+    "pricing": "Preise"
   }
 }
