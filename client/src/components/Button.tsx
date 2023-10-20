@@ -14,8 +14,9 @@ const buttonVariants = cva(
         default: 'bg-slate-900 text-white hover:bg-slate-700 ',
         destructive: 'bg-red-500 text-white',
         success: 'bg-green-500 text-white',
-        info: 'bg-blue-500 text-white',
+        info: 'bg-blue-500 text-white ',
         outline: 'bg-transparent hover:outline',
+        card: 'bg-transparent border hover:border-2 border-slate-900 duration-0',
       },
       size: {
         default: 'h-10 py-2 px-4',

@@ -32,19 +32,13 @@ const AdminNavMobile: FC<AdminNavMobileProps> = ({ onClose }) => {
         </div>
         <div className="group mx-auto">
           <li className="cursor-pointer">
-            <a href="/projects">{t('users')}</a>
-          </li>
-          <div className="line h-px group-hover:w-16 w-0 bg-black mx-auto transition-all duration-300" />
-        </div>
-        <div className="group mx-auto">
-          <li className="cursor-pointer">
-            <a href="/pricing">{t('pricing')}</a>
+            <a href="/users">{t('users')}</a>
           </li>
           <div className="line h-px group-hover:w-16 w-0 bg-black mx-auto transition-all duration-300" />
         </div>
         <li className="space-y-4">
-          <ChangeLanguage />
           <UserAvatar />
+          <ChangeLanguage />
         </li>
       </ul>
     </main>

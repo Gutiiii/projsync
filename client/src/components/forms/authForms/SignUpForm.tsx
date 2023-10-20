@@ -6,6 +6,7 @@ import { useRegisterUser } from '@/hooks/useRegisterUser';
 import { BACKEND_URL, FRONTEND_URL } from '@/lib/constants';
 import { registerUserSchema } from '@/schemas/user.schema';
 import { RegisterUserFormData } from '@/types/user.types';
+import { Spinner } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@radix-ui/react-label';
 import axios from 'axios';
@@ -71,7 +72,8 @@ const SignUpForm = () => {
   //     }, 2000);
   //   }
   // };
-  const { mutateAsync, isSuccess, isError, status } = useRegisterUser();
+  const { mutateAsync, isSuccess, isError, status, isLoading } =
+    useRegisterUser();
   const submitData = async (formData: RegisterUserFormData) => {
     const name = formData['name'];
     const email = formData['email'];
@@ -161,7 +163,18 @@ const SignUpForm = () => {
           </div>
         </div>
         <Button className="w-full h-10 mt-4" type="submit">
-          {t('createaccount')}
+          {isLoading ? (
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="black"
+              size="md"
+              className="my-1"
+            />
+          ) : (
+            t('createaccount')
+          )}
         </Button>
       </form>
       <div className="flex mt-8">

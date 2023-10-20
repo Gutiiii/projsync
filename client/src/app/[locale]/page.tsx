@@ -5,7 +5,6 @@ import { authOptions } from '../api/auth/[...nextauth]/options';
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
-  console.log('SESSION: ', session);
   return (
     <>
       <div className="bg-gray-200 w-full">

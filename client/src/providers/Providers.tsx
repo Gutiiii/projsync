@@ -1,4 +1,5 @@
 'use client';
+import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SessionProvider } from 'next-auth/react';
 import { FC, useState } from 'react';
@@ -12,8 +13,10 @@ const Providers: FC<ProvidersProps> = ({ children }) => {
   return (
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
-        <Toaster position="top-center" richColors />
-        {children}
+        <ChakraProvider>
+          <Toaster position="top-center" richColors />
+          {children}
+        </ChakraProvider>
       </QueryClientProvider>
     </SessionProvider>
   );
