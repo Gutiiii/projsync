@@ -52,5 +52,9 @@
     "projects": "Projects",
     "users": "Users",
     "pricing": "Pricing"
+  },
+  "Avatar": {
+    "changepassword": "Change Password",
+    "signout": "Sign out"
   }
 }

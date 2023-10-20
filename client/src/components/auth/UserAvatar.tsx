@@ -13,6 +13,7 @@ import {
 
 const UserAvatar: FC = ({}) => {
   const t = useTranslations('Toaster');
+  const avatar = useTranslations('Avatar');
   const { data: session } = useSession();
 
   const onPasswordChange = () => {
@@ -41,13 +42,13 @@ const UserAvatar: FC = ({}) => {
             className="cursor-pointer"
             onClick={() => onPasswordChange()}
           >
-            Passwort ändern
+            {avatar('changepassword')}
           </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={() => signOut()}
           >
-            Abmelden
+            {avatar('signout')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
