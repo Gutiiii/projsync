@@ -1,10 +1,7 @@
 'use client';
-import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import UserAvatar from '@/components/auth/UserAvatar';
-import { getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { FC } from 'react';
 import { Button } from '../../Button';
 import ChangeLanguage from '../../ChangeLanguage';
 import SignInButton from '../../auth/button/SignInButton';
@@ -18,7 +15,11 @@ const LandingNav = ({}) => {
       <div className="flex text-xl text-center items-center sm:justify-around justify-between mx-4">
         <button className="flex text-center items-center">ProjSync.</button>
         <div className="items-center text-center hidden sm:flex">
-          <div className="group mx-auto">
+          <div
+            className={
+              session?.user ? 'group mx-auto ml-44' : 'group mx-auto ml-56'
+            }
+          >
             <button>
               <a href="/pricing">{t('pricing')}</a>
             </button>
@@ -61,7 +62,6 @@ const LandingNav = ({}) => {
               </Button>
             </>
           )}
-
           <div className="items-end flex">
             <ChangeLanguage />
           </div>

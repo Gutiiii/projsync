@@ -12,7 +12,7 @@ import { Label } from '@radix-ui/react-label';
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { redirect } from 'next/navigation';
+import { redirect, usePathname } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { FaGoogle } from 'react-icons/fa';
 import { toast } from 'sonner';
@@ -20,6 +20,7 @@ import { toast } from 'sonner';
 const SignUpForm = () => {
   const t = useTranslations('Register');
   const toaster = useTranslations('Toaster');
+  const pathName = usePathname();
 
   const handleGoogleSignin = async () => {
     signIn('google', {

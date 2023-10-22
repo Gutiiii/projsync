@@ -17,6 +17,7 @@ import { signinUserSchema } from '@/schemas/user.schema';
 import { SigninUserFormData } from '@/types/user.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
+import { usePathname } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 // import { useForm } from 'react-hook-form';
@@ -25,6 +26,7 @@ import { toast } from 'sonner';
 const SignInForm = () => {
   const t = useTranslations('Login');
   const toaster = useTranslations('Toaster');
+  const pathName = usePathname();
 
   const handleGoogleSignin = async () => {
     signIn('google', {
@@ -70,8 +72,12 @@ const SignInForm = () => {
 
   //TODO Replace Logo
   return (
-    <main className="font-light">
-      <div className="mb-2">Logo.(REPLACE)</div>
+    <main
+      className={
+        pathName.includes('/de') ? 'font-light mx-[60px]' : 'font-light'
+      }
+    >
+      <div className="mb-2 ">Logo.(REPLACE)</div>
       <h1 className="text-xl mb-2">{t('header')}</h1>
       <div className="flex text-md">
         <p className="mr-1">{t('isregistered')}</p>

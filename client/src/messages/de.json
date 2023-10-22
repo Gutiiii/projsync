@@ -56,5 +56,23 @@
   "Avatar": {
     "changepassword": "Passwort ändern",
     "signout": "Abmelden"
+  },
+  "PremiumCard": {
+    "plan": "Premium Plan",
+    "description": "Alles, was Sie sich vorstellen können",
+    "month": "/Monat",
+    "getstarted": "Jetzt loslegen",
+    "first": "Projekte",
+    "second": "Einladungen pro Projekt",
+    "third": "Chatten Sie mit Ihren Kunden"
+  },
+  "FreeCard": {
+    "plan": "Free Plan",
+    "description": "Everything you need to begin synchronizing your projects",
+    "month": "/Monat",
+    "getstarted": "Loslegen",
+    "first": "2 kostenlose Projekte",
+    "second": "1 Einladung pro Projekt",
+    "third": "Kommentare"
   }
 }

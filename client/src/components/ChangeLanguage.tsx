@@ -15,7 +15,7 @@ import { FC } from 'react';
 const ChangeLanguage: FC = () => {
   const t = useTranslations('Landingnav');
   const pathName = usePathname();
-  const modifiedPathName = pathName.replace('/de', ''); // This will remove '/de' if it is included
+  const modifiedPathName = pathName.replace('/de', '');
 
   return (
     <div id="dropdown">
