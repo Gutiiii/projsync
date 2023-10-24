@@ -13,7 +13,9 @@ const LandingNav = ({}) => {
   return (
     <div className="h-12 pt-2 sticky top-0 inset-x-0 z-10">
       <div className="flex text-xl text-center items-center sm:justify-around justify-between mx-4">
-        <button className="flex text-center items-center">ProjSync.</button>
+        <button className="flex text-center items-center">
+          <a href="/">ProjSync.</a>
+        </button>
         <div className="items-center text-center hidden sm:flex">
           <div
             className={
