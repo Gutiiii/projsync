@@ -3,16 +3,15 @@ import { Button } from '@/components/Button';
 import FormError from '@/components/FormError';
 import { Input } from '@/components/ui/input';
 import { useRegisterUser } from '@/hooks/useRegisterUser';
-import { BACKEND_URL, FRONTEND_URL } from '@/lib/constants';
+import { FRONTEND_URL } from '@/lib/constants';
 import { registerUserSchema } from '@/schemas/user.schema';
 import { RegisterUserFormData } from '@/types/user.types';
 import { Spinner } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@radix-ui/react-label';
-import axios from 'axios';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { redirect, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { FaGoogle } from 'react-icons/fa';
 import { toast } from 'sonner';
@@ -73,8 +72,7 @@ const SignUpForm = () => {
   //     }, 2000);
   //   }
   // };
-  const { mutateAsync, isSuccess, isError, status, isLoading } =
-    useRegisterUser();
+  const { mutateAsync, isSuccess, isError, isLoading } = useRegisterUser();
   const submitData = async (formData: RegisterUserFormData) => {
     const name = formData['name'];
     const email = formData['email'];
@@ -86,7 +84,6 @@ const SignUpForm = () => {
     };
     mutateAsync(values);
     console.log('SUC: ', isSuccess);
-    console.log('STATUS', status);
     // const response = await axios
     //   .post(BACKEND_URL + '/auth/signup', values, {
     //     headers: {
