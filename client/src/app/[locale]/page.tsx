@@ -1,17 +1,14 @@
 import Footer from '@/components/Footer';
 import LandingMain from '@/components/LandingMain';
 import LandingNav from '@/components/navbar/landing/LandingNav';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../api/auth/[...nextauth]/options';
 
-export default async function Home() {
-  const session = await getServerSession(authOptions);
+export default function Home() {
   return (
     <>
-      <div className="bg-gray-200 w-full">
+      <div className="bg-gray-200 w-full h-screen">
         <LandingNav />
         <LandingMain />
-        {/* <Footer /> */}
+        <Footer />
       </div>
     </>
   );

@@ -9,7 +9,7 @@ const FreeCard = () => {
   const { data: session } = useSession();
   const t = useTranslations('FreeCard');
   return (
-    <div className="w-80 h-96 border-2 border-gray-300 shadow-2xl rounded-lg text-left px-5 pt-4 pb-12">
+    <div className="lg:w-[347px] lg:h-[506px] w-full border-2 border-gray-400 shadow-2xl rounded-lg text-left px-5 pt-4 pb-12">
       <p className="text-2xl">{t('plan')}</p>
       <p className="mt-8 mb-8 text-sm">{t('description')}</p>
       <div className="flex">
