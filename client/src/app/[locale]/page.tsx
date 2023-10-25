@@ -1,3 +1,4 @@
+import Footer from '@/components/Footer';
 import LandingMain from '@/components/LandingMain';
 import LandingNav from '@/components/navbar/landing/LandingNav';
 import { getServerSession } from 'next-auth';
@@ -10,6 +11,7 @@ export default async function Home() {
       <div className="bg-gray-200 w-full">
         <LandingNav />
         <LandingMain />
+        {/* <Footer /> */}
       </div>
     </>
   );
