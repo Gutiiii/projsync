@@ -19,15 +19,11 @@ import axios from "axios";
 
 // }
 
-const registerUser = async (values: RegisterUserFormData) => {
+export const registerUser = async (values: RegisterUserFormData) => {
     return await axios.post(BACKEND_URL + '/auth/signup', values, {
         headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
         },
     })
-}
-
-export const useRegisterUser = () => {
-    return useMutation({mutationFn: asnyc})
 }
