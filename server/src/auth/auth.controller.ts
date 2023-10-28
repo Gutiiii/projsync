@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ProviderDto, RegisterDto, SigninDto } from './dto/auth.dto';
+import { JwtDto, ProviderDto, RegisterDto, SigninDto } from './dto/auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -9,6 +9,11 @@ export class AuthController {
     @Post('provider')
     async provider(@Body() dto: ProviderDto) {
         return await this.authService.provider(dto)
+    }
+
+    @Post("jwt")
+    async jwt(@Body() dto: JwtDto) {
+        return await this.authService.jwt(dto)
     }
 
     @Post('signup')
@@ -20,6 +25,5 @@ export class AuthController {
     async signin(@Body() dto: SigninDto) {
         return await this.authService.signin(dto)
     }
-
 
 }

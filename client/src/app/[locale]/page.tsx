@@ -5,7 +5,7 @@ import LandingNav from '@/components/navbar/landing/LandingNav';
 export default function Home() {
   return (
     <>
-      <div className="bg-gray-200 w-full h-screen">
+      <div className="bg-gray-200 w-full h-full">
         <LandingNav />
         <LandingMain />
         <Footer />

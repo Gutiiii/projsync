@@ -22,7 +22,7 @@ const AdminNavbar = ({}) => {
             </div>
             <div className="group mx-auto">
               <button>
-                <a href="/users">{t('users')}</a>
+                <a href="/admin">Admin</a>
               </button>
               <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
             </div>

@@ -4,7 +4,7 @@ import { compare, hash } from "bcrypt";
 import env from 'lib/env';
 import { PrismaService } from 'src/prisma.service';
 import { UserService } from 'src/user/user.service';
-import { ProviderDto, RegisterDto, SigninDto } from './dto/auth.dto';
+import { JwtDto, ProviderDto, RegisterDto, SigninDto } from './dto/auth.dto';
 
 
 const EXPIRE_TIME = 10800000
@@ -48,6 +48,7 @@ export class AuthService {
             }
 
             const { password, ...user } = res
+
 
 
             return {
@@ -108,6 +109,38 @@ export class AuthService {
         throw new BadRequestException("Something went wrong!")
     }
 
+    async jwt(dto: JwtDto) {
+        const res = await this.userService.findByEmail(dto.email)
+        if (res) {
+
+            const payload = {
+                name: res.name,
+                email: res.email,
+                role: res.role,
+                provider: res.provider,
+                sub: {
+                    createdAt: res.createdAt,
+                    updatedAt: res.updatedAt
+                }
+            }
+
+            const { password, ...user } = res
+
+            return {
+                user,
+                backendTokens: {
+                    accessToken: await this.jwtService.signAsync(payload, {
+                        // expiresIn: "20s",
+                        secret: env.jwtSecretKey
+                    }),
+                    expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME)
+                }
+
+            }
+        }
+        throw new BadRequestException("Something went wrong!")
+    }
+
     async signin(dto: SigninDto) {
         const user = await this.validateUser(dto)
 
@@ -126,12 +159,8 @@ export class AuthService {
             user,
             backendTokens: {
                 accessToken: await this.jwtService.signAsync(payload, {
-                    expiresIn: "3h",
+                    // expiresIn: "20s",
                     secret: env.jwtSecretKey
-                }),
-                refreshToken: await this.jwtService.signAsync(payload, {
-                    expiresIn: "7d",
-                    secret: env.jwtRefreshTokenKey
                 }),
                 expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME)
             }
@@ -149,5 +178,20 @@ export class AuthService {
         }
 
         throw new UnauthorizedException()
+    }
+
+    async refreshToken(user: any) {
+        const payload = {
+            username: user.username,
+            sub: user.sub
+        }
+
+        return {
+            accessToken: await this.jwtService.signAsync(payload, {
+                // expiresIn: "20s",
+                secret: process.env.jwtSecretKey,
+            }),
+            expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME)
+        }
     }
 }

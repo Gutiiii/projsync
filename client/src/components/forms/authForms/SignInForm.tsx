@@ -2,32 +2,23 @@
 import { Button } from '@/components/Button';
 import FormError from '@/components/FormError';
 import { Input } from '@/components/ui/input';
-import { Label } from '@radix-ui/react-label';
-import { signIn, useSession } from 'next-auth/react';
-import { useTranslations } from 'next-intl';
-import { FaGoogle } from 'react-icons/fa';
-// import { createUserSchema } from '@/schema/user.schema';
-// import { CreateUserFormData } from '@/types/user.types';
-// import { zodResolver } from '@hookform/resolvers/zod';
-// import { useQuery, useQueryClient } from '@tanstack/react-query';
-// import axios from 'axios';
-// import { hash } from 'bcrypt';
-import { BACKEND_URL, FRONTEND_URL } from '@/lib/constants';
+import { FRONTEND_URL } from '@/lib/constants';
 import { signinUserSchema } from '@/schemas/user.schema';
 import { SigninUserFormData } from '@/types/user.types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
-import { usePathname } from 'next/navigation';
+import { Label } from '@radix-ui/react-label';
+import { signIn } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
+import { usePathname, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { FaGoogle } from 'react-icons/fa';
 import { toast } from 'sonner';
-// import { useForm } from 'react-hook-form';
-// import { toast } from 'react-toastify';
 
 const SignInForm = () => {
   const t = useTranslations('Login');
   const toaster = useTranslations('Toaster');
   const pathName = usePathname();
-
+  const router = useRouter();
   const handleGoogleSignin = async () => {
     signIn('google', {
       callbackUrl: FRONTEND_URL + '/dashboard',
@@ -51,13 +42,12 @@ const SignInForm = () => {
       email,
       password,
     });
-    console.log('RESULT: ', result);
     if (result?.error) {
       toast.error(`${toaster('error')}`, {
         description: `${toaster('errordescription')}`,
       });
       setTimeout(() => {
-        window.location.reload();
+        router.refresh();
       }, 2000);
     } else {
       toast.success(`${toaster('login')}`, {
@@ -65,7 +55,7 @@ const SignInForm = () => {
         duration: 2000,
       });
       setTimeout(() => {
-        window.location.href = '/dashboard';
+        router.push('/dashboard');
       }, 2000);
     }
   };

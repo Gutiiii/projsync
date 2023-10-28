@@ -2,16 +2,17 @@
 import { Button } from '@/components/Button';
 import FormError from '@/components/FormError';
 import { Input } from '@/components/ui/input';
-import { useRegisterUser } from '@/hooks/useRegisterUser';
+import { registerUser } from '@/hooks/useRegisterUser';
 import { FRONTEND_URL } from '@/lib/constants';
 import { registerUserSchema } from '@/schemas/user.schema';
 import { RegisterUserFormData } from '@/types/user.types';
 import { Spinner } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@radix-ui/react-label';
+import { useMutation } from '@tanstack/react-query';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { FaGoogle } from 'react-icons/fa';
 import { toast } from 'sonner';
@@ -19,7 +20,8 @@ import { toast } from 'sonner';
 const SignUpForm = () => {
   const t = useTranslations('Register');
   const toaster = useTranslations('Toaster');
-  const pathName = usePathname();
+  const mutation = useMutation({ mutationFn: registerUser });
+  const router = useRouter();
 
   const handleGoogleSignin = async () => {
     signIn('google', {
@@ -37,42 +39,6 @@ const SignUpForm = () => {
   });
   //TODO Check why response is idle
 
-  // const submitData = async (formData: RegisterUserFormData) => {
-  //   const name = formData['name'];
-  //   const email = formData['email'];
-  //   const password = formData['password'];
-  //   const values = {
-  //     name,
-  //     email,
-  //     password,
-  //   };
-  //   const response = await axios
-  //     .post(BACKEND_URL + '/auth/signup', values, {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Accept: 'application/json',
-  //       },
-  //     })
-  //     .then((response: any) => response)
-  //     .catch((error: any) => error.response.data);
-  //   if (response['status'] === 201) {
-  //     toast.success(`${toaster('register')}`, {
-  //       description: `${toaster('registerdescription')}`,
-  //       duration: 2000,
-  //     });
-  //     setTimeout(() => {
-  //       window.location.href = '/signin';
-  //     }, 2000);
-  //   } else {
-  //     toast.error(`${toaster('error')}`, {
-  //       description: `${toaster('errordescription')}`,
-  //     });
-  //     setTimeout(() => {
-  //       window.location.reload();
-  //     }, 2000);
-  //   }
-  // };
-  const { mutateAsync, isSuccess, isError, isLoading } = useRegisterUser();
   const submitData = async (formData: RegisterUserFormData) => {
     const name = formData['name'];
     const email = formData['email'];
@@ -82,33 +48,25 @@ const SignUpForm = () => {
       email,
       password,
     };
-    mutateAsync(values);
-    console.log('SUC: ', isSuccess);
-    // const response = await axios
-    //   .post(BACKEND_URL + '/auth/signup', values, {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       Accept: 'application/json',
-    //     },
-    //   })
-    //   .then((response: any) => response)
-    //   .catch((error: any) => error.response.data);
-    if (isSuccess) {
-      toast.success(`${toaster('register')}`, {
-        description: `${toaster('registerdescription')}`,
-        duration: 2000,
-      });
-      setTimeout(() => {
-        window.location.href = '/signin';
-      }, 2000);
-    } else if (isError) {
-      toast.error(`${toaster('error')}`, {
-        description: `${toaster('errordescription')}`,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    }
+    await mutation.mutateAsync(values, {
+      onSuccess: () => {
+        toast.success(`${toaster('register')}`, {
+          description: `${toaster('registerdescription')}`,
+          duration: 2000,
+        });
+        setTimeout(() => {
+          router.push('/signin');
+        }, 2000);
+      },
+      onError: () => {
+        toast.error(`${toaster('error')}`, {
+          description: `${toaster('errordescription')}`,
+        });
+        setTimeout(() => {
+          router.refresh();
+        }, 2000);
+      },
+    });
   };
   //TODO Replace Logo
   return (
@@ -161,7 +119,7 @@ const SignUpForm = () => {
           </div>
         </div>
         <Button className="w-full h-10 mt-4" type="submit">
-          {isLoading ? (
+          {mutation.isLoading ? (
             <Spinner
               thickness="4px"
               speed="0.65s"

@@ -1,4 +1,3 @@
-
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'nestjs-zod/z';
 
@@ -14,6 +13,10 @@ const ProviderSchema = z.object({
     provider: z.enum(["CREDENTIALS", "GOOGLE"]),
 });
 
+const JwtSchema = z.object({
+    email: z.string()
+})
+
 const SigninSchema = z.object({
     email: z.string().email(),
     password: z.string().min(8).max(64)
@@ -21,5 +24,7 @@ const SigninSchema = z.object({
 
 export class RegisterDto extends createZodDto(RegisterSchema) { }
 export class ProviderDto extends createZodDto(ProviderSchema) { }
+
+export class JwtDto extends createZodDto(JwtSchema) { }
 
 export class SigninDto extends createZodDto(SigninSchema) { }
