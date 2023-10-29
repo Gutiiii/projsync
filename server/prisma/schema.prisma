@@ -41,6 +41,12 @@ model Project {
   updatedAt DateTime @updatedAt
   title String @db.VarChar(50)
   description String @db.VarChar(250)
+  status ProjectStatus @default(OPEN)
+}
+
+enum ProjectStatus {
+  OPEN
+  CLOSED
 }
 
 //TODO Add ProjectEntries Fields

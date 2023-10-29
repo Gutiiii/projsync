@@ -1,6 +1,6 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
-import ChangeLanguage from '@/components/ChangeLanguage';
-import HomeComponent from '@/components/HomeComponent';
+import ChangeLanguage from '@/components/helpers/ChangeLanguage';
+import HomeComponent from '@/components/helpers/HomeComponent';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { FC } from 'react';

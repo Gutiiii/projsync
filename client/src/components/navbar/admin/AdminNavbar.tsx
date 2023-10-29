@@ -1,5 +1,5 @@
-import ChangeLanguage from '@/components/ChangeLanguage';
 import UserAvatar from '@/components/auth/UserAvatar';
+import ChangeLanguage from '@/components/helpers/ChangeLanguage';
 import { useTranslations } from 'next-intl';
 import AdminHamburger from './AdminHamburger';
 

@@ -1,9 +1,9 @@
 'use client';
 import UserAvatar from '@/components/auth/UserAvatar';
+import ChangeLanguage from '@/components/helpers/ChangeLanguage';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { Button } from '../../Button';
-import ChangeLanguage from '../../ChangeLanguage';
 import SignInButton from '../../auth/button/SignInButton';
 import LandingHamburger from './LandingHamburger';
 

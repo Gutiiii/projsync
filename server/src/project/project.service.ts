@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateProjectDto } from './dto/project.dto';
 
@@ -28,6 +28,21 @@ export class ProjectService {
         } else {
             throw new BadRequestException("Something went wrong!")
         }
+    }
 
+    async getAllProjects(id: string) {
+        const projects = await this.prismaService.project.findMany({
+            where: {
+                userProject: {
+                    some: {
+                        userId: id
+                    }
+                }
+            }
+        })
+
+        if (!projects) throw new BadRequestException("Something went wrong")
+
+        return projects
     }
 }

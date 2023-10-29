@@ -37,6 +37,7 @@ export class AuthService {
         if (res) {
 
             const payload = {
+                id: res.id,
                 name: res.name,
                 email: res.email,
                 role: res.role,
@@ -80,6 +81,7 @@ export class AuthService {
             const { password, ...user } = newUser
 
             const payload = {
+                id: res.id,
                 name: res.name,
                 email: res.email,
                 role: res.role,
@@ -114,6 +116,7 @@ export class AuthService {
         if (res) {
 
             const payload = {
+                id: res.id,
                 name: res.name,
                 email: res.email,
                 role: res.role,
@@ -145,6 +148,7 @@ export class AuthService {
         const user = await this.validateUser(dto)
 
         const payload = {
+            id: user.id,
             name: user.name,
             email: user.email,
             role: user.role,

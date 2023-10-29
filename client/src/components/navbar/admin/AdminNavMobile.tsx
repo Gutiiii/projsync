@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { FC } from 'react';
 import { Button } from '../../Button';
-import ChangeLanguage from '../../ChangeLanguage';
+import ChangeLanguage from '../../helpers/ChangeLanguage';
 
 interface AdminNavMobileProps {
   onClose: () => void;

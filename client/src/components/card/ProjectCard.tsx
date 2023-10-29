@@ -4,14 +4,14 @@ import { FC } from 'react';
 interface ProjectCardProps {
   title: string;
   description: string;
-  status: 'Open' | 'Closed';
+  status: 'OPEN' | 'CLOSED';
 }
 
 const ProjectCard: FC<ProjectCardProps> = ({ title, description, status }) => {
   return (
     <div
       className={
-        status === 'Open'
+        status === 'OPEN'
           ? 'px-4 border-2 pt-4  rounded-xl shadow-xl w-80 h-80 cursor-pointer hover:bg-gray-300 transition-background duration-200 border-black'
           : 'px-4 border-2 pt-4  rounded-xl shadow-xl w-80 h-80 cursor-pointer hover:bg-gray-300 transition-background duration-200 border-red-700'
       }

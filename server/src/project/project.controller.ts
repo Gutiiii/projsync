@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { PrismaService } from 'src/prisma.service';
@@ -14,5 +14,10 @@ export class ProjectController {
         return await this.projectService.createProject(dto)
     }
 
+    @UseGuards(JwtGuard)
+    @Get("all")
+    async allProjects(@Req() request) {
+        return await this.projectService.getAllProjects(request.user.id)
+    }
 
 }

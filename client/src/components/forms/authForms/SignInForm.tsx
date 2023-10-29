@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@/components/Button';
-import FormError from '@/components/FormError';
+import FormError from '@/components/error/FormError';
 import { Input } from '@/components/ui/input';
 import { FRONTEND_URL } from '@/lib/constants';
 import { signinUserSchema } from '@/schemas/user.schema';

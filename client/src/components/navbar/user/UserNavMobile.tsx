@@ -1,9 +1,8 @@
 import UserAvatar from '@/components/auth/UserAvatar';
+import ChangeLanguage from '@/components/helpers/ChangeLanguage';
 import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { FC } from 'react';
-import { Button } from '../../Button';
-import ChangeLanguage from '../../ChangeLanguage';
 
 interface AdminNavMobileProps {
   onClose: () => void;

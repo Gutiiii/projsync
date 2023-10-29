@@ -1,6 +1,6 @@
 import UserAvatar from '@/components/auth/UserAvatar';
+import ChangeLanguage from '@/components/helpers/ChangeLanguage';
 import { useTranslations } from 'next-intl';
-import ChangeLanguage from '../../ChangeLanguage';
 import UserHamburger from './UserHamburger';
 
 const UserNavbar = ({}) => {

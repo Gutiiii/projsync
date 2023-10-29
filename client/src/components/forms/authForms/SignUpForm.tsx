@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@/components/Button';
-import FormError from '@/components/FormError';
+import FormError from '@/components/error/FormError';
 import { Input } from '@/components/ui/input';
 import { registerUser } from '@/hooks/useRegisterUser';
 import { FRONTEND_URL } from '@/lib/constants';
@@ -92,7 +92,9 @@ const SignUpForm = () => {
               placeholder={t('fullname')}
               {...register('name')}
             />
-            {errors.name && <FormError error={errors.name.message} />}
+            {errors.name && (
+              <FormError variant="signup" error={errors.name.message} />
+            )}
           </div>
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
             <Label className="ml-1" htmlFor="email">
@@ -104,7 +106,9 @@ const SignUpForm = () => {
               placeholder={t('email')}
               {...register('email')}
             />
-            {errors.email && <FormError error={errors.email.message} />}
+            {errors.email && (
+              <FormError variant="signup" error={errors.email.message} />
+            )}
           </div>
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
             <Label className="ml-1">{t('password')}</Label>
@@ -115,7 +119,9 @@ const SignUpForm = () => {
               placeholder={t('password')}
               {...register('password')}
             />
-            {errors.password && <FormError error={errors.password.message} />}
+            {errors.password && (
+              <FormError variant="signup" error={errors.password.message} />
+            )}
           </div>
         </div>
         <Button className="w-full h-10 mt-4" type="submit">

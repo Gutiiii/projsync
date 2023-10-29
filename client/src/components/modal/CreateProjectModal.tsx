@@ -1,10 +1,10 @@
+import { Input } from '@/components/ui/input';
 import { createProjectSchema } from '@/schemas/project.schema';
 import { CreateProjectFormData } from '@/types/project.types';
 import {
   Button,
   FormControl,
   FormLabel,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -14,10 +14,9 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-
 import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
-import FormError from '../FormError';
+import FormError from '../error/FormError';
 
 interface CreateProjectModalProps {
   visible: boolean;
@@ -43,6 +42,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
     const description = formData['description'];
     handleOnSubmit(title, description);
   };
+
   return (
     <Modal isOpen={visible} onClose={handleOnClose}>
       <ModalOverlay />
@@ -57,12 +57,16 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
                   <FormLabel>Title</FormLabel>
                   <Input
                     placeholder="Title"
-                    required
                     type="text"
                     {...register('title')}
                     className={errors.title ? 'border-red-500' : ''}
                   />
-                  {errors.title && <FormError error={errors.title.message} />}
+                  {errors.title && (
+                    <FormError
+                      variant="createproject"
+                      error={errors.title.message}
+                    />
+                  )}
                 </FormControl>
               </div>
               <div className="">
@@ -70,13 +74,15 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
                   <FormLabel>Description</FormLabel>
                   <Input
                     placeholder="Description"
-                    required
                     type="text"
                     className={errors.description ? 'border-red-500' : ''}
                     {...register('description')}
                   />
                   {errors.description && (
-                    <FormError error={errors.description.message} />
+                    <FormError
+                      variant="createproject"
+                      error={errors.description.message}
+                    />
                   )}
                 </FormControl>
               </div>
