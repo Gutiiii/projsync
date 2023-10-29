@@ -36,7 +36,7 @@ export default async function LocaleLayout({
   if (!isValidLocale) notFound();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} className="light">
       <body className="bg-gray-200">
         <Providers>
           <NextIntlClientProvider locale={locale} messages={messages}>

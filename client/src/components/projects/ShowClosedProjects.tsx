@@ -1,9 +1,15 @@
+'use client';
+import { Checkbox } from '@nextui-org/react';
 import { FC } from 'react';
 
 interface ShowClosedProjectsProps {}
 
 const ShowClosedProjects: FC<ShowClosedProjectsProps> = ({}) => {
-  return <div>ShowClosedProjects</div>;
+  return (
+    <Checkbox radius="full" color="primary">
+      Show Closed Projects
+    </Checkbox>
+  );
 };
 
 export default ShowClosedProjects;
