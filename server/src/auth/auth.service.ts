@@ -59,10 +59,6 @@ export class AuthService {
                         expiresIn: "3h",
                         secret: env.jwtSecretKey
                     }),
-                    refreshToken: await this.jwtService.signAsync(payload, {
-                        expiresIn: "7d",
-                        secret: env.jwtRefreshTokenKey
-                    }),
                     expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME)
                 }
 
@@ -98,10 +94,6 @@ export class AuthService {
                     accessToken: await this.jwtService.signAsync(payload, {
                         expiresIn: "3h",
                         secret: env.jwtSecretKey
-                    }),
-                    refreshToken: await this.jwtService.signAsync(payload, {
-                        expiresIn: "7d",
-                        secret: env.jwtRefreshTokenKey
                     }),
                     expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME)
                 }

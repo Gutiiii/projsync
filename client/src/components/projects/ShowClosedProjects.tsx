@@ -5,11 +5,7 @@ import { FC } from 'react';
 interface ShowClosedProjectsProps {}
 
 const ShowClosedProjects: FC<ShowClosedProjectsProps> = ({}) => {
-  return (
-    <Checkbox radius="full" color="primary">
-      Show Closed Projects
-    </Checkbox>
-  );
+  return <Checkbox radius="full">Show Closed Projects</Checkbox>;
 };
 
 export default ShowClosedProjects;
