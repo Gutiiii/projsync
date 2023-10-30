@@ -1,7 +1,9 @@
 import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
+
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { PrismaService } from 'src/prisma.service';
+import { User } from 'src/types/user.type';
 import { CreateProjectDto } from './dto/project.dto';
 import { ProjectService } from './project.service';
 
