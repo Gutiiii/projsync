@@ -1,4 +1,5 @@
 'use client';
+import { BACKEND_URL, FRONTEND_URL } from '@/lib/constants';
 import { Check } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -8,6 +9,8 @@ import { Button } from '../Button';
 const FreeCard = () => {
   const { data: session } = useSession();
   const t = useTranslations('FreeCard');
+  console.log(BACKEND_URL);
+  console.log(FRONTEND_URL);
   return (
     <div className="lg:w-[347px] lg:h-[506px] w-full border-2 border-gray-400 shadow-2xl rounded-lg text-left px-5 pt-4 pb-12">
       <p className="text-2xl">{t('plan')}</p>
