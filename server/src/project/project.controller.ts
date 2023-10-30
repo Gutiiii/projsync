@@ -14,14 +14,15 @@ export class ProjectController {
     constructor(private projectService: ProjectService) { }
     @UseGuards(JwtGuard)
     @Post()
-    async project(@Body() dto: CreateProjectDto) {
+    async project(@Body() dto: CreateProjectDto, @GetUser() user) {
+        this.logger.log("-------------------------")
+        this.logger.verbose(`${user.name} Created a new Project:`)
         return await this.projectService.createProject(dto)
     }
 
     @UseGuards(JwtGuard)
     @Get("all")
     async allProjects(@Req() request, @GetUser() user, @Ip() ip) {
-        this.logger.verbose(`${request.user.name} Fetched all Projects from ${ip}`)
         return await this.projectService.getAllProjects(request.user.id)
     }
 

@@ -1,9 +1,10 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateProjectDto } from './dto/project.dto';
 
 @Injectable()
 export class ProjectService {
+    private logger = new Logger('ProjectService')
     constructor(private prismaService: PrismaService) { }
 
     async createProject(dto: CreateProjectDto) {
@@ -14,6 +15,7 @@ export class ProjectService {
                 description: dto.description
             }
         })
+        this.logger.verbose(`New Project ${project.id}`)
         if (project && project.id) {
             const userProject = await this.prismaService.user_Project.create({
                 data: {
@@ -22,6 +24,7 @@ export class ProjectService {
                     projectId: project.id
                 }
             })
+            this.logger.verbose(`New User_Project: ${userProject.id}`)
             if (userProject) return { project, userProject }
 
             throw new BadRequestException("Something went wrong!")
