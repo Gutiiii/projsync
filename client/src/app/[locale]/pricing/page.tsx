@@ -7,7 +7,6 @@ import env from '@/lib/env';
 import React from 'react';
 
 const Pricing = () => {
-  console.log(BACKEND_URL);
   return (
     <div className="relative h-full sm:h-screen pb-40">
       <LandingNav />
