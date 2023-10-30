@@ -1,9 +1,9 @@
 export type CreateProjectFormData = {
-    id: string | undefined,
-    token: string | undefined,
+    id?: string | undefined,
+    token?: string | undefined,
     title: string,
     description: string,
-    role: string,
+    role?: string,
 }
 
 export type ProjectCardType = {

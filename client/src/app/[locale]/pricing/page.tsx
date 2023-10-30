@@ -2,9 +2,12 @@ import Footer from '@/components/Footer';
 import FreeCard from '@/components/card/FreeCard';
 import PremiumCard from '@/components/card/PremiumCard';
 import LandingNav from '@/components/navbar/landing/LandingNav';
+import { BACKEND_URL } from '@/lib/constants';
+import env from '@/lib/env';
 import React from 'react';
 
 const Pricing = () => {
+  console.log(BACKEND_URL);
   return (
     <div className="relative h-full sm:h-screen pb-40">
       <LandingNav />
