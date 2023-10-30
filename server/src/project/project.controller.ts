@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Ip, Logger, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 
 import { GetUser } from 'src/auth/get-user.decorator';
@@ -10,6 +10,7 @@ import { ProjectService } from './project.service';
 
 @Controller('project')
 export class ProjectController {
+    private logger = new Logger("ProjectController")
     constructor(private projectService: ProjectService) { }
     @UseGuards(JwtGuard)
     @Post()
@@ -19,8 +20,8 @@ export class ProjectController {
 
     @UseGuards(JwtGuard)
     @Get("all")
-    async allProjects(@Req() request, @GetUser() user) {
-        console.log("USER: ", user)
+    async allProjects(@Req() request, @GetUser() user, @Ip() ip) {
+        this.logger.verbose(`${request.user.name} Fetched all Projects from ${ip}`)
         return await this.projectService.getAllProjects(request.user.id)
     }
 
