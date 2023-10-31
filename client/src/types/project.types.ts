@@ -11,4 +11,5 @@ export type ProjectCardType = {
     title: string
     description: string
     status: "OPEN" | "CLOSED"
+    createdAt: string
 }

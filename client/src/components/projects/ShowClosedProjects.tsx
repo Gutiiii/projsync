@@ -11,8 +11,6 @@ const ShowClosedProjects: FC<ShowClosedProjectsProps> = ({}) => {
   const pathname = usePathname();
   const searchParams = useSearchParams()!;
 
-  // Get a new searchParams string by merging the current
-  // searchParams with a provided key/value pair
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams);
@@ -22,22 +20,27 @@ const ShowClosedProjects: FC<ShowClosedProjectsProps> = ({}) => {
     },
     [searchParams],
   );
+
+  const showClosed = searchParams.get('showClosed') === 'true';
+
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-2 cursor-pointer">
       <Checkbox
+        defaultChecked={showClosed}
         id="showclosed"
         onClick={() => {
-          searchParams.get('showClosed')
-            ? router.push(
-                pathname + '?' + createQueryString('showClosed', 'false'),
-              )
-            : router.push(
-                pathname + '?' + createQueryString('showClosed', 'true'),
-              );
+          router.push(
+            pathname +
+              '?' +
+              createQueryString('showClosed', String(!showClosed)),
+          );
         }}
       />
-      <label htmlFor="showclosed" className="text-lg font-medium leading-none">
-        Show Closed Projects
+      <label
+        htmlFor="showclosed"
+        className="sm:text-lg text-sm font-medium leading-none"
+      >
+        Closed Projects
       </label>
     </div>
   );

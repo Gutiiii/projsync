@@ -5,9 +5,19 @@ interface ProjectCardProps {
   title: string;
   description: string;
   status: 'OPEN' | 'CLOSED';
+  createdAt: string;
 }
 
-const ProjectCard: FC<ProjectCardProps> = ({ title, description, status }) => {
+const ProjectCard: FC<ProjectCardProps> = ({
+  title,
+  description,
+  status,
+  createdAt,
+}) => {
+  const date = new Date(createdAt);
+  const dateStr = date.toDateString();
+  const dateWithoutWeekday = dateStr.substring(dateStr.indexOf(' ') + 1);
+
   return (
     <div
       className={
@@ -26,6 +36,7 @@ const ProjectCard: FC<ProjectCardProps> = ({ title, description, status }) => {
         />
       </div>
       <p className="text-lg mt-12">{description}</p>
+      <p>Created At: {dateWithoutWeekday}</p>
     </div>
   );
 };

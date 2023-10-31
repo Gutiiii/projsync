@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Button } from '../Button';
 import CreateProjectModal from '../modal/CreateProjectModal';
+import { Input } from '../ui/input';
 
 const CreateProjectButton = () => {
   const router = useRouter();
