@@ -7,11 +7,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ArrowDownAZ } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { useCallback, useState } from 'react';
-import { Button } from '../Button';
+import React, { useCallback } from 'react';
 
 const SortProjects = () => {
+  const t = useTranslations('Project');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams()!;
@@ -30,9 +31,9 @@ const SortProjects = () => {
     <div className="cursor-pointer">
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex h-9 items-center text-center hover:outline bg-transparent active:scale-95 rounded-md px-2">
+          <div className="flex h-9 items-center text-center hover:outline bg-transparent active:scale-95 rounded-md px-2 mx-5 sm:mt-1">
             <ArrowDownAZ className="" />
-            Sort
+            {t('sort')}
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
@@ -43,7 +44,7 @@ const SortProjects = () => {
               );
             }}
           >
-            Sort Title Ascending
+            {t('dropdown1')}
           </DropdownMenuItem>
 
           <DropdownMenuItem
@@ -53,7 +54,7 @@ const SortProjects = () => {
               );
             }}
           >
-            Sort Title Descending
+            {t('dropdown2')}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -63,7 +64,7 @@ const SortProjects = () => {
               );
             }}
           >
-            Sort Creation Date Ascending
+            {t('dropdown3')}
           </DropdownMenuItem>
 
           <DropdownMenuItem
@@ -73,7 +74,7 @@ const SortProjects = () => {
               );
             }}
           >
-            Sort Creation Date Descending
+            {t('dropdown4')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

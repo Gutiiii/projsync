@@ -14,6 +14,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import FormError from '../error/FormError';
@@ -29,6 +30,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
   handleOnClose,
   handleOnSubmit,
 }) => {
+  const t = useTranslations('Project');
   const {
     handleSubmit,
     register,
@@ -47,16 +49,16 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
     <Modal isOpen={visible} onClose={handleOnClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Passwort ändern</ModalHeader>
+        <ModalHeader>{t('modalheader')}</ModalHeader>
         <ModalCloseButton onClick={handleOnClose} />
         <form onSubmit={handleSubmit(submitData)}>
           <ModalBody pb={6}>
             <div className="">
               <div className="">
                 <FormControl className="mb-2">
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>{t('title')}</FormLabel>
                   <Input
-                    placeholder="Title"
+                    placeholder={t('title')}
                     type="text"
                     {...register('title')}
                     className={errors.title ? 'border-red-500' : ''}
@@ -71,9 +73,9 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
               </div>
               <div className="">
                 <FormControl className="mb-2">
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t('description')}</FormLabel>
                   <Input
-                    placeholder="Description"
+                    placeholder={t('description')}
                     type="text"
                     className={errors.description ? 'border-red-500' : ''}
                     {...register('description')}
@@ -91,9 +93,9 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
 
           <ModalFooter>
             <Button colorScheme="blue" mr={3} type="submit">
-              Erstellen
+              {t('create')}
             </Button>
-            <Button onClick={handleOnClose}>Abbrechen</Button>
+            <Button onClick={handleOnClose}>{t('cancle')}</Button>
           </ModalFooter>
         </form>
       </ModalContent>

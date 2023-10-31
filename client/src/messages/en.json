@@ -74,5 +74,21 @@
     "first": "2 Free Projects",
     "second": "1 Invitee per Project",
     "third": "Comments"
+  },
+  "Project": {
+    "newproject": "New Project",
+    "searchproject": "Search Project",
+    "closedprojects": "Closed Projects",
+    "sort": "Sort",
+    "modalheader": "Create Project",
+    "title": "Title",
+    "description": "Description",
+    "create": "Create",
+    "cancle": "Cancel",
+    "dropdown1": "Sort Title Ascending",
+    "dropdown2": "Sort Title Descending",
+    "dropdown3": "Sort Creation Date Ascending",
+    "dropdown4": "Sort Creation Date Descending",
+    "createprojecttoast": "Project Created"
   }
 }

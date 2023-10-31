@@ -1,12 +1,14 @@
 'use client';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useTranslations } from 'next-intl';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback } from 'react';
 
 interface ShowClosedProjectsProps {}
 
 const ShowClosedProjects: FC<ShowClosedProjectsProps> = ({}) => {
+  const t = useTranslations('Project');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams()!;
@@ -40,7 +42,7 @@ const ShowClosedProjects: FC<ShowClosedProjectsProps> = ({}) => {
         htmlFor="showclosed"
         className="sm:text-lg text-sm font-medium leading-none"
       >
-        Closed Projects
+        {t('closedprojects')}
       </label>
     </div>
   );

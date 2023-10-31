@@ -122,6 +122,7 @@ const ProjectsMap: FC<ProjectsMapProps> = ({ projects, search }) => {
               status={project.status}
               title={project.title}
               description={project.description}
+              id={project.id}
               key={project.id}
             />
           ))}

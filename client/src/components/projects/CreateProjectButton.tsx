@@ -2,14 +2,14 @@
 import { useCreateProject } from '@/hooks/projectHooks/useCreateProject';
 import { useMutation } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '../Button';
 import CreateProjectModal from '../modal/CreateProjectModal';
-import { Input } from '../ui/input';
 
 const CreateProjectButton = () => {
-  const router = useRouter();
+  const t = useTranslations('Project');
   const [createProjectModalVisible, setCreateProjectModalVisible] =
     useState<boolean>(false);
   const mutation = useMutation({ mutationFn: useCreateProject });
@@ -21,7 +21,10 @@ const CreateProjectButton = () => {
   const createProject = (title: string, description: string) => {
     setCreateProjectModalVisible(false);
     mutation.mutateAsync({ title, description, id, token, role });
-    router.refresh();
+    toast.success(`${t('createprojecttoast')}`);
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   };
 
   return (
@@ -31,7 +34,7 @@ const CreateProjectButton = () => {
         className=""
         onClick={() => setCreateProjectModalVisible(true)}
       >
-        New Project
+        {t('newproject')}
       </Button>
       <CreateProjectModal
         visible={createProjectModalVisible}

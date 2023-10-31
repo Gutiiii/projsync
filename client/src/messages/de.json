@@ -74,5 +74,21 @@
     "first": "2 kostenlose Projekte",
     "second": "1 Einladung pro Projekt",
     "third": "Kommentare"
+  },
+  "Project": {
+    "newproject": "Neues Projekt",
+    "searchproject": "Projekt suchen",
+    "closedprojects": "Abgeschlossene Projekte",
+    "sort": "Sortieren",
+    "modalheader": "Projekt erstellen",
+    "title": "Titel",
+    "description": "Beschreibung",
+    "create": "Erstellen",
+    "cancle": "Abbrechen",
+    "dropdown1": "Nach Titel aufsteigend sortieren",
+    "dropdown2": "Nach Titel absteigend sortieren",
+    "dropdown3": "Nach Erstellungsdatum aufsteigend sortieren",
+    "dropdown4": "Nach Erstellungsdatum absteigend sortieren",
+    "createprojecttoast": "Projekt erstellt"
   }
 }
