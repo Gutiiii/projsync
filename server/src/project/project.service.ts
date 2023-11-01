@@ -41,6 +41,13 @@ export class ProjectService {
                         userId: id
                     }
                 }
+            },
+            include: {
+                userProject: {
+                    select: {
+                        role: true
+                    }
+                }
             }
         })
 

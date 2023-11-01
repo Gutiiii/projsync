@@ -1,10 +1,6 @@
-import { Body, Controller, Get, Ip, Logger, Param, Post, Req, UseGuards } from '@nestjs/common';
-import { AuthService } from 'src/auth/auth.service';
-
+import { Body, Controller, Get, Logger, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { PrismaService } from 'src/prisma.service';
-import { User } from 'src/types/user.type';
 import { CreateProjectDto } from './dto/project.dto';
 import { ProjectService } from './project.service';
 
@@ -12,6 +8,7 @@ import { ProjectService } from './project.service';
 export class ProjectController {
     private logger = new Logger("ProjectController")
     constructor(private projectService: ProjectService) { }
+
     @UseGuards(JwtGuard)
     @Post()
     async project(@Body() dto: CreateProjectDto, @GetUser() user) {
@@ -31,5 +28,4 @@ export class ProjectController {
     async authProject(@Req() request, @Param('projectId') projectId) {
         return await this.projectService.authProject(request.user.id, projectId)
     }
-
 }

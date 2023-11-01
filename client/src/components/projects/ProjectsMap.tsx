@@ -1,12 +1,8 @@
 'use client';
 import { ProjectCardType } from '@/types/project.types';
-import { filter } from '@chakra-ui/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { title } from 'process';
 import React, { FC, useState } from 'react';
 import ProjectCard from '../card/ProjectCard';
-import { Progress } from '../ui/progress';
-import SearchProject from './SearchProject';
 
 interface ProjectsMapProps {
   projects: any[];
@@ -117,7 +113,6 @@ const ProjectsMap: FC<ProjectsMapProps> = ({ projects, search }) => {
 
   const openingProject = (id: string) => {
     router.push('/projects/' + id);
-    console.log('ID: ', id);
   };
 
   return (
@@ -130,6 +125,7 @@ const ProjectsMap: FC<ProjectsMapProps> = ({ projects, search }) => {
               status={project.status}
               title={project.title}
               description={project.description}
+              role={project.userProject[0].role}
               id={project.id}
               key={project.id}
               onOpen={openingProject}

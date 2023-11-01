@@ -7,9 +7,12 @@ export type CreateProjectFormData = {
 }
 
 export type ProjectCardType = {
-    id: string
-    title: string
-    description: string
-    status: "OPEN" | "CLOSED"
-    createdAt: string
-}
+    id: string;
+    title: string;
+    description: string;
+    status: "OPEN" | "CLOSED";
+    createdAt: string;
+    userProject: {
+        role: "CREATOR" | "EDITOR" | "VIEWER";
+    }[];
+};

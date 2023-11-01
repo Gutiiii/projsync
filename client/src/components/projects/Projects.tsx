@@ -16,6 +16,7 @@ const Projects: FC<ProjectsProps> = ({ projects }) => {
   const onChangeSearch = (value: string) => {
     setSearch(value);
   };
+
   return (
     <div>
       <div className="flex justify-evenly mt-20 mb-8">

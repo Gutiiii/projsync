@@ -1,9 +1,7 @@
 'use client';
-import { Info } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { FC, useEffect, useState } from 'react';
+import { Eye, FileEdit, Info, User2 } from 'lucide-react';
+import { FC, useState } from 'react';
 import OpenProjectModal from '../modal/OpenProjectModal';
-import { Progress } from '../ui/progress';
 
 interface ProjectCardProps {
   title: string;
@@ -11,6 +9,7 @@ interface ProjectCardProps {
   status: 'OPEN' | 'CLOSED';
   createdAt: string;
   id: string;
+  role: 'CREATOR' | 'EDITOR' | 'VIEWER';
   onOpen: (id: string) => void;
 }
 
@@ -21,6 +20,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
   createdAt,
   id,
   onOpen,
+  role,
 }) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const date = new Date(createdAt);
@@ -29,6 +29,11 @@ const ProjectCard: FC<ProjectCardProps> = ({
 
   const onClose = () => {
     setModalVisible(false);
+  };
+
+  const onCardClick = (e: any) => {
+    if (e.target.id === 'info') return;
+    setModalVisible(true);
   };
 
   const onSubmit = (id: string) => {
@@ -60,16 +65,27 @@ const ProjectCard: FC<ProjectCardProps> = ({
             ? 'px-4 border-2 pt-4  rounded-xl shadow-xl w-80 h-80 cursor-pointer hover:bg-gray-300 transition-background duration-200 border-black'
             : 'px-4 border-2 pt-4  rounded-xl shadow-xl w-80 h-80 cursor-pointer hover:bg-gray-300 transition-background duration-200 border-red-700'
         }
-        onClick={() => setModalVisible(true)}
+        onClick={(e) => onCardClick(e)}
       >
         <div className="flex justify-between ">
           <p className="text-xl font-bold">{title}</p>
-          <Info
-            color="blue"
-            size={25}
-            width={25}
-            className="text-end mt-0.5 cursor-pointer hover:opacity-60 transition-opacity duration-200"
-          />
+          <div className="flex space-x-2">
+            {role === 'CREATOR' ? (
+              <User2 size={26} />
+            ) : role === 'VIEWER' ? (
+              <Eye className="" size={28} />
+            ) : role === 'EDITOR' ? (
+              <FileEdit className="mt-0.5" />
+            ) : null}
+            <Info
+              id="info"
+              color="blue"
+              size={25}
+              width={25}
+              className="text-end mt-0.5 cursor-pointer hover:opacity-60 transition-opacity duration-200"
+              onClick={() => console.log('INFO')}
+            />
+          </div>
         </div>
         <p className="text-lg mt-12">{description}</p>
         <p>Created At: {dateWithoutWeekday}</p>
