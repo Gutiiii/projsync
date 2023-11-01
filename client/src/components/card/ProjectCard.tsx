@@ -3,6 +3,7 @@ import { Info } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
 import OpenProjectModal from '../modal/OpenProjectModal';
+import { Progress } from '../ui/progress';
 
 interface ProjectCardProps {
   title: string;
@@ -10,6 +11,7 @@ interface ProjectCardProps {
   status: 'OPEN' | 'CLOSED';
   createdAt: string;
   id: string;
+  onOpen: (id: string) => void;
 }
 
 const ProjectCard: FC<ProjectCardProps> = ({
@@ -18,20 +20,37 @@ const ProjectCard: FC<ProjectCardProps> = ({
   status,
   createdAt,
   id,
+  onOpen,
 }) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const date = new Date(createdAt);
   const dateStr = date.toDateString();
   const dateWithoutWeekday = dateStr.substring(dateStr.indexOf(' ') + 1);
-  const router = useRouter();
 
   const onClose = () => {
     setModalVisible(false);
   };
 
   const onSubmit = (id: string) => {
-    router.push(`/projects/${id}`);
+    onClose();
+    onOpen(id);
   };
+
+  // const startSimulatedProgress = () => {
+  //   setOpenProgress(0);
+
+  //   const interval = setInterval(() => {
+  //     setOpenProgress((prevProgress) => {
+  //       if (prevProgress >= 95) {
+  //         clearInterval(interval);
+  //         return prevProgress;
+  //       }
+  //       return prevProgress + 5;
+  //     });
+  //   }, 500);
+
+  //   return interval;
+  // };
 
   return (
     <>

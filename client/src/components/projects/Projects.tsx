@@ -17,7 +17,7 @@ const Projects: FC<ProjectsProps> = ({ projects }) => {
     setSearch(value);
   };
   return (
-    <>
+    <div>
       <div className="flex justify-evenly mt-20 mb-8">
         <CreateProjectButton />
         <SearchProject onChange={onChangeSearch} />
@@ -29,7 +29,7 @@ const Projects: FC<ProjectsProps> = ({ projects }) => {
       <div className="flex justify-center">
         <ProjectsMap projects={projects} search={search} />
       </div>
-    </>
+    </div>
   );
 };
 

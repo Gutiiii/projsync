@@ -1,10 +1,11 @@
 'use client';
 import { ProjectCardType } from '@/types/project.types';
 import { filter } from '@chakra-ui/react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { title } from 'process';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import ProjectCard from '../card/ProjectCard';
+import { Progress } from '../ui/progress';
 import SearchProject from './SearchProject';
 
 interface ProjectsMapProps {
@@ -13,6 +14,8 @@ interface ProjectsMapProps {
 }
 
 const ProjectsMap: FC<ProjectsMapProps> = ({ projects, search }) => {
+  const [isOpening, setIsOpening] = useState<boolean>(true);
+  const router = useRouter();
   const searchParams = useSearchParams()!;
   const showClosed = searchParams.get('showClosed') === 'true';
   const titleAsc = searchParams.get('sortOrder') === 'title-asc';
@@ -112,8 +115,13 @@ const ProjectsMap: FC<ProjectsMapProps> = ({ projects, search }) => {
     });
   };
 
+  const openingProject = (id: string) => {
+    router.push('/projects/' + id);
+    console.log('ID: ', id);
+  };
+
   return (
-    <>
+    <div className="relative">
       {filteredProjects().length > 0 ? (
         <div className="grid lg:grid-cols-3 gap-8 md:grid-cols-2 grid-cols-1">
           {sortedProjects().map((project: ProjectCardType) => (
@@ -124,13 +132,24 @@ const ProjectsMap: FC<ProjectsMapProps> = ({ projects, search }) => {
               description={project.description}
               id={project.id}
               key={project.id}
+              onOpen={openingProject}
             />
           ))}
         </div>
       ) : (
         <div className="text-xl mt-2">No Projects Found</div>
       )}
-    </>
+      {/* {isOpening ? (
+        <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black">
+          <Progress
+            // indicatorColor={openProgress === 100 ? 'bg-green-500' : ''}
+            // value={openProgress}
+            value={50}
+            className="relative backdrop-blur-md"
+          />
+        </div>
+      ) : null} */}
+    </div>
   );
 };
 

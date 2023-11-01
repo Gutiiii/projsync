@@ -25,10 +25,10 @@ const AdminProjects = async () => {
     }
 
     return (
-      <>
+      <div>
         <AdminNavbar />
         <Projects projects={projectsArray} />
-      </>
+      </div>
     );
   }
 };

@@ -48,4 +48,17 @@ export class ProjectService {
 
         return projects
     }
+
+    async authProject(userId: string, projectId: string) {
+        const userProject = await this.prismaService.user_Project.findFirst({
+            where: {
+                userId: userId,
+                projectId: projectId
+            }
+        })
+        if (!userProject) throw new UnauthorizedException("Unauthorized")
+
+        return userProject
+    }
+
 }

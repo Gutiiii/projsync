@@ -22,8 +22,14 @@ export class ProjectController {
 
     @UseGuards(JwtGuard)
     @Get("all")
-    async allProjects(@Req() request, @GetUser() user, @Ip() ip) {
+    async allProjects(@Req() request) {
         return await this.projectService.getAllProjects(request.user.id)
+    }
+
+    @UseGuards(JwtGuard)
+    @Get("auth/:projectId")
+    async authProject(@Req() request, @Param('projectId') projectId) {
+        return await this.projectService.authProject(request.user.id, projectId)
     }
 
 }
