@@ -4,7 +4,8 @@ const AdminUsers = () => {
   return (
     <>
       <AdminNavbar />
-      <div>AdminUsers</div>
+      <div>Admin</div>
+      
     </>
   );
 };

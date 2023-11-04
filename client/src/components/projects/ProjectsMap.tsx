@@ -121,6 +121,7 @@ const ProjectsMap: FC<ProjectsMapProps> = ({ projects, search }) => {
         <div className="grid lg:grid-cols-3 gap-8 md:grid-cols-2 grid-cols-1">
           {sortedProjects().map((project: ProjectCardType) => (
             <ProjectCard
+              project={project}
               createdAt={project.createdAt}
               status={project.status}
               title={project.title}

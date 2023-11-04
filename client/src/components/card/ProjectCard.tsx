@@ -1,7 +1,9 @@
 'use client';
+import { ProjectCardType } from '@/types/project.types';
 import { Eye, FileEdit, Info, User2 } from 'lucide-react';
 import { FC, useState } from 'react';
 import OpenProjectModal from '../modal/OpenProjectModal';
+import ProjectInfoModal from '../modal/ProjectInfoModal';
 
 interface ProjectCardProps {
   title: string;
@@ -11,6 +13,7 @@ interface ProjectCardProps {
   id: string;
   role: 'CREATOR' | 'EDITOR' | 'VIEWER';
   onOpen: (id: string) => void;
+  project: ProjectCardType;
 }
 
 const ProjectCard: FC<ProjectCardProps> = ({
@@ -21,8 +24,10 @@ const ProjectCard: FC<ProjectCardProps> = ({
   id,
   onOpen,
   role,
+  project,
 }) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [infoModalVisible, setInfoModalVisible] = useState<boolean>(false);
   const date = new Date(createdAt);
   const dateStr = date.toDateString();
   const dateWithoutWeekday = dateStr.substring(dateStr.indexOf(' ') + 1);
@@ -31,8 +36,12 @@ const ProjectCard: FC<ProjectCardProps> = ({
     setModalVisible(false);
   };
 
+  const onInfoClose = () => {
+    setInfoModalVisible(false);
+  };
+
   const onCardClick = (e: any) => {
-    if (e.target.id === 'info') return;
+    if (e.target.id === 'info') return setInfoModalVisible(true);
     setModalVisible(true);
   };
 
@@ -95,6 +104,11 @@ const ProjectCard: FC<ProjectCardProps> = ({
         handleOnClose={onClose}
         handleOnSubmit={onSubmit}
         id={id}
+      />
+      <ProjectInfoModal
+        project={project}
+        visible={infoModalVisible}
+        handleOnClose={onInfoClose}
       />
     </>
   );
