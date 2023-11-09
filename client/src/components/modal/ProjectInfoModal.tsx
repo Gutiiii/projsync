@@ -1,3 +1,4 @@
+import env from '@/lib/env';
 import { ProjectCardType } from '@/types/project.types';
 import {
   Button,
@@ -9,8 +10,12 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { FC } from 'react';
+import { Resend } from 'resend';
+import { ChangePasswordEmail } from '../../../react-email/emails/ChangePasswordEmail';
 
 interface ProjectInfoModalProps {
   project: ProjectCardType;
@@ -23,10 +28,12 @@ const ProjectInfoModal: FC<ProjectInfoModalProps> = ({
   visible,
   handleOnClose,
 }) => {
-  const t = useTranslations('Create');
+  // const t = useTranslations('Create');
   const date = new Date(project.createdAt);
   const dateStr = date.toDateString();
+  const router = useRouter();
   const dateWithoutWeekday = dateStr.substring(dateStr.indexOf(' ') + 1);
+
   return (
     <Modal isOpen={visible} onClose={handleOnClose}>
       <ModalOverlay />
@@ -40,7 +47,10 @@ const ProjectInfoModal: FC<ProjectInfoModalProps> = ({
 
           <p className="font-light text-lg">{project.description}</p>
           <p>Created on: {dateWithoutWeekday}</p>
-          <p>Role: {project.userProject['0'].role}</p>
+          <p className="flex">
+            Role:{' '}
+            <p className="font-bold ml-1">{project.userProject['0'].role}</p>
+          </p>
           <div className="flex space-x-1">
             <p>Status: </p>
             <p
@@ -54,12 +64,18 @@ const ProjectInfoModal: FC<ProjectInfoModalProps> = ({
             </p>
           </div>
         </ModalBody>
-
         <ModalFooter>
           {/* <Button colorScheme="blue" mr={3} type="submit">
             {t('create')}
           </Button> */}
-          <Button onClick={handleOnClose}>Close</Button>
+          <Button
+            colorScheme="blue"
+            mr={3}
+            onClick={() => router.push('/projects/' + project.id)}
+          >
+            Open Project
+          </Button>
+          <Button onClick={handleOnClose}>Close</Button>{' '}
         </ModalFooter>
       </ModalContent>
     </Modal>
