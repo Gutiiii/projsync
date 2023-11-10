@@ -46,7 +46,8 @@
     "passwordchangegoogle": "Passwortänderung nicht verfügbar!",
     "passwordchangegoogledescription": "Es scheint, als hätten Sie sich mit Google angemeldet. Bitte ändern Sie Ihr Passwort auf Google",
     "passwordchangecredentials": "Passwort Änderung Initialisiert!",
-    "passwordchangecredentialsdescription": "Sie haben gerade eine E-Mail mit Anweisungen zur Aktualisierung Ihres Passworts erhalten."
+    "passwordchangecredentialsdescription": "Sie haben gerade eine E-Mail mit Anweisungen zur Aktualisierung Ihres Passworts erhalten.",
+    "passwordchangeerror": "Etwas ist schiefgelaufen"
   },
   "Admin": {
     "projects": "Projekte",

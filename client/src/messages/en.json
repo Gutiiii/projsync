@@ -46,7 +46,8 @@
     "passwordchangegoogle": "Password Change Unavailable!",
     "passwordchangegoogledescription": "It appears you signed in with Google. Please change your password on Google",
     "passwordchangecredentials": "Password Change Initialised!",
-    "passwordchangecredentialsdescription": "You have just received an email with instructions to update your password."
+    "passwordchangecredentialsdescription": "You have just received an email with instructions to update your password.",
+    "passwordchangeerror": "Something went wrong"
   },
   "Admin": {
     "projects": "Projects",

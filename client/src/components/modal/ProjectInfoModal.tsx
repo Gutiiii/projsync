@@ -15,7 +15,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 import { Resend } from 'resend';
-import { ChangePasswordEmail } from '../../../react-email/emails/ChangePasswordEmail';
+import { ChangePasswordEmail } from '../../../../react-email/emails/ChangePasswordEmail';
 
 interface ProjectInfoModalProps {
   project: ProjectCardType;

@@ -1,5 +1,6 @@
 'use server';
 
+import ChangePasswordEmail from '@/components/emails/ChangePasswordEmail';
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 // import { ChangePasswordEmail } from '../../react-email/emails/ChangePasswordEmail';
@@ -7,16 +8,17 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendPasswordEmail = async () => {
+  console.log('SEND');
   try {
     const data = await resend.emails.send({
       from: 'Acme <onboarding@resend.dev>',
       to: ['samuel.gutmans@gmail.com'],
-      subject: 'Change Password',
-      react: <div>HELLO</div>,
+      subject: 'Reset Password',
+      react: <ChangePasswordEmail />,
     });
 
-    console.log(data);
+    return { status: 200 };
   } catch (error) {
-    console.log(error);
+    return { status: 400 };
   }
 };

@@ -5,9 +5,8 @@ import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { FC } from 'react';
 import Avatar from 'react-avatar';
-import { Resend } from 'resend';
+import { useFormState } from 'react-dom';
 import { toast } from 'sonner';
-import { ChangePasswordEmail } from '../../../react-email/emails/ChangePasswordEmail';
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -15,24 +14,21 @@ import {
 } from '../ui/dropdown-menu';
 
 const UserAvatar: FC = ({}) => {
+  const [state, formAction] = useFormState(sendPasswordEmail, null);
   const t = useTranslations('Toaster');
   const avatar = useTranslations('Avatar');
   const { data: session } = useSession();
 
-  const onPasswordChange = () => {
-    if (session?.user.provider === 'GOOGLE') {
-      toast.error(`${t('passwordchangegoogle')}`, {
-        description: `${t('passwordchangegoogledescription')}`,
-        duration: 6000,
-      });
-    }
-    if (session?.user.provider === 'CREDENTIALS') {
-      toast.success(`${t('passwordchangecredentials')}`, {
-        description: `${t('passwordchangecredentialsdescription')}`,
-        duration: 6000,
-      });
-    }
-  };
+  if (state?.status === 200) {
+    toast.success(`${t('passwordchangecredentials')}`, {
+      description: `${t('passwordchangecredentialsdescription')}`,
+      duration: 6000,
+    });
+  } else if (state?.status === 400) {
+    toast.error(`${t('passwordchangeerror')}`, {
+      duration: 6000,
+    });
+  }
 
   return (
     <div className="cursor-pointer">
@@ -48,7 +44,7 @@ const UserAvatar: FC = ({}) => {
                     description: `${t('passwordchangegoogledescription')}`,
                     duration: 6000,
                   })
-                : sendPasswordEmail()
+                : formAction()
             }
           >
             <DropdownMenuItem className="cursor-pointer">
