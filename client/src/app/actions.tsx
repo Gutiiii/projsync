@@ -3,10 +3,8 @@
 import ChangePasswordEmail from '@/components/emails/ChangePasswordEmail';
 import { BACKEND_URL } from '@/lib/constants';
 import { getServerSession } from 'next-auth';
-import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { authOptions } from './api/auth/[...nextauth]/options';
-// import { ChangePasswordEmail } from '../../react-email/emails/ChangePasswordEmail';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -17,7 +15,6 @@ export const sendPasswordEmail = async () => {
     BACKEND_URL + '/auth/addpasswordresetcode/' + session?.user.id,
   );
   const result = await res.json();
-  console.log('RES ', result);
 
   try {
     await resend.emails.send({
