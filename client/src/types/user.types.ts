@@ -8,3 +8,8 @@ export type SigninUserFormData = {
     email: string
     password: string
 }
+
+export type ChangePasswordFormData = {
+    password: string
+    passwordConfirmation: string
+}

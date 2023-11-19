@@ -39,7 +39,7 @@ const UserAvatar: FC = ({}) => {
         <DropdownMenuContent>
           <form
             action={() =>
-              session?.user.provider === 'CREDENTIALS'
+              session?.user.provider === 'GOOGLE'
                 ? toast.error(`${t('passwordchangegoogle')}`, {
                     description: `${t('passwordchangegoogledescription')}`,
                     duration: 6000,

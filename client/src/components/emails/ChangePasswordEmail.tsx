@@ -14,7 +14,7 @@ import {
 import { Tailwind } from '@react-email/tailwind';
 import * as React from 'react';
 
-const ChangePasswordEmail = () => (
+const ChangePasswordEmail = ({ code }: { code: string }) => (
   <Tailwind
     config={{
       theme: {
@@ -55,7 +55,7 @@ const ChangePasswordEmail = () => (
           </Text>
           <Link
             className="cursor-pointer bg-blue-500 rounded-sm px-3 py-2 text-white mt-4"
-            href={`${FRONTEND_URL}/projects`}
+            href={`${FRONTEND_URL}/changepassword/${code}`}
           >
             Reset Your Password
           </Link>

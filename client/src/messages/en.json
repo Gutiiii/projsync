@@ -36,6 +36,12 @@
     "githubsignup": "Log in with Github",
     "googlesignup": "Log in with Google"
   },
+  "ChangePassword": {
+    "header": "Change Your Password",
+    "password": "Password",
+    "passwordconfirmation": "Password Confirmation",
+    "submit": "Change Password"
+  },
   "Toaster": {
     "register": "Successfully registered!",
     "registerdescription": "You will be redirected",
