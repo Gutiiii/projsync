@@ -69,7 +69,7 @@ const SignInForm = () => {
   };
 
   const onModalSubmit = async (email: string) => {
-    await sendPasswordEmailForgot(email);
+    const res = await sendPasswordEmailForgot(email);
     setModalVisible(false);
     toast(
       "If there's a User that exists with this E-Mail. An E-Mail has been sent!",

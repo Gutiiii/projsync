@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { hash } from "bcrypt";
 import { ChangePasswordDto } from 'src/auth/dto/auth.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -6,6 +6,7 @@ import { uuid } from 'uuidv4';
 
 @Injectable()
 export class UserService {
+    private logger = new Logger('AuthController')
     constructor(private prismaService: PrismaService) { }
 
     async findByEmail(email: string) {
@@ -49,7 +50,7 @@ export class UserService {
     }
 
     async changePassword(dto: ChangePasswordDto) {
-        return await this.prismaService.user.update({
+        const user = await this.prismaService.user.update({
             where: {
                 resetPasswordCode: dto.code
             },
@@ -58,5 +59,8 @@ export class UserService {
                 resetPasswordCode: null
             }
         })
+        this.logger.verbose(`${user.email} Changed his Password`)
+
+        return user
     }
 }

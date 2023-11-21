@@ -10,7 +10,6 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendPasswordEmail = async () => {
   const session = await getServerSession(authOptions);
-
   const res = await fetch(
     BACKEND_URL + '/auth/addpasswordresetcode/' + session?.user.email,
   );
@@ -23,7 +22,6 @@ export const sendPasswordEmail = async () => {
       subject: 'Reset Password',
       react: <ChangePasswordEmail code={result.code} />,
     });
-
     return { status: 200 };
   } catch (error) {
     return { status: 400 };
@@ -31,6 +29,7 @@ export const sendPasswordEmail = async () => {
 };
 
 export const sendPasswordEmailForgot = async (email: string) => {
+  console.log('EMAIL: ', email.trim());
   const res = await fetch(BACKEND_URL + '/auth/addpasswordresetcode/' + email);
   const result = await res.json();
   try {
