@@ -37,16 +37,7 @@ const UserAvatar: FC = ({}) => {
           <Avatar name={session?.user.name} color="black " round size="40" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <form
-            action={() =>
-              session?.user.provider === 'GOOGLE'
-                ? toast.error(`${t('passwordchangegoogle')}`, {
-                    description: `${t('passwordchangegoogledescription')}`,
-                    duration: 6000,
-                  })
-                : formAction()
-            }
-          >
+          <form action={() => formAction()}>
             <DropdownMenuItem className="cursor-pointer">
               <button type="submit">{avatar('changepassword')}</button>
             </DropdownMenuItem>

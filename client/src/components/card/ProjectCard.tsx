@@ -92,7 +92,6 @@ const ProjectCard: FC<ProjectCardProps> = ({
               size={25}
               width={25}
               className="text-end mt-0.5 cursor-pointer hover:opacity-60 transition-opacity duration-200"
-              onClick={() => console.log('INFO')}
             />
           </div>
         </div>

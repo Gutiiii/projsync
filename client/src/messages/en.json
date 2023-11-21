@@ -47,6 +47,7 @@
     "registerdescription": "You will be redirected",
     "login": "Sucessfully logged in!",
     "logindescription": "You will be redirected",
+    "changepassword": "You Password has been Changed!",
     "error": "Something went wrong!",
     "errordescription": "Please Try again later",
     "passwordchangegoogle": "Password Change Unavailable!",

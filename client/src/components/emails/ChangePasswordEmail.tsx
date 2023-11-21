@@ -54,7 +54,7 @@ const ChangePasswordEmail = ({ code }: { code: string }) => (
             below to get started.
           </Text>
           <Link
-            className="cursor-pointer bg-blue-500 rounded-sm px-3 py-2 text-white mt-4"
+            className="cursor-pointer bg-blue-500 rounded-sm px-3 py-2 text-white mt-6"
             href={`${FRONTEND_URL}/changepassword/${code}`}
           >
             Reset Your Password

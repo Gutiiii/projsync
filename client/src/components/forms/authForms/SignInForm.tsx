@@ -1,8 +1,10 @@
 'use client';
+import { sendPasswordEmail, sendPasswordEmailForgot } from '@/app/actions';
 import { Button } from '@/components/Button';
 import FormError from '@/components/error/FormError';
+import ForgotPasswordModal from '@/components/modal/ForgotPasswordModal';
 import { Input } from '@/components/ui/input';
-import { FRONTEND_URL } from '@/lib/constants';
+import { BACKEND_URL, FRONTEND_URL } from '@/lib/constants';
 import { signinUserSchema } from '@/schemas/user.schema';
 import { SigninUserFormData } from '@/types/user.types';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,11 +12,13 @@ import { Label } from '@radix-ui/react-label';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaGoogle } from 'react-icons/fa';
-import { toast } from 'sonner';
+import { Toaster, toast } from 'sonner';
 
 const SignInForm = () => {
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const t = useTranslations('Login');
   const toaster = useTranslations('Toaster');
   const pathName = usePathname();
@@ -60,6 +64,18 @@ const SignInForm = () => {
     }
   };
 
+  const onModalClose = () => {
+    setModalVisible(false);
+  };
+
+  const onModalSubmit = async (email: string) => {
+    await sendPasswordEmailForgot(email);
+    setModalVisible(false);
+    toast(
+      "If there's a User that exists with this E-Mail. An E-Mail has been sent!",
+    );
+  };
+
   //TODO Replace Logo
   return (
     <main
@@ -100,6 +116,12 @@ const SignInForm = () => {
             {errors.password && <FormError error={errors.password.message} />}
           </div>
         </div>
+        <p
+          className="text-center mt-2 text-blue-600 text-md hover:underline cursor-pointer"
+          onClick={() => setModalVisible(true)}
+        >
+          Forgot Password?
+        </p>
         <Button className="w-full h-10 mt-4" type="submit">
           {t('login')}
         </Button>
@@ -121,6 +143,11 @@ const SignInForm = () => {
           <p>{t('googlesignup')}</p>
         </div>
       </button>
+      <ForgotPasswordModal
+        visible={modalVisible}
+        handleOnClose={onModalClose}
+        handleOnSubmit={onModalSubmit}
+      />
     </main>
   );
 };

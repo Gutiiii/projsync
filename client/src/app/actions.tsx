@@ -12,10 +12,27 @@ export const sendPasswordEmail = async () => {
   const session = await getServerSession(authOptions);
 
   const res = await fetch(
-    BACKEND_URL + '/auth/addpasswordresetcode/' + session?.user.id,
+    BACKEND_URL + '/auth/addpasswordresetcode/' + session?.user.email,
   );
   const result = await res.json();
 
+  try {
+    await resend.emails.send({
+      from: 'Acme <onboarding@resend.dev>',
+      to: ['samuel.gutmans@gmail.com'],
+      subject: 'Reset Password',
+      react: <ChangePasswordEmail code={result.code} />,
+    });
+
+    return { status: 200 };
+  } catch (error) {
+    return { status: 400 };
+  }
+};
+
+export const sendPasswordEmailForgot = async (email: string) => {
+  const res = await fetch(BACKEND_URL + '/auth/addpasswordresetcode/' + email);
+  const result = await res.json();
   try {
     await resend.emails.send({
       from: 'Acme <onboarding@resend.dev>',

@@ -30,17 +30,22 @@ export class UserService {
         return { id: user.id }
     }
 
-    async addPasswordResetCode(id: string) {
-        const user = await this.prismaService.user.update({
-            where: {
-                id: id
-            },
-            data: {
-                resetPasswordCode: uuid()
-            }
-        })
+    async addPasswordResetCode(email: string) {
+        try {
+            const user = await this.prismaService.user.update({
+                where: {
+                    email: email
+                },
+                data: {
+                    resetPasswordCode: uuid()
+                }
+            })
 
-        return { code: user.resetPasswordCode }
+            return { code: user.resetPasswordCode }
+        } catch (error) {
+            throw new UnauthorizedException("Not authorized")
+        }
+
     }
 
     async changePassword(dto: ChangePasswordDto) {
@@ -49,7 +54,8 @@ export class UserService {
                 resetPasswordCode: dto.code
             },
             data: {
-                password: await hash(dto.password, 10)
+                password: await hash(dto.password, 10),
+                resetPasswordCode: null
             }
         })
     }

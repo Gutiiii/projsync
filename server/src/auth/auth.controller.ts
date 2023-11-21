@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
+import { email } from 'envalid';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { ChangePasswordDto, JwtDto, ProviderDto, RegisterDto, SigninDto } from './dto/auth.dto';
@@ -33,9 +34,9 @@ export class AuthController {
         return await this.userService.findByResetPasswordCode(code)
     }
 
-    @Get("addpasswordresetcode/:id")
-    async AddPassworDresetCode(@Param('id') id: string) {
-        return await this.userService.addPasswordResetCode(id)
+    @Get("addpasswordresetcode/:email")
+    async AddPassworDresetCode(@Param('email') email: string) {
+        return await this.userService.addPasswordResetCode(email)
     }
 
     @Post("changepassword")

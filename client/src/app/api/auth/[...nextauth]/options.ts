@@ -40,22 +40,44 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async signIn({ user, account }) {
-            if (account?.provider === "credentials") return true
-            const name = user.name
-            const email = user.email
-            const provider = account?.provider.toUpperCase()
-
-            const res = await fetch(BACKEND_URL + "/auth/provider", {
-                method: "POST",
-                body: JSON.stringify({
-                    name, email, provider
-                }),
-                headers: {
-                    "Content-Type": "application/json"
+        async signIn({ user, account, credentials }) {
+            if (account?.provider === "credentials") {
+                if (!credentials?.email || !credentials?.password) return false
+                const { email, password } = credentials
+                const res = await fetch(BACKEND_URL + "/auth/signin", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        email, password
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                if (res.status === 401 || res.status === 400) {
+                    return false
                 }
-            })
-            return true
+                const user = await res.json()
+
+                if (!user) return false
+
+                return user
+            } else {
+                const name = user.name
+                const email = user.email
+                const provider = account?.provider.toUpperCase()
+
+                const res = await fetch(BACKEND_URL + "/auth/provider", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        name, email, provider
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                return true
+            }
+
         },
         async jwt({ token, user, account }) {
             if (account && ["google"].includes(account.provider)) {

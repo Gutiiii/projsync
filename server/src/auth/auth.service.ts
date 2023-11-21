@@ -190,4 +190,6 @@ export class AuthService {
             expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME)
         }
     }
+
+    
 }
