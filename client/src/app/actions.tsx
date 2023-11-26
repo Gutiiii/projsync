@@ -2,6 +2,7 @@
 
 import ChangePasswordEmail from '@/components/emails/ChangePasswordEmail';
 import { BACKEND_URL } from '@/lib/constants';
+import axios from 'axios';
 import { getServerSession } from 'next-auth';
 import { Resend } from 'resend';
 import { authOptions } from './api/auth/[...nextauth]/options';
@@ -14,7 +15,6 @@ export const sendPasswordEmail = async () => {
     BACKEND_URL + '/auth/addpasswordresetcode/' + session?.user.email,
   );
   const result = await res.json();
-
   try {
     await resend.emails.send({
       from: 'Acme <onboarding@resend.dev>',
@@ -29,15 +29,15 @@ export const sendPasswordEmail = async () => {
 };
 
 export const sendPasswordEmailForgot = async (email: string) => {
-  console.log('EMAIL: ', email.trim());
-  const res = await fetch(BACKEND_URL + '/auth/addpasswordresetcode/' + email);
-  const result = await res.json();
+  const res = await axios.get(
+    BACKEND_URL + '/auth/addpasswordresetcode/' + email,
+  );
   try {
     await resend.emails.send({
       from: 'Acme <onboarding@resend.dev>',
       to: ['samuel.gutmans@gmail.com'],
       subject: 'Reset Password',
-      react: <ChangePasswordEmail code={result.code} />,
+      react: <ChangePasswordEmail code={res.data.code} />,
     });
 
     return { status: 200 };

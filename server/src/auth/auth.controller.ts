@@ -36,7 +36,6 @@ export class AuthController {
 
     @Get("addpasswordresetcode/:email")
     async addPassworDresetCode(@Param('email') email: string) {
-        console.log("EMAIL API: ", email)
         return await this.userService.addPasswordResetCode(email)
     }
 

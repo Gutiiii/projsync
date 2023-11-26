@@ -4,7 +4,7 @@ import { Button } from '@/components/Button';
 import FormError from '@/components/error/FormError';
 import ForgotPasswordModal from '@/components/modal/ForgotPasswordModal';
 import { Input } from '@/components/ui/input';
-import { BACKEND_URL, FRONTEND_URL } from '@/lib/constants';
+import { FRONTEND_URL } from '@/lib/constants';
 import { signinUserSchema } from '@/schemas/user.schema';
 import { SigninUserFormData } from '@/types/user.types';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,7 +15,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaGoogle } from 'react-icons/fa';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 
 const SignInForm = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -51,7 +51,7 @@ const SignInForm = () => {
         description: `${toaster('errordescription')}`,
       });
       setTimeout(() => {
-        router.refresh();
+        window.location.reload();
       }, 2000);
     } else {
       toast.success(`${toaster('login')}`, {
@@ -69,8 +69,8 @@ const SignInForm = () => {
   };
 
   const onModalSubmit = async (email: string) => {
-    const res = await sendPasswordEmailForgot(email);
     setModalVisible(false);
+    await sendPasswordEmailForgot(email);
     toast(
       "If there's a User that exists with this E-Mail. An E-Mail has been sent!",
     );

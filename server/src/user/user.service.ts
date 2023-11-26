@@ -32,6 +32,7 @@ export class UserService {
     }
 
     async addPasswordResetCode(email: string) {
+        this.logger.verbose(`${email} Requested a Password Reset`)
         try {
             const user = await this.prismaService.user.update({
                 where: {
