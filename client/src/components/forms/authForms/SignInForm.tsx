@@ -1,5 +1,5 @@
 'use client';
-import { sendPasswordEmail, sendPasswordEmailForgot } from '@/app/actions';
+import { sendPasswordEmailForgot } from '@/app/actions';
 import { Button } from '@/components/Button';
 import FormError from '@/components/error/FormError';
 import ForgotPasswordModal from '@/components/modal/ForgotPasswordModal';

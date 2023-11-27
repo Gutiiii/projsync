@@ -5,7 +5,7 @@ import axios from "axios";
 
 export const useGetAllUsers = (token: string | undefined) => {
     return useQuery({
-        queryKey: ["getAllCustomers"],
+        queryKey: ["getAllProjects"],
         queryFn: async () => {
             return await axios.get(BACKEND_URL + '/project/all', {
                 headers: {

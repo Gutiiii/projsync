@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <div className="h-16 bg-slate-900 absolute w-full bottom-0 flex justify-around text-center items-center text-gray-300 text-md">
+    <div className="h-[55px] bg-slate-900 absolute w-full bottom-0 flex justify-around text-center items-center text-gray-400 text-md">
       <p className="hover:text-gray-100 cursor-pointer">ProjSync.</p>
       <div className="flex space-x-4">
         <p className="hover:text-gray-100 cursor-pointer">GitHub</p>

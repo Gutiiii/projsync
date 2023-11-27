@@ -40,7 +40,7 @@ const ShowClosedProjects: FC<ShowClosedProjectsProps> = ({}) => {
       />
       <label
         htmlFor="showclosed"
-        className="sm:text-lg text-sm font-medium leading-none"
+        className="sm:text-lg text-sm font-medium leading-none cursor-pointer"
       >
         {t('closedprojects')}
       </label>

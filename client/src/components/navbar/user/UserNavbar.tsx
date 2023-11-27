@@ -6,7 +6,7 @@ import UserHamburger from './UserHamburger';
 const UserNavbar = ({}) => {
   const t = useTranslations('Admin');
   return (
-    <div className="h-12 pt-2 sticky top-0 inset-x-0 z-10">
+    <div className="h-[55px] pt-2 sticky top-0 inset-x-0 z-10 shadow-xl bg-gray-200">
       <div className="flex text-xl text-center items-center sm:justify-around justify-between mx-4">
         <button className="flex text-center items-center">
           <a href="/dashboard">ProjSync.</a>

@@ -3,7 +3,7 @@ import { sendPasswordEmail } from '@/app/actions';
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Avatar from 'react-avatar';
 import { useFormState } from 'react-dom';
 import { toast } from 'sonner';
@@ -19,16 +19,22 @@ const UserAvatar: FC = ({}) => {
   const avatar = useTranslations('Avatar');
   const { data: session } = useSession();
 
-  if (state?.status === 200) {
-    toast.success(`${t('passwordchangecredentials')}`, {
-      description: `${t('passwordchangecredentialsdescription')}`,
-      duration: 6000,
-    });
-  } else if (state?.status === 400) {
-    toast.error(`${t('passwordchangeerror')}`, {
-      duration: 6000,
-    });
-  }
+  const [toastDisplayed, setToastDisplayed] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (state?.status === 200 && !toastDisplayed) {
+      toast.success(`${t('passwordchangecredentials')}`, {
+        description: `${t('passwordchangecredentialsdescription')}`,
+        duration: 5000,
+      });
+      setToastDisplayed(true);
+    } else if (state?.status === 400 && !toastDisplayed) {
+      toast.error(`${t('passwordchangeerror')}`, {
+        duration: 5000,
+      });
+      setToastDisplayed(true);
+    }
+  }, [state, toastDisplayed, t]);
 
   return (
     <div className="cursor-pointer">
@@ -37,7 +43,12 @@ const UserAvatar: FC = ({}) => {
           <Avatar name={session?.user.name} color="black " round size="40" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <form action={() => formAction()}>
+          <form
+            action={() => {
+              setToastDisplayed(false);
+              formAction();
+            }}
+          >
             <DropdownMenuItem className="cursor-pointer">
               <button type="submit">{avatar('changepassword')}</button>
             </DropdownMenuItem>

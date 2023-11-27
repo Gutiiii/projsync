@@ -11,11 +11,11 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendPasswordEmail = async () => {
   const session = await getServerSession(authOptions);
-  const res = await fetch(
-    BACKEND_URL + '/auth/addpasswordresetcode/' + session?.user.email,
-  );
-  const result = await res.json();
   try {
+    const res = await fetch(
+      BACKEND_URL + '/auth/addpasswordresetcode/' + session?.user.email,
+    );
+    const result = await res.json();
     await resend.emails.send({
       from: 'Acme <onboarding@resend.dev>',
       to: ['samuel.gutmans@gmail.com'],
@@ -29,10 +29,10 @@ export const sendPasswordEmail = async () => {
 };
 
 export const sendPasswordEmailForgot = async (email: string) => {
-  const res = await axios.get(
-    BACKEND_URL + '/auth/addpasswordresetcode/' + email,
-  );
   try {
+    const res = await axios.get(
+      BACKEND_URL + '/auth/addpasswordresetcode/' + email,
+    );
     await resend.emails.send({
       from: 'Acme <onboarding@resend.dev>',
       to: ['samuel.gutmans@gmail.com'],

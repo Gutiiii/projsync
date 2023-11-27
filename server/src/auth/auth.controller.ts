@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { email } from 'envalid';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
@@ -33,7 +34,6 @@ export class AuthController {
     async findByResetPasswordCode(@Param('code') code: string) {
         return await this.userService.findByResetPasswordCode(code)
     }
-
     @Get("addpasswordresetcode/:email")
     async addPassworDresetCode(@Param('email') email: string) {
         return await this.userService.addPasswordResetCode(email)

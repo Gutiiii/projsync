@@ -1,4 +1,3 @@
-import env from '@/lib/env';
 import { ProjectCardType } from '@/types/project.types';
 import {
   Button,
@@ -10,12 +9,8 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { FC } from 'react';
-import { Resend } from 'resend';
-import { ChangePasswordEmail } from '../../../../react-email/emails/ChangePasswordEmail';
 
 interface ProjectInfoModalProps {
   project: ProjectCardType;
@@ -39,29 +34,35 @@ const ProjectInfoModal: FC<ProjectInfoModalProps> = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          <h1 className="text-2xl">Project Information</h1>{' '}
-        </ModalHeader>
+          <h1 className="text-2xl font-medium">Project Information</h1>
+        </ModalHeader>{' '}
+        <hr className="mx-4 " />
         <ModalCloseButton onClick={handleOnClose} />
         <ModalBody pb={6}>
-          <p className="text-xl mb-4">Project Title: {project.title}</p>
-
-          <p className="font-light text-lg">{project.description}</p>
-          <p>Created on: {dateWithoutWeekday}</p>
-          <p className="flex">
-            Role:{' '}
-            <p className="font-bold ml-1">{project.userProject['0'].role}</p>
+          <p className="text-xl my-2 -mt-0.5 text-center font-semibold">
+            {project.title}
           </p>
-          <div className="flex space-x-1">
-            <p>Status: </p>
-            <p
-              className={
-                project.status === 'OPEN'
-                  ? 'text-md font-bold text-green-500'
-                  : 'text-md font-bold text-red-500'
-              }
-            >
-              {project.status}
+          <hr className="mx-4" />
+          <p className="text-lg text-center mx-4 my-2">{project.description}</p>
+          <hr className="mx-4 mb-4" />
+          <div className="text-lg">
+            <p>Created on: {dateWithoutWeekday}</p>
+            <p className="flex">
+              Role:{' '}
+              <p className="font-bold ml-1">{project.userProject['0'].role}</p>
             </p>
+            <div className="flex space-x-1">
+              <p>Status: </p>
+              <p
+                className={
+                  project.status === 'OPEN'
+                    ? 'text-md font-bold text-green-500'
+                    : 'text-md font-bold text-red-500'
+                }
+              >
+                {project.status}
+              </p>
+            </div>
           </div>
         </ModalBody>
         <ModalFooter>
