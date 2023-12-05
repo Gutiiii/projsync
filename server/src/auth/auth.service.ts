@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from "bcrypt";
-import env from 'lib/env';
+import env from 'src/lib/env';
 import { PrismaService } from 'src/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { JwtDto, ProviderDto, RegisterDto, SigninDto } from './dto/auth.dto';
