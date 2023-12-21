@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Logger, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { UserService } from 'src/user/user.service';
 import { CreateProjectDto } from './dto/project.dto';
 import { ProjectService } from './project.service';
 
@@ -27,5 +28,11 @@ export class ProjectController {
     @Get("auth/:projectId")
     async authProject(@Req() request, @Param('projectId') projectId) {
         return await this.projectService.authProject(request.user.id, projectId)
+    }
+
+    @UseGuards(JwtGuard)
+    @Get(":projectId")
+    async projectById(@Param('projectId') projectId) {
+        return await this.projectService.getProjectById(projectId)
     }
 }

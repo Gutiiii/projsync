@@ -68,4 +68,20 @@ export class ProjectService {
         return userProject
     }
 
+    async getProjectById(id: string) {
+        try {
+            const project = await this.prismaService.project.findFirst({
+                where: {
+                    id: id
+                }
+            })
+
+            return project
+        } catch (error) {
+            throw new UnauthorizedException("Unauthorized")
+
+        }
+
+    }
+
 }

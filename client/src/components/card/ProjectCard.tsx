@@ -91,7 +91,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
               color="blue"
               size={25}
               width={25}
-              className="text-end mt-0.5 cursor-pointer hover:opacity-60 transition-opacity duration-200"
+              className="text-end mt-0.5 cursor-pointer hover:opacity-50 transition-opacity duration-200"
             />
           </div>
         </div>

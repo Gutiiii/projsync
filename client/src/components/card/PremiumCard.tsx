@@ -9,7 +9,7 @@ const PremiumCard = () => {
   const { data: session } = useSession();
   const t = useTranslations('PremiumCard');
   return (
-    <div className="lg:w-[347px] lg:h-[506px] w-full border-2 border-slate-900 shadow-2xl rounded-lg text-left px-5 pt-4 pb-12">
+    <div className="relative lg:w-[347px] lg:h-[506px] w-full border-2 border-slate-900 shadow-2xl rounded-lg text-left px-5 pt-4 pb-12">
       <p className="text-2xl">{t('plan')}</p>
       <p className="mt-8 mb-12 text-sm">{t('description')}</p>
       <div className="flex">
@@ -65,6 +65,10 @@ const PremiumCard = () => {
           <p className="ml-1">{t('third')}</p>
         </li>
       </ul>
+      {/* Diagonal Text Overlay */}
+      <p className="absolute top-1 left-1 transform -translate-x-1/2 -translate-y-1/2 -rotate-45 text-white bg-red-500 p-2 rounded-xl">
+        Coming Soon
+      </p>
     </div>
   );
 };

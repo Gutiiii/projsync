@@ -16,3 +16,11 @@ export type ProjectCardType = {
         role: "CREATOR" | "EDITOR" | "VIEWER";
     }[];
 };
+
+export type Project = {
+    id: string
+    title: string
+    description: string
+    status: "OPEN" | "CLOSED";
+    createdAt: string;
+}
