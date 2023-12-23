@@ -45,13 +45,13 @@ const ProjectInfoModal: FC<ProjectInfoModalProps> = ({
           <hr className="mx-4" />
           <p className="text-lg text-center mx-4 my-2">{project.description}</p>
           <hr className="mx-4 mb-4" />
-          <div className="text-lg">
-            <p>Created on: {dateWithoutWeekday}</p>
-            <p className="flex">
+          <div className="text-lg text-center">
+            <p>Created: {dateWithoutWeekday}</p>
+            <p className="flex justify-center">
               Role:{' '}
               <p className="font-bold ml-1">{project.userProject['0'].role}</p>
             </p>
-            <div className="flex space-x-1">
+            <div className="flex space-x-1 justify-center">
               <p>Status: </p>
               <p
                 className={
@@ -66,9 +66,6 @@ const ProjectInfoModal: FC<ProjectInfoModalProps> = ({
           </div>
         </ModalBody>
         <ModalFooter>
-          {/* <Button colorScheme="blue" mr={3} type="submit">
-            {t('create')}
-          </Button> */}
           <Button
             colorScheme="blue"
             mr={3}
