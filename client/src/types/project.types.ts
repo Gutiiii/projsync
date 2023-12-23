@@ -23,4 +23,15 @@ export type Project = {
     description: string
     status: "OPEN" | "CLOSED";
     createdAt: string;
+    userProject: {
+        id: string;
+        userId: string;
+        projectId: string;
+        role: "CREATOR" | "EDITOR" | "VIEWER";
+        createdAt: string
+        user: {
+            email: string
+            name: string
+        }
+    }[];
 }

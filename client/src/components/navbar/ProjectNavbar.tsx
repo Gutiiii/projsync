@@ -6,9 +6,10 @@ import ProjectInformation from '../projects/ProjectInformation';
 
 const ProjectNavbar = ({ project }: { project: Project }) => {
   const [currentSection, setCurrentSection] = useState<string>('Project Board');
+
   return (
     <>
-      <div className="w-2/3 h-8 md:mt-20 mt-10 mx-auto flex justify-evenly text-xl rounded-xl">
+      <div className="sm:w-2/3 h-8 md:mt-20 mt-10 mx-auto flex justify-evenly md:text-2xl text-xl rounded-xl">
         <div
           className="group"
           onClick={() => setCurrentSection('Project Board')}

@@ -73,15 +73,25 @@ export class ProjectService {
             const project = await this.prismaService.project.findFirst({
                 where: {
                     id: id
+                },
+                include: {
+                    userProject: {
+                        where: {
+                            projectId: id
+                        }, include: {
+                            user: {
+                                select: {
+                                    name: true
+                                }
+                            }
+                        }
+                    }
                 }
-            })
-
-            return project
+            });
+            return project;
         } catch (error) {
-            throw new UnauthorizedException("Unauthorized")
-
+            throw new UnauthorizedException("Unauthorized");
         }
-
     }
 
 }

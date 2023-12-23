@@ -75,7 +75,7 @@ enum ProjectRole {
 }
 
 model Invitation {
-  id String @id @default(uuid())
+  id String @id @default(uuid())
   email String
   project Project @relation(fields: [projectId], references: [id])
   projectId String

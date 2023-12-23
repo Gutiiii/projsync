@@ -14,20 +14,21 @@ const ProjectPage = async ({ params }: { params: { projectId: string } }) => {
   await useAuthForProjects(params.projectId);
   const session = await getServerSession(authOptions);
 
-  const data = await axios.get(BACKEND_URL + '/project/' + params.projectId, {
+  const res = await fetch(BACKEND_URL + '/project/' + params.projectId, {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization: 'Bearer ' + session?.backendTokens.accessToken,
     },
   });
+  const data = await res.json();
 
-  if (!data.data) return redirect('/projects');
+  if (!data) return redirect('/projects');
 
   return (
     <>
       {session?.user.role === 'ADMIN' ? <AdminNavbar /> : <UserNavbar />}
-      <ProjectNavbar project={data.data} />
+      <ProjectNavbar project={data} />
     </>
   );
 };
