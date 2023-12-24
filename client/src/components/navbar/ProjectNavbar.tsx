@@ -1,10 +1,16 @@
 'use client';
-import { Project } from '@/types/project.types';
+import { CurrentUser, Project } from '@/types/project.types';
 import React, { useState } from 'react';
 import ProjectBoard from '../projects/ProjectBoard';
 import ProjectInformation from '../projects/ProjectInformation';
 
-const ProjectNavbar = ({ project }: { project: Project }) => {
+const ProjectNavbar = ({
+  project,
+  currentUser,
+}: {
+  project: Project;
+  currentUser: CurrentUser;
+}) => {
   const [currentSection, setCurrentSection] = useState<string>('Project Board');
 
   return (
@@ -47,7 +53,7 @@ const ProjectNavbar = ({ project }: { project: Project }) => {
         ) : currentSection === 'Chat' ? (
           <div>Chat</div>
         ) : currentSection === 'Project Information' ? (
-          <ProjectInformation project={project} />
+          <ProjectInformation project={project} currentUser={currentUser} />
         ) : null}
       </div>
     </>

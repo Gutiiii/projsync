@@ -30,8 +30,18 @@ export type Project = {
         role: "CREATOR" | "EDITOR" | "VIEWER";
         createdAt: string
         user: {
-            email: string
             name: string
         }
     }[];
+}
+
+export type CurrentUser = {
+    id: string
+    userId: string
+    projectId: string
+    role: "CREATOR" | "EDITOR" | "VIEWER";
+    createdAt: string;
+    user: {
+        name: string
+    }
 }

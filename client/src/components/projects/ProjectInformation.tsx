@@ -1,9 +1,15 @@
 'use client';
-import { Project } from '@/types/project.types';
+import { CurrentUser, Project } from '@/types/project.types';
 import React from 'react';
 import ProjectsMember from './ProjectsMember';
 
-const ProjectInformation = ({ project }: { project: Project }) => {
+const ProjectInformation = ({
+  project,
+  currentUser,
+}: {
+  project: Project;
+  currentUser: CurrentUser;
+}) => {
   const date = new Date(project.createdAt);
   const dateStr = date.toDateString();
   const dateWithoutWeekday = dateStr.substring(dateStr.indexOf(' ') + 1);
@@ -38,7 +44,10 @@ const ProjectInformation = ({ project }: { project: Project }) => {
         </div>
 
         <div className="text-center sm:mt-6 mt-12">
-          <ProjectsMember projectMembers={project.userProject} />
+          <ProjectsMember
+            projectMembers={project.userProject}
+            role={currentUser.role}
+          />
         </div>
       </div>
     </div>

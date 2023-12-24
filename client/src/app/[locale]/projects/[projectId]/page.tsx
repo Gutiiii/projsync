@@ -5,6 +5,7 @@ import UserNavbar from '@/components/navbar/user/UserNavbar';
 import useAuthForProjects from '@/hooks/authHooks/useAuthForProjects';
 import { useSigninRequiredServer } from '@/hooks/authHooks/useSigninRequiredServer';
 import { BACKEND_URL } from '@/lib/constants';
+import { CurrentUser } from '@/types/project.types';
 import axios from 'axios';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
@@ -25,10 +26,14 @@ const ProjectPage = async ({ params }: { params: { projectId: string } }) => {
 
   if (!data) return redirect('/projects');
 
+  const currentUser = data.userProject.find(
+    (item: CurrentUser) => item.userId === session?.user.id,
+  );
+
   return (
     <>
       {session?.user.role === 'ADMIN' ? <AdminNavbar /> : <UserNavbar />}
-      <ProjectNavbar project={data} />
+      <ProjectNavbar project={data} currentUser={currentUser} />
     </>
   );
 };
