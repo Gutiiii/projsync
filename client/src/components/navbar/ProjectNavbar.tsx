@@ -1,5 +1,6 @@
 'use client';
 import { CurrentUser, Project } from '@/types/project.types';
+import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import ProjectBoard from '../projects/ProjectBoard';
 import ProjectInformation from '../projects/ProjectInformation';
@@ -7,11 +8,14 @@ import ProjectInformation from '../projects/ProjectInformation';
 const ProjectNavbar = ({
   project,
   currentUser,
+  invitations,
 }: {
   project: Project;
   currentUser: CurrentUser;
+  invitations: any;
 }) => {
   const [currentSection, setCurrentSection] = useState<string>('Project Board');
+  const t = useTranslations('Project');
 
   return (
     <>
@@ -20,7 +24,7 @@ const ProjectNavbar = ({
           className="group"
           onClick={() => setCurrentSection('Project Board')}
         >
-          <div className="cursor-pointer">Project Board</div>
+          <div className="cursor-pointer">{t('projectboard')}</div>
           {currentSection === 'Project Board' ? (
             <div className="line h-px w-full bg-black mx-auto transition-all duration-300" />
           ) : (
@@ -39,7 +43,7 @@ const ProjectNavbar = ({
           className="group"
           onClick={() => setCurrentSection('Project Information')}
         >
-          <div className="cursor-pointer">Project Information</div>
+          <div className="cursor-pointer">{t('projectinformation')}</div>
           {currentSection === 'Project Information' ? (
             <div className="line h-px w-full bg-black mx-auto transition-all duration-300" />
           ) : (
@@ -53,7 +57,11 @@ const ProjectNavbar = ({
         ) : currentSection === 'Chat' ? (
           <div>Chat</div>
         ) : currentSection === 'Project Information' ? (
-          <ProjectInformation project={project} currentUser={currentUser} />
+          <ProjectInformation
+            project={project}
+            currentUser={currentUser}
+            invitations={invitations}
+          />
         ) : null}
       </div>
     </>

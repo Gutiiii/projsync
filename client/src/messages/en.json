@@ -97,6 +97,19 @@
     "dropdown2": "Sort Title Descending",
     "dropdown3": "Sort Creation Date Ascending",
     "dropdown4": "Sort Creation Date Descending",
-    "createprojecttoast": "Project Created"
+    "createprojecttoast": "Project Created",
+    "projectboard": "Project Board",
+    "projectinformation": "Project Information",
+    "created": "Created",
+    "members": "Members",
+    "invite": "Invite",
+    "inviteheader": "Invite Members to this Project",
+    "inputemail": "Input the E-Mail Adresse.",
+    "selectheader": "Choose role",
+    "select1": "Creator (Full access)",
+    "select2": "Editor (Can Edit Project)",
+    "select3": "Viewer (Can View Project)",
+    "sendinvite": "Send Invite",
+    "invitations": "Invitations"
   }
 }

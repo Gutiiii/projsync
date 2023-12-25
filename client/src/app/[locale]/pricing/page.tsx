@@ -2,13 +2,11 @@ import Footer from '@/components/Footer';
 import FreeCard from '@/components/card/FreeCard';
 import PremiumCard from '@/components/card/PremiumCard';
 import LandingNav from '@/components/navbar/landing/LandingNav';
-import { BACKEND_URL } from '@/lib/constants';
-import env from '@/lib/env';
 import React from 'react';
 
 const Pricing = () => {
   return (
-    <div className="relative h-full sm:h-screen pb-40">
+    <div className="relative h-full">
       <LandingNav />
       <div className="mt-10 lg:mt-32 2xl:mt-48 text-center items-center justify-center">
         <h1 className="text-6xl font-black">Pricing</h1>
@@ -20,7 +18,9 @@ const Pricing = () => {
         <FreeCard />
         <PremiumCard />
       </div>
-      <Footer />
+      <div className="mt-10">
+        <Footer />
+      </div>
     </div>
   );
 };

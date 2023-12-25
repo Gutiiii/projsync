@@ -43,5 +43,13 @@ export type CurrentUser = {
     createdAt: string;
     user: {
         name: string
+        email: string
     }
+}
+
+export type CreateInvitationFormData = {
+    email: string
+    role: "EDITOR" | "VIEWER";
+    projectId: string
+    token?: string
 }

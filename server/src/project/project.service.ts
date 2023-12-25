@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { CreateProjectDto } from './dto/project.dto';
+import { CreateInvitationDto, CreateProjectDto } from './dto/project.dto';
 
 @Injectable()
 export class ProjectService {
@@ -81,7 +81,8 @@ export class ProjectService {
                         }, include: {
                             user: {
                                 select: {
-                                    name: true
+                                    name: true,
+                                    email: true
                                 }
                             }
                         }
@@ -91,6 +92,56 @@ export class ProjectService {
             return project;
         } catch (error) {
             throw new UnauthorizedException("Unauthorized");
+        }
+    }
+
+    async createInvitation(dto: CreateInvitationDto, userId: string) {
+        try {
+            const hasRight = await this.prismaService.user_Project.findFirst({
+                where: {
+                    projectId: dto.projectId,
+                    userId: userId,
+                    role: "CREATOR"
+                }
+            })
+            if (!hasRight) throw new UnauthorizedException("Unauthorized!")
+            const deleteExistingInvitation = await this.prismaService.invitation.deleteMany({
+                where: {
+                    email: dto.email,
+                    projectId: dto.projectId
+                }
+            })
+            const invitation = await this.prismaService.invitation.create({
+                data: {
+                    projectId: dto.projectId,
+                    email: dto.email,
+                    role: dto.role
+                }
+            })
+            return invitation
+        } catch (error) {
+            throw new BadRequestException("Something went wrong!")
+        }
+    }
+
+    async getInvitationsProject(projectId: string, userId: string) {
+        const hasRight = await this.prismaService.user_Project.findFirst({
+            where: {
+                projectId: projectId,
+                userId: userId,
+            }
+        })
+        if (!hasRight) throw new UnauthorizedException("Unauthorized!")
+
+        try {
+            const invitations = await this.prismaService.invitation.findMany({
+                where: {
+                    projectId: projectId
+                }
+            })
+            return invitations
+        } catch (error) {
+            throw new BadRequestException("Something went wrong")
         }
     }
 

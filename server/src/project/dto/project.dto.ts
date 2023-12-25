@@ -8,4 +8,11 @@ const CreateProjectSchema = z.object({
     description: z.string().max(250)
 })
 
+const CreateInvitationSchema = z.object({
+    email: z.string().email(),
+    role: z.enum(["EDITOR", "VIEWER"]),
+    projectId: z.string(),
+})
+
 export class CreateProjectDto extends createZodDto(CreateProjectSchema) { }
+export class CreateInvitationDto extends createZodDto(CreateInvitationSchema) { }

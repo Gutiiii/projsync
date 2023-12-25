@@ -11,10 +11,6 @@ async function bootstrap() {
     origin: [allowedOrigin],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   })
-  app.use((req, res, next) => {
-    logger.log('Headers:', req.headers);
-    next();
-  });
   await app.listen(env.PORT, '0.0.0.0');
   logger.log("Application listening on port " + env.PORT)
 }

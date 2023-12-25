@@ -6,7 +6,7 @@ import useAuthForProjects from '@/hooks/authHooks/useAuthForProjects';
 import { useSigninRequiredServer } from '@/hooks/authHooks/useSigninRequiredServer';
 import { BACKEND_URL } from '@/lib/constants';
 import { CurrentUser } from '@/types/project.types';
-import axios from 'axios';
+
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 
@@ -24,6 +24,18 @@ const ProjectPage = async ({ params }: { params: { projectId: string } }) => {
   });
   const data = await res.json();
 
+  const res2 = await fetch(
+    BACKEND_URL + '/project/invitations/' + params.projectId,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: 'Bearer ' + session?.backendTokens.accessToken,
+      },
+    },
+  );
+  const invitationsdata = await res2.json();
+
   if (!data) return redirect('/projects');
 
   const currentUser = data.userProject.find(
@@ -33,7 +45,11 @@ const ProjectPage = async ({ params }: { params: { projectId: string } }) => {
   return (
     <>
       {session?.user.role === 'ADMIN' ? <AdminNavbar /> : <UserNavbar />}
-      <ProjectNavbar project={data} currentUser={currentUser} />
+      <ProjectNavbar
+        project={data}
+        currentUser={currentUser}
+        invitations={invitationsdata}
+      />
     </>
   );
 };

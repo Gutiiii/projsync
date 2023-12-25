@@ -97,6 +97,19 @@
     "dropdown2": "Nach Titel absteigend sortieren",
     "dropdown3": "Nach Erstellungsdatum aufsteigend sortieren",
     "dropdown4": "Nach Erstellungsdatum absteigend sortieren",
-    "createprojecttoast": "Projekt erstellt"
+    "createprojecttoast": "Projekt erstellt",
+    "projectboard": "Projektboard",
+    "projectinformation": "Projektinformationen",
+    "created": "Erstellt",
+    "members": "Mitglieder",
+    "invite": "Einladen",
+    "inviteheader": "Mitglieder zu diesem Projekt einladen",
+    "inputemail": "E-Mail-Adresse eingeben",
+    "selectheader": "Rolle auswählen",
+    "select1": "Ersteller (Voller Zugriff)",
+    "select2": "Bearbeiter (Kann Projekt bearbeiten)",
+    "select3": "Betrachter (Kann Projekt ansehen)",
+    "sendinvite": "Einladung senden",
+    "invitations": "Einladungen"
   }
 }

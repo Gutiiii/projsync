@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Logger, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { CreateProjectDto } from './dto/project.dto';
+import { CreateInvitationDto, CreateProjectDto } from './dto/project.dto';
 import { ProjectService } from './project.service';
 
 @Controller('project')
@@ -33,5 +33,17 @@ export class ProjectController {
     @Get(":projectId")
     async projectById(@Param('projectId') projectId) {
         return await this.projectService.getProjectById(projectId)
+    }
+
+    @UseGuards(JwtGuard)
+    @Post("invite")
+    async createInvitation(@Body() dto: CreateInvitationDto, @Req() request) {
+        return await this.projectService.createInvitation(dto, request.user.id)
+    }
+
+    @UseGuards(JwtGuard)
+    @Get("invitations/:projectId")
+    async getInvitationsProject(@Param("projectId") projectId, @Req() request) {
+        return await this.projectService.getInvitationsProject(projectId, request.user.id)
     }
 }
