@@ -1,19 +1,18 @@
 'use client';
-import { CurrentUser, Project } from '@/types/project.types';
+import { FRONTEND_URL } from '@/lib/constants';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
-import ProjectBoard from '../projects/ProjectBoard';
-import ProjectInformation from '../projects/ProjectInformation';
 
-const ProjectNavbar = ({}) => {
+const ProjectNavbar = ({ projectId }: { projectId: string }) => {
   const pathName = usePathname();
+  const path = `/projects/${projectId}`;
   const t = useTranslations('Project');
 
   return (
     <>
       <div className="sm:w-2/3 h-8 md:mt-20 mt-10 mx-auto flex justify-evenly md:text-2xl text-xl rounded-xl">
-        <a href={pathName + '/board'}>
+        <a href={path + '/board'}>
           <div className="group">
             <div className="cursor-pointer">{t('projectboard')}</div>
             {pathName.includes('board') ? (
@@ -23,7 +22,7 @@ const ProjectNavbar = ({}) => {
             )}
           </div>
         </a>
-        <a href={pathName + '/chat'}>
+        <a href={path + '/chat'}>
           <div className="group">
             <div className="cursor-pointer">Chat</div>
             {pathName.includes('chat') ? (
@@ -33,7 +32,7 @@ const ProjectNavbar = ({}) => {
             )}
           </div>
         </a>
-        <a href={pathName + '/information'}>
+        <a href={path + '/information'}>
           <div className="group">
             <div className="cursor-pointer">{t('projectinformation')}</div>
             {pathName.includes('information') ? (
@@ -44,19 +43,7 @@ const ProjectNavbar = ({}) => {
           </div>
         </a>
       </div>
-      <div className="flex justify-center mt-8">
-        {/* {currentSection === 'Project Board' ? (
-          <ProjectBoard />
-        ) : currentSection === 'Chat' ? (
-          <div>Chat</div>
-        ) : currentSection === 'Project Information' ? (
-          <ProjectInformation
-            project={project}
-            currentUser={currentUser}
-            invitations={invitations}
-          />
-        ) : null} */}
-      </div>
+      <div className="flex justify-center mt-8"></div>
     </>
   );
 };

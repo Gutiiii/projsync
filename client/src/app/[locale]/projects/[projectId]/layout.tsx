@@ -13,7 +13,6 @@ interface layoutProps {
 }
 
 const layout: FC<layoutProps> = async ({ children, params }) => {
-
   await useSigninRequiredServer();
   await useAuthForProjects(params.projectId);
   const session = await getServerSession(authOptions);
@@ -21,7 +20,7 @@ const layout: FC<layoutProps> = async ({ children, params }) => {
   return (
     <div>
       {session?.user.role === 'ADMIN' ? <AdminNavbar /> : <UserNavbar />}
-      <ProjectNavbar />
+      <ProjectNavbar projectId={params.projectId} />
       {children}
     </div>
   );
