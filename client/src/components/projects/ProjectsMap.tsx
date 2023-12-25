@@ -112,7 +112,7 @@ const ProjectsMap: FC<ProjectsMapProps> = ({ projects, search }) => {
   };
 
   const openingProject = (id: string) => {
-    router.push('/projects/' + id);
+    router.push('/projects/' + id + '/board');
   };
 
   return (

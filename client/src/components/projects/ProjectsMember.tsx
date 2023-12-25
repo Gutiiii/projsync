@@ -108,6 +108,8 @@ const ProjectsMember = ({
 
     const newInvitation = await mutation.data.data;
 
+    console.log(newInvitation)
+
     setInvitationsArray([...invitationsArray, newInvitation]);
   };
 

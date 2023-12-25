@@ -1,58 +1,51 @@
 'use client';
 import { CurrentUser, Project } from '@/types/project.types';
 import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 import ProjectBoard from '../projects/ProjectBoard';
 import ProjectInformation from '../projects/ProjectInformation';
 
-const ProjectNavbar = ({
-  project,
-  currentUser,
-  invitations,
-}: {
-  project: Project;
-  currentUser: CurrentUser;
-  invitations: any;
-}) => {
-  const [currentSection, setCurrentSection] = useState<string>('Project Board');
+const ProjectNavbar = ({}) => {
+  const pathName = usePathname();
   const t = useTranslations('Project');
 
   return (
     <>
       <div className="sm:w-2/3 h-8 md:mt-20 mt-10 mx-auto flex justify-evenly md:text-2xl text-xl rounded-xl">
-        <div
-          className="group"
-          onClick={() => setCurrentSection('Project Board')}
-        >
-          <div className="cursor-pointer">{t('projectboard')}</div>
-          {currentSection === 'Project Board' ? (
-            <div className="line h-px w-full bg-black mx-auto transition-all duration-300" />
-          ) : (
-            <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
-          )}
-        </div>
-        <div className="group" onClick={() => setCurrentSection('Chat')}>
-          <div className="cursor-pointer">Chat</div>
-          {currentSection === 'Chat' ? (
-            <div className="line h-px w-full bg-black mx-auto transition-all duration-300" />
-          ) : (
-            <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
-          )}
-        </div>
-        <div
-          className="group"
-          onClick={() => setCurrentSection('Project Information')}
-        >
-          <div className="cursor-pointer">{t('projectinformation')}</div>
-          {currentSection === 'Project Information' ? (
-            <div className="line h-px w-full bg-black mx-auto transition-all duration-300" />
-          ) : (
-            <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
-          )}
-        </div>
+        <a href={pathName + '/board'}>
+          <div className="group">
+            <div className="cursor-pointer">{t('projectboard')}</div>
+            {pathName.includes('board') ? (
+              <div className="line h-px w-full bg-black mx-auto transition-all duration-300" />
+            ) : (
+              <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
+            )}
+          </div>
+        </a>
+        <a href={pathName + '/chat'}>
+          <div className="group">
+            <div className="cursor-pointer">Chat</div>
+            {pathName.includes('chat') ? (
+              <div className="line h-px w-full bg-black mx-auto transition-all duration-300" />
+            ) : (
+              <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
+            )}
+          </div>
+        </a>
+        <a href={pathName + '/information'}>
+          <div className="group">
+            <div className="cursor-pointer">{t('projectinformation')}</div>
+            {pathName.includes('information') ? (
+              <div className="line h-px w-full bg-black mx-auto transition-all duration-300" />
+            ) : (
+              <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
+            )}
+          </div>
+        </a>
       </div>
       <div className="flex justify-center mt-8">
-        {currentSection === 'Project Board' ? (
+        {/* {currentSection === 'Project Board' ? (
           <ProjectBoard />
         ) : currentSection === 'Chat' ? (
           <div>Chat</div>
@@ -62,7 +55,7 @@ const ProjectNavbar = ({
             currentUser={currentUser}
             invitations={invitations}
           />
-        ) : null}
+        ) : null} */}
       </div>
     </>
   );
