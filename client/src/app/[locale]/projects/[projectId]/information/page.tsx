@@ -13,7 +13,6 @@ const ProjectInformationPage = async ({
 }: {
   params: { projectId: string };
 }) => {
-  
   const session = await getServerSession(authOptions);
 
   const res = await fetch(BACKEND_URL + '/project/' + params.projectId, {

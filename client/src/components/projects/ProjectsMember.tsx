@@ -1,4 +1,5 @@
 'use client';
+import { sendProjectInvitation } from '@/app/actions';
 import { useCreateInvitation } from '@/hooks/projectHooks/useCreateInvitation';
 import { BACKEND_URL } from '@/lib/constants';
 import { useMutation } from '@tanstack/react-query';
@@ -49,7 +50,13 @@ const ProjectsMember = ({
   projectMembers,
   role,
   invitations,
-}: ProjectsMemberProps & { role: 'VIEWER' | 'EDITOR' | 'CREATOR' }) => {
+  projectTitle,
+  projectDescription,
+}: ProjectsMemberProps & {
+  role: 'VIEWER' | 'EDITOR' | 'CREATOR';
+  projectTitle: string;
+  projectDescription: string;
+}) => {
   // Your component logic here
   const [inviteMemberModalVisible, setInviteMemberModalVisible] =
     useState<boolean>(false);
@@ -97,20 +104,30 @@ const ProjectsMember = ({
     };
 
     mutation.mutateAsync(values, {
-      onSuccess: () => {
-        toast.success('Invite sent!');
-      },
       onError: () => {
         toast.error('Something went wrong!');
+        return null;
       },
     });
-    if (!mutation?.data?.data) return;
+    console.log('AFTER');
+    const mutationdata = await mutation?.data?.data;
+    const res = await sendProjectInvitation(
+      projectId,
+      projectTitle,
+      email,
+      projectDescription,
+      mutationdata,
+    );
+    if (res.status === 200) {
+      toast.success('Invite sent!');
+    }
+    window.location.reload();
 
-    const newInvitation = await mutation.data.data;
+    // const newInvitation = await mutation.data.data;
 
-    console.log(newInvitation)
+    // console.log(newInvitation)
 
-    setInvitationsArray([...invitationsArray, newInvitation]);
+    // setInvitationsArray([...invitationsArray, newInvitation]);
   };
 
   return (

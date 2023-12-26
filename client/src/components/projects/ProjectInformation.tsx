@@ -49,6 +49,8 @@ const ProjectInformation = ({
 
         <div className="text-center sm:mt-6 mt-12">
           <ProjectsMember
+            projectTitle={project.title}
+            projectDescription={project.description}
             projectMembers={project.userProject}
             role={currentUser.role}
             invitations={invitations}
