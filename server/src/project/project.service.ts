@@ -145,4 +145,17 @@ export class ProjectService {
         }
     }
 
+    async getInvitationById(invitationId: string) {
+        try {
+            const invitation = await this.prismaService.invitation.findFirst({
+                where: {
+                    id: invitationId
+                }
+            })
+            return invitation
+        } catch (error) {
+            throw new UnauthorizedException("Unauthorized")
+        }
+    }
+
 }

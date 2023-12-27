@@ -3,7 +3,7 @@ import HomeComponent from '@/components/helpers/HomeComponent';
 import AcceptInvitation from '@/components/projects/AcceptInvitation';
 import React from 'react';
 
-const page = () => {
+const page = ({ params }: { params: { invitationId: string } }) => {
   return (
     <main>
       <div className="absolute top-0 left-0 mt-3 ml-3 ">
@@ -13,7 +13,7 @@ const page = () => {
         <ChangeLanguage />
       </div>
       <div className="flex h-screen items-center justify-center text-center">
-        <AcceptInvitation />
+        <AcceptInvitation invitationId={params.invitationId} />
       </div>
     </main>
   );

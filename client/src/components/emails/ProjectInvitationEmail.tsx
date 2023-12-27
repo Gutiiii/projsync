@@ -15,11 +15,11 @@ import { Tailwind } from '@react-email/tailwind';
 import * as React from 'react';
 
 const ProjectInvitationEmail = ({
-  projectId,
+  invitationId,
   projectName,
   projectDescription,
 }: {
-  projectId: string;
+  invitationId: string;
   projectName: string;
   projectDescription: string;
 }) => (
@@ -40,7 +40,7 @@ const ProjectInvitationEmail = ({
           fontFamily="Roboto"
           fallbackFontFamily="Verdana"
           webFont={{
-            url: 'https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2',
+            url: 'https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2',     
             format: 'woff2',
           }}
           fontWeight={400}
@@ -62,7 +62,7 @@ const ProjectInvitationEmail = ({
           <Text className="text-md">{projectDescription}</Text>
           <Link
             className="cursor-pointer bg-blue-500 rounded-sm px-3 py-2 text-white mt-6"
-            href={`${FRONTEND_URL}/projects/invitation/${projectId}`}
+            href={`${FRONTEND_URL}/projects/invitation/${invitationId}`}
           >
             Accept Invitation
           </Link>

@@ -46,4 +46,9 @@ export class ProjectController {
     async getInvitationsProject(@Param("projectId") projectId, @Req() request) {
         return await this.projectService.getInvitationsProject(projectId, request.user.id)
     }
+
+    @Get("invitation/:invitationId")
+    async invitationById(@Param("invitationId") invitationId) {
+        return await this.projectService.getInvitationById(invitationId)
+    }
 }

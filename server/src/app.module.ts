@@ -11,7 +11,7 @@ import { UserModule } from './user/user.module';
 @Module({
   imports: [ConfigModule.forRoot(), AuthModule, UserModule, ProjectModule, ThrottlerModule.forRoot([{
     ttl: 30000,
-    limit: 10,
+    limit: 20,
   }]),],
   controllers: [AppController],
   providers: [AppService, {

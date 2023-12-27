@@ -1,14 +1,40 @@
 'use client';
+import { useGetByInvitationId } from '@/hooks/projectHooks/useGetInvitationById';
+import Google from 'next-auth/providers/google';
+import { signIn, useSession } from 'next-auth/react';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 import { Button } from '../Button';
+import { Skeleton } from '../ui/skeleton';
 
-const AcceptInvitation = () => {
-  return (
-    <div>
-      <p className="text-3xl mb-4">Accept to Join this Project</p>
-      <Button variant="info">Accept Invitation</Button>
-    </div>
-  );
+const AcceptInvitation = ({ invitationId }: { invitationId: string }) => {
+  const { data: session } = useSession();
+  const { isLoading, isError, isSuccess } = useGetByInvitationId(invitationId);
+  const router = useRouter();
+  const path = usePathname();
+
+  if (isError) router.push('/dashboard');
+  if (isLoading) {
+    return (
+      <div>
+        <Skeleton className="h-8 w-72 bg-gray-300 -mt-10" />
+        <Skeleton className="bg-gray-300 h-10 w-72 mt-4" />
+      </div>
+    );
+  }
+  if (isSuccess) {
+    return (
+      <div>
+        <p className="text-3xl mb-4">Accept to Join this Project</p>
+        <Button
+          variant="info"
+          onClick={() => signIn('google', { callbackUrl: path })}
+        >
+          Accept Invitation
+        </Button>
+      </div>
+    );
+  }
 };
 
 export default AcceptInvitation;

@@ -20,6 +20,7 @@ import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../Button';
 import InviteMemberModal from '../modal/InviteMemberModal';
+import LoadingSpinner from '../ui/LoadingSpinner';
 
 type User = {
   name: string;
@@ -104,30 +105,26 @@ const ProjectsMember = ({
     };
 
     mutation.mutateAsync(values, {
+      onSuccess: async (data) => {
+        const invitationId = data.data.id;
+        const res = await sendProjectInvitation(
+          projectTitle,
+          email,
+          projectDescription,
+          invitationId,
+        );
+        if (res.status === 200) {
+          toast.success('Invite sent!');
+        }
+        const newInvitation = data.data;
+
+        setInvitationsArray([...invitationsArray, newInvitation]);
+      },
       onError: () => {
         toast.error('Something went wrong!');
         return null;
       },
     });
-    console.log('AFTER');
-    const mutationdata = await mutation?.data?.data;
-    const res = await sendProjectInvitation(
-      projectId,
-      projectTitle,
-      email,
-      projectDescription,
-      mutationdata,
-    );
-    if (res.status === 200) {
-      toast.success('Invite sent!');
-    }
-    window.location.reload();
-
-    // const newInvitation = await mutation.data.data;
-
-    // console.log(newInvitation)
-
-    // setInvitationsArray([...invitationsArray, newInvitation]);
   };
 
   return (
@@ -244,6 +241,7 @@ const ProjectsMember = ({
           handleOnSubmit={handleInvite}
         />
       )}
+      {mutation.isLoading && <LoadingSpinner />}
     </>
   );
 };
