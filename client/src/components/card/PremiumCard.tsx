@@ -2,6 +2,7 @@
 import { Check } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import React from 'react';
 import { Button } from '../Button';
 
@@ -17,7 +18,9 @@ const PremiumCard = () => {
         <p className="mt-3 text-gray-600 ml-1">{t('month')}</p>
       </div>
       <Button className="w-full mt-4">
-        <a href={session?.user ? '/dashboard' : '/signup'}>{t('getstarted')}</a>
+        <Link href={session?.user ? '/dashboard' : '/signup'}>
+          {t('getstarted')}
+        </Link>
       </Button>
       <ul className="mt-8 space-y-2 text-gray-600">
         <li className="flex">

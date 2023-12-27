@@ -12,6 +12,7 @@ import { Label } from '@radix-ui/react-label';
 import { useMutation } from '@tanstack/react-query';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { FaGoogle } from 'react-icons/fa';
@@ -76,7 +77,7 @@ const SignUpForm = () => {
       <div className="flex text-md">
         <p className="mr-1">{t('isregistered')}</p>
         <div className="text-blue-600 cursor-pointer hover:underline">
-          <a href="/signin">{t('login')}.</a>
+          <Link href="/signin">{t('login')}.</Link>
         </div>
       </div>
       <form onSubmit={handleSubmit(submitData)}>

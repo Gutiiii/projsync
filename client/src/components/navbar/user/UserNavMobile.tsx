@@ -2,6 +2,7 @@ import UserAvatar from '@/components/auth/UserAvatar';
 import ChangeLanguage from '@/components/helpers/ChangeLanguage';
 import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { FC } from 'react';
 
 interface AdminNavMobileProps {
@@ -26,7 +27,7 @@ const AdminNavMobile: FC<AdminNavMobileProps> = ({ onClose }) => {
         <div className="group mx-auto">
           <li className="cursor-pointer">
             {' '}
-            <a href="/projects">{t('projects')}</a>
+            <Link href="/projects">{t('projects')}</Link>
           </li>
           <div className="line h-px group-hover:w-16 w-0 bg-black mx-auto transition-all duration-300" />
         </div>

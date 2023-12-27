@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { FC } from 'react';
 import { Button } from './Button';
 import { Badge } from './ui/badge';
@@ -21,7 +22,7 @@ const LandingMain: FC<LandingMainProps> = ({}) => {
           {t('description')}
         </h2>
         <Button size="sm">
-          <a href="/signup" className="flex items-center ">
+          <Link href="/signup" className="flex items-center ">
             {landingnav('getstarted')}
             <svg
               width="30"
@@ -38,7 +39,7 @@ const LandingMain: FC<LandingMainProps> = ({}) => {
                 clipRule="evenodd"
               ></path>
             </svg>
-          </a>
+          </Link>
         </Button>
       </div>
     </main>

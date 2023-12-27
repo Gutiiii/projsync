@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@radix-ui/react-label';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -88,7 +89,7 @@ const SignInForm = () => {
       <div className="flex text-md">
         <p className="mr-1">{t('isregistered')}</p>
         <div className="text-blue-600 cursor-pointer hover:underline">
-          <a href="/signup">{t('register')}.</a>
+          <Link href="/signup">{t('register')}.</Link>
         </div>
       </div>
       <form onSubmit={handleSubmit(submitData)}>

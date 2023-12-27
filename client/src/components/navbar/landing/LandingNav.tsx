@@ -3,6 +3,7 @@ import UserAvatar from '@/components/auth/UserAvatar';
 import ChangeLanguage from '@/components/helpers/ChangeLanguage';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { Button } from '../../Button';
 import SignInButton from '../../auth/button/SignInButton';
 import LandingHamburger from './LandingHamburger';
@@ -14,7 +15,7 @@ const LandingNav = ({}) => {
     <div className="h-[55px] pt-2 sticky top-0 inset-x-0 z-10 shadow-xl bg-gray-200">
       <div className="flex text-xl text-center items-center sm:justify-around justify-between mx-4">
         <button className="flex text-center items-center">
-          <a href="/">ProjSync.</a>
+          <Link href="/">ProjSync.</Link>
         </button>
         <div className="items-center text-center hidden sm:flex">
           <div
@@ -23,7 +24,7 @@ const LandingNav = ({}) => {
             }
           >
             <button>
-              <a href="/pricing">{t('pricing')}</a>
+              <Link href="/pricing">{t('pricing')}</Link>
             </button>
             <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
           </div>
@@ -32,7 +33,7 @@ const LandingNav = ({}) => {
           {session?.user ? (
             <>
               <Button>
-                <a href="/dashboard">Dashboard</a>
+                <Link href="/dashboard">Dashboard</Link>
               </Button>
               <UserAvatar />
             </>
@@ -43,7 +44,7 @@ const LandingNav = ({}) => {
                 <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
               </div>
               <Button>
-                <a href="/signup" className="flex items-center ">
+                <Link href="/signup" className="flex items-center ">
                   {t('getstarted')}
                   <svg
                     width="30"
@@ -60,7 +61,7 @@ const LandingNav = ({}) => {
                       clipRule="evenodd"
                     ></path>
                   </svg>
-                </a>
+                </Link>
               </Button>
             </>
           )}

@@ -4,6 +4,7 @@ import ChangeLanguage from '@/components/helpers/ChangeLanguage';
 import { X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { FC } from 'react';
 import { Button } from '../../Button';
 
@@ -19,7 +20,7 @@ const LandingNavMobile: FC<LandingNavMobileProps> = ({ onClose }) => {
     <main className="absolute inset-0 text-center w-full z-20 bg-gray-400 h-screen grid overflow-hidden ">
       <div className="flex justify-between">
         <div className="mt-2 ml-4 text-xl">
-          <a href="/">ProjSync.</a>
+          <Link href="/">ProjSync.</Link>
         </div>
         <div
           className="h-10 w-10 hover:rounded-full hover:bg-gray-500 active:bg-gray-600 active:scale-95 cursor-pointer p-1 mt-1 mx-2"
@@ -31,26 +32,26 @@ const LandingNavMobile: FC<LandingNavMobileProps> = ({ onClose }) => {
       <ul className="space-y-5">
         <div className="group mx-auto mb-5">
           <li className="cursor-pointer">
-            <a href="/pricing">{landingnav('pricing')}</a>
+            <Link href="/pricing">{landingnav('pricing')}</Link>
           </li>
           <div className="line h-px group-hover:w-16 w-0 bg-black mx-auto transition-all duration-300" />
         </div>
         {session?.user ? (
           <>
-            <a href="/dashboard">Dashboard</a>
+            <Link href="/dashboard">Dashboard</Link>
             <UserAvatar />
           </>
         ) : (
           <>
             <div className="group">
-              <a href="/signin">
+              <Link href="/signin">
                 <li className="cursor-pointer">{landingnav('login')}</li>
                 <div className="line h-px group-hover:w-12 w-0 bg-black mx-auto transition-all duration-300" />
-              </a>
+              </Link>
             </div>
             <li className="cursor-pointer">
               {' '}
-              <a href="/signup">
+              <Link href="/signup">
                 {' '}
                 <Button size="sm" className="mx-auto">
                   {landingnav('getstarted')}
@@ -70,7 +71,7 @@ const LandingNavMobile: FC<LandingNavMobileProps> = ({ onClose }) => {
                     ></path>
                   </svg>
                 </Button>
-              </a>
+              </Link>
             </li>
           </>
         )}
