@@ -5,13 +5,17 @@ import { allowedOrigin } from './constants';
 import env from './lib/env';
 
 async function bootstrap() {
-  const logger = new Logger('bootstrap')
+  const logger = new Logger('bootstrap');
   const app = await NestFactory.create(AppModule);
+
+  // Enable CORS using the `enableCors` method
   app.enableCors({
     origin: [allowedOrigin],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  })
+  });
+
   await app.listen(env.PORT, '0.0.0.0');
-  logger.log("Application listening on port " + env.PORT)
+  logger.log("Application listening on port " + env.PORT);
 }
+
 bootstrap();
