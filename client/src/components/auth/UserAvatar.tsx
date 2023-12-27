@@ -1,5 +1,6 @@
 'use client';
 import { sendPasswordEmail } from '@/app/actions';
+import { Spinner } from '@chakra-ui/react';
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -46,8 +47,6 @@ const UserAvatar: FC = ({}) => {
     }
   }, [state, toastDisplayed, t]);
 
-  console.log('LOADING: ', loading);
-
   return (
     <div className="cursor-pointer">
       <DropdownMenu>
@@ -76,8 +75,8 @@ const UserAvatar: FC = ({}) => {
         </DropdownMenuContent>
       </DropdownMenu>
       {loading && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-50 p-4 rounded-md text-white z-50">
-          <p>Loading...</p>
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-50 p-4 rounded-md text-white z-50">
+          <Spinner size="lg" />
         </div>
       )}
     </div>
