@@ -46,6 +46,8 @@ const UserAvatar: FC = ({}) => {
     }
   }, [state, toastDisplayed, t]);
 
+  console.log('LOADING: ', loading);
+
   return (
     <div className="cursor-pointer">
       <DropdownMenu>
@@ -62,9 +64,7 @@ const UserAvatar: FC = ({}) => {
             }}
           >
             <DropdownMenuItem className="cursor-pointer">
-              <button type="submit">
-                {loading ? 'Loading...' : avatar('changepassword')}
-              </button>
+              <button type="submit">{avatar('changepassword')}</button>
             </DropdownMenuItem>
           </form>
           <DropdownMenuItem
@@ -75,6 +75,11 @@ const UserAvatar: FC = ({}) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      {loading && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-50 p-4 rounded-md text-white z-50">
+          <p>Loading...</p>
+        </div>
+      )}
     </div>
   );
 };
