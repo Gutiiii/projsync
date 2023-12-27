@@ -13,6 +13,8 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 
+// ... (existing imports)
+
 const UserAvatar: FC = ({}) => {
   const [state, formAction] = useFormState(sendPasswordEmail, null);
   const t = useTranslations('Toaster');
@@ -20,8 +22,11 @@ const UserAvatar: FC = ({}) => {
   const { data: session } = useSession();
 
   const [toastDisplayed, setToastDisplayed] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    setLoading(false);
+
     if (state?.status === 200 && !toastDisplayed) {
       toast.success(`${t('passwordchangecredentials')}`, {
         description: `${t('passwordchangecredentialsdescription')}`,
@@ -34,6 +39,11 @@ const UserAvatar: FC = ({}) => {
       });
       setToastDisplayed(true);
     }
+
+    // Reset loading state when the action is resolved
+    if (state?.status !== undefined) {
+      setLoading(false);
+    }
   }, [state, toastDisplayed, t]);
 
   return (
@@ -44,13 +54,17 @@ const UserAvatar: FC = ({}) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <form
-            action={() => {
+            onSubmit={(e) => {
+              e.preventDefault();
               setToastDisplayed(false);
+              setLoading(true); // Set loading state to true when action starts
               formAction();
             }}
           >
             <DropdownMenuItem className="cursor-pointer">
-              <button type="submit">{avatar('changepassword')}</button>
+              <button type="submit">
+                {loading ? 'Loading...' : avatar('changepassword')}
+              </button>
             </DropdownMenuItem>
           </form>
           <DropdownMenuItem
