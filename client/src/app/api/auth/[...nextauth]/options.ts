@@ -5,7 +5,6 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 
 export const authOptions: NextAuthOptions = {
-    //TODO: Bug when user registered with provider and then someone tries to login with credentials, any password works.
     providers: [
         CredentialsProvider({
             name: 'Credentials',
