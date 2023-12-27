@@ -75,9 +75,14 @@ const UserAvatar: FC = ({}) => {
         </DropdownMenuContent>
       </DropdownMenu>
       {loading && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-50 p-4 rounded-md text-white z-50">
-          <Spinner size="lg" />
-        </div>
+        <Spinner
+          className="fixed top-10 left-1/2 z-50"
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="black"
+          size="xl"
+        />
       )}
     </div>
   );
