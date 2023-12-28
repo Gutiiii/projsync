@@ -1,6 +1,5 @@
 'use client';
 import { useGetByInvitationId } from '@/hooks/projectHooks/useGetInvitationById';
-import Google from 'next-auth/providers/google';
 import { signIn, useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
@@ -13,7 +12,11 @@ const AcceptInvitation = ({ invitationId }: { invitationId: string }) => {
   const router = useRouter();
   const path = usePathname();
 
-  if (isError) router.push('/dashboard');
+  if (isError) {
+    if (session) router.push('/dashboard');
+    else router.push('/signin');
+  }
+
   if (isLoading) {
     return (
       <div>

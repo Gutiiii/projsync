@@ -8,7 +8,7 @@ const Pricing = () => {
   return (
     <div className="relative h-full">
       <LandingNav />
-      <div className="mt-10 lg:mt-32 2xl:mt-48 text-center items-center justify-center">
+      <div className="mt-10 lg:mt-24 2xl:mt-32 text-center items-center justify-center">
         <h1 className="text-6xl font-black">Pricing</h1>
         <h2 className="mt-6 text-3xl font-semibold mb-20">
           Start free and scale after
