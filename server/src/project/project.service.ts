@@ -152,6 +152,8 @@ export class ProjectService {
                     id: invitationId
                 }
             })
+
+            if (!invitation) throw new UnauthorizedException("Unauthorized")
             return invitation
         } catch (error) {
             throw new UnauthorizedException("Unauthorized")
