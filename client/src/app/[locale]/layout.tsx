@@ -37,7 +37,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className="light">
-      <body className="bg-gray-200">
+      <body className="bg-gray-200 min-h-screen">
         <Providers>
           <NextIntlClientProvider locale={locale} messages={messages}>
             <div className={roboto.className}>{children}</div>
