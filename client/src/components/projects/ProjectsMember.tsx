@@ -134,7 +134,6 @@ const ProjectsMember = ({
           <p className="text-2xl font-semibold text-center mb-4 relative">
             {t('members')}
           </p>
-          {/* TODO Add Invite Functionality */}
           {role === 'CREATOR' ? (
             <Button
               className="ml-3 -mt-0.5"
