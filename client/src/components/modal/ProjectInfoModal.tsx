@@ -9,6 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
+import { FileEdit, Pencil, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 
@@ -62,19 +63,44 @@ const ProjectInfoModal: FC<ProjectInfoModalProps> = ({
               >
                 {project.status}
               </p>
+              {project.userProject['0'].role === 'CREATOR' && (
+                <Pencil className="h-7 w-7 hover:rounded-full hover:bg-gray-300 active:bg-gray-400 active:scale-95 cursor-pointer p-1 mx-2 " />
+              )}
             </div>
           </div>
         </ModalBody>
-        <ModalFooter>
-          <Button
-            colorScheme="blue"
-            mr={3}
-            onClick={() => router.push('/projects/' + project.id)}
-          >
-            Open Project
-          </Button>
-          <Button onClick={handleOnClose}>Close</Button>{' '}
-        </ModalFooter>
+        <footer
+          className={
+            project.userProject[0].role === 'CREATOR'
+              ? 'flex m-2 justify-between mx-4'
+              : 'flex m-2 justify-end mx-4'
+          }
+        >
+          {project.userProject['0'].role === 'CREATOR' && (
+            <div className="flex items-center space-x-3">
+              {' '}
+              <FileEdit
+                size={18}
+                className="h-10 w-10 hover:rounded-full hover:bg-gray-300 active:bg-gray-400 active:scale-95 cursor-pointer p-1 mt-1 mx-2"
+              />
+              <Trash2
+                size={18}
+                className="h-10 w-10 hover:rounded-full hover:bg-gray-300 active:bg-gray-400 active:scale-95 cursor-pointer p-1 mt-1 mx-2 "
+              />
+            </div>
+          )}
+
+          <div className="flex">
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => router.push('/projects/' + project.id)}
+            >
+              Open Project
+            </Button>
+            <Button onClick={handleOnClose}>Close</Button>{' '}
+          </div>
+        </footer>
       </ModalContent>
     </Modal>
   );
