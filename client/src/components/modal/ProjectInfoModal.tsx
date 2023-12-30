@@ -1,6 +1,5 @@
 import { ProjectCardType } from '@/types/project.types';
 import {
-  Button,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -9,6 +8,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
+import { Button } from '@nextui-org/react';
 import { FileEdit, Pencil, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { FC } from 'react';
@@ -92,8 +92,8 @@ const ProjectInfoModal: FC<ProjectInfoModalProps> = ({
 
           <div className="flex">
             <Button
-              colorScheme="blue"
-              mr={3}
+              className="mr-3"
+              color="primary"
               onClick={() => router.push('/projects/' + project.id)}
             >
               Open Project

@@ -3,7 +3,6 @@
 const { nextui } = require("@nextui-org/react");
 
 module.exports = {
-  darkMode: ["class"],
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
@@ -78,6 +77,5 @@ module.exports = {
 
   },
   darkMode: "class",
-  plugins: [nextui()],
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), nextui()],
 }

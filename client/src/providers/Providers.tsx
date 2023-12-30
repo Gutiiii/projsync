@@ -13,14 +13,16 @@ interface ProvidersProps {
 const Providers: FC<ProvidersProps> = ({ children }) => {
   const [queryClient] = useState(() => new QueryClient());
   return (
-    <SessionProvider>
-      <QueryClientProvider client={queryClient}>
-        <ChakraProvider>
-          <Toaster position="top-center" richColors />
-          <NextUIProvider>{children}</NextUIProvider>
-        </ChakraProvider>
-      </QueryClientProvider>
-    </SessionProvider>
+    <NextUIProvider>
+      <SessionProvider>
+        <QueryClientProvider client={queryClient}>
+          <ChakraProvider>
+            <Toaster position="top-center" richColors />
+            {children}
+          </ChakraProvider>
+        </QueryClientProvider>
+      </SessionProvider>
+    </NextUIProvider>
   );
 };
 

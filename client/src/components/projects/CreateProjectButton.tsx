@@ -5,7 +5,8 @@ import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import { Button } from '../Button';
+
+import { Button } from '@nextui-org/react';
 import CreateProjectModal from '../modal/CreateProjectModal';
 
 const CreateProjectButton = () => {
@@ -30,7 +31,7 @@ const CreateProjectButton = () => {
   return (
     <>
       <Button
-        variant={'info'}
+        color="primary"
         className=""
         onClick={() => setCreateProjectModalVisible(true)}
       >

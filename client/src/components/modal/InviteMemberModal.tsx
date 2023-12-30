@@ -1,7 +1,6 @@
 'use client';
 import { Input } from '@/components/ui/input';
 import {
-  Button,
   FormControl,
   Modal,
   ModalBody,
@@ -12,6 +11,7 @@ import {
   ModalOverlay,
   Select,
 } from '@chakra-ui/react';
+import { Button } from '@nextui-org/react';
 import { useTranslations } from 'next-intl';
 
 import React, { FC, useState } from 'react';
@@ -66,8 +66,8 @@ const InviteMemberModal: FC<ForgotPasswordModalProps> = ({
           <ModalFooter>
             <Button
               type="submit"
-              colorScheme="blue"
-              mr={3}
+              color="primary"
+              className="mr-3 cursor-pointer"
               onClick={() => {
                 setEmail('');
                 handleOnSubmit(email, role);

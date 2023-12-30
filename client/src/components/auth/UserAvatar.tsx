@@ -1,6 +1,5 @@
 'use client';
 import { sendPasswordEmail } from '@/app/actions';
-import { Spinner } from '@chakra-ui/react';
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';

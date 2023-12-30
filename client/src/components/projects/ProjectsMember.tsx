@@ -2,6 +2,7 @@
 import { sendProjectInvitation } from '@/app/actions';
 import { useCreateInvitation } from '@/hooks/projectHooks/useCreateInvitation';
 import { BACKEND_URL } from '@/lib/constants';
+import { Button } from '@nextui-org/react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import {
@@ -18,7 +19,6 @@ import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import { Button } from '../Button';
 import InviteMemberModal from '../modal/InviteMemberModal';
 import LoadingSpinner from '../ui/LoadingSpinner';
 
@@ -136,8 +136,7 @@ const ProjectsMember = ({
           </p>
           {role === 'CREATOR' ? (
             <Button
-              className="ml-3 -mt-0.5"
-              variant="info"
+              className="ml-3 -mt-0.5 bg-blue-500 hover:bg-blue-700 text-white h-9"
               size="sm"
               onClick={() => setInviteMemberModalVisible(true)}
             >

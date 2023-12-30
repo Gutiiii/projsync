@@ -1,6 +1,5 @@
 'use client';
 import {
-  Button,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -9,6 +8,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
+import { Button } from '@nextui-org/react';
 import React, { FC } from 'react';
 
 interface CreateProjectModalProps {
@@ -32,7 +32,11 @@ const OpenProjectModal: FC<CreateProjectModalProps> = ({
         <ModalCloseButton onClick={handleOnClose} />
         <ModalBody pb={6}></ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={() => handleOnSubmit(id)}>
+          <Button
+            className="mr-3"
+            color="primary"
+            onClick={() => handleOnSubmit(id)}
+          >
             Proceed
           </Button>
           <Button onClick={handleOnClose}>Cancel</Button>
