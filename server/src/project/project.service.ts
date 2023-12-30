@@ -111,6 +111,15 @@ export class ProjectService {
                     projectId: dto.projectId
                 }
             })
+
+            const user = await this.prismaService.user_Project.findMany({
+                where: {
+                    userId: userId,
+                    projectId: dto.projectId
+                }
+            })
+            
+            if (user) throw new BadRequestException("User isalready a Member of this Project!")
             const invitation = await this.prismaService.invitation.create({
                 data: {
                     projectId: dto.projectId,
