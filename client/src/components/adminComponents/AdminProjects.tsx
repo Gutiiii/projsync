@@ -25,7 +25,7 @@ const AdminProjects = async () => {
     }
 
     return (
-      <div>
+      <div className="min-h-screen">
         <AdminNavbar />
         <Projects projects={projectsArray} />
       </div>
