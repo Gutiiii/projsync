@@ -1,13 +1,14 @@
 'use client';
 import { Button } from '@/components/Button';
 import FormError from '@/components/error/FormError';
-import { Input } from '@/components/ui/input';
+
 import { registerUser } from '@/hooks/useRegisterUser';
 import { FRONTEND_URL } from '@/lib/constants';
 import { registerUserSchema } from '@/schemas/user.schema';
 import { RegisterUserFormData } from '@/types/user.types';
 import { Spinner } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Input } from '@nextui-org/react';
 import { Label } from '@radix-ui/react-label';
 import { useMutation } from '@tanstack/react-query';
 import { signIn } from 'next-auth/react';
@@ -89,8 +90,10 @@ const SignUpForm = () => {
             <Input
               type="text"
               id="fullname"
+              size="sm"
+              isRequired
               className={errors.name ? 'border-red-500' : ''}
-              placeholder={t('fullname')}
+              label={t('fullname')}
               {...register('name')}
             />
             {errors.name && (
@@ -104,7 +107,9 @@ const SignUpForm = () => {
             <Input
               id="email"
               className={errors.email ? 'border-red-500' : ''}
-              placeholder={t('email')}
+              label={t('email')}
+              isRequired
+              size="sm"
               {...register('email')}
             />
             {errors.email && (
@@ -117,7 +122,9 @@ const SignUpForm = () => {
               type="password"
               id="password"
               className={errors.password ? 'border-red-500' : ''}
-              placeholder={t('password')}
+              label={t('password')}
+              isRequired
+              size="sm"
               {...register('password')}
             />
             {errors.password && (

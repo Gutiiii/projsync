@@ -1,8 +1,6 @@
-import { Input } from '@/components/ui/input';
 import { createProjectSchema } from '@/schemas/project.schema';
 import { CreateProjectFormData } from '@/types/project.types';
 import {
-  Button,
   FormControl,
   FormLabel,
   Modal,
@@ -14,6 +12,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Input } from '@nextui-org/react';
 import { useTranslations } from 'next-intl';
 import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
@@ -58,7 +57,9 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
                 <FormControl className="mb-2">
                   <FormLabel>{t('title')}</FormLabel>
                   <Input
-                    placeholder={t('title')}
+                    isRequired
+                    size="sm"
+                    label={t('title')}
                     type="text"
                     {...register('title')}
                     className={errors.title ? 'border-red-500' : ''}
@@ -75,7 +76,9 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
                 <FormControl className="mb-2">
                   <FormLabel>{t('description')}</FormLabel>
                   <Input
-                    placeholder={t('description')}
+                    isRequired
+                    size="sm"
+                    label={t('description')}
                     type="text"
                     className={errors.description ? 'border-red-500' : ''}
                     {...register('description')}
@@ -92,7 +95,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} type="submit">
+            <Button color="primary" className="mr-3" type="submit">
               {t('create')}
             </Button>
             <Button onClick={handleOnClose}>{t('cancle')}</Button>

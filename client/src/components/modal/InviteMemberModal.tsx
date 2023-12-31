@@ -1,5 +1,4 @@
 'use client';
-import { Input } from '@/components/ui/input';
 import {
   FormControl,
   Modal,
@@ -9,8 +8,10 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
 } from '@chakra-ui/react';
+
+import { Input, Select, SelectItem } from '@nextui-org/react';
+
 import { Button } from '@nextui-org/react';
 import { useTranslations } from 'next-intl';
 
@@ -30,6 +31,7 @@ const InviteMemberModal: FC<ForgotPasswordModalProps> = ({
   const [email, setEmail] = useState<string>('');
   const [role, setRole] = useState<'EDITOR' | 'VIEWER'>('EDITOR');
   const t = useTranslations('Project');
+  //TODO Change to react Form for Email required
   return (
     <Modal isOpen={visible} onClose={handleOnClose}>
       <ModalOverlay />
@@ -42,24 +44,26 @@ const InviteMemberModal: FC<ForgotPasswordModalProps> = ({
 
             <FormControl className="mb-2 mt-4">
               <Input
-                required
-                placeholder="E-Mail"
+                isRequired
+                size="sm"
+                label="Email"
                 type="email"
                 onChange={(e) => setEmail(e.target.value)}
               />
             </FormControl>
             <FormControl>
               <Select
-                size="md"
-                required
+                isRequired
+                size="sm"
                 onChange={(e: any) => setRole(e.target.value)}
-                defaultValue={1}
+                label="Select a Role"
               >
-                <option value={1} disabled>
-                  {t('selectheader')}
-                </option>
-                <option value="EDITOR">{t('select2')}</option>
-                <option value="VIEWER">{t('select3')}</option>
+                <SelectItem value="EDITOR" key={'EDITOR'}>
+                  {t('select2')}
+                </SelectItem>
+                <SelectItem value="VIEWER" key={'VIEWER'}>
+                  {t('select3')}
+                </SelectItem>
               </Select>
             </FormControl>
           </ModalBody>

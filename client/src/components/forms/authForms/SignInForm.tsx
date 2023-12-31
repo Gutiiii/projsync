@@ -3,11 +3,12 @@ import { sendPasswordEmailForgot } from '@/app/actions';
 import { Button } from '@/components/Button';
 import FormError from '@/components/error/FormError';
 import ForgotPasswordModal from '@/components/modal/ForgotPasswordModal';
-import { Input } from '@/components/ui/input';
+
 import { FRONTEND_URL } from '@/lib/constants';
 import { signinUserSchema } from '@/schemas/user.schema';
 import { SigninUserFormData } from '@/types/user.types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Input } from '@nextui-org/react';
 import { Label } from '@radix-ui/react-label';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -101,7 +102,9 @@ const SignInForm = () => {
             <Input
               type="text"
               id="email"
-              placeholder={t('email')}
+              label="Email"
+              size="sm"
+              isRequired
               {...register('email')}
             />
             {errors.email && <FormError error={errors.email.message} />}
@@ -109,9 +112,11 @@ const SignInForm = () => {
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
             <Label className="ml-1">{t('password')}</Label>
             <Input
+              size="sm"
+              isRequired
               type="password"
               id="password"
-              placeholder={t('password')}
+              label={t('password')}
               {...register('password')}
             />
             {errors.password && <FormError error={errors.password.message} />}

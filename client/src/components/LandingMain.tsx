@@ -1,7 +1,7 @@
+import { Button } from '@nextui-org/react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { FC } from 'react';
-import { Button } from './Button';
 import { Badge } from './ui/badge';
 
 interface LandingMainProps {}
@@ -21,7 +21,7 @@ const LandingMain: FC<LandingMainProps> = ({}) => {
         <h2 className="mx-auto text-center items-center w-96 text-lg font-semibold mt-8 mb-4">
           {t('description')}
         </h2>
-        <Button size="sm">
+        <Button size="sm" color="primary">
           <Link href="/signup" className="flex items-center ">
             {landingnav('getstarted')}
             <svg

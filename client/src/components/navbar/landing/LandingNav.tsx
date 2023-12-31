@@ -1,10 +1,10 @@
 'use client';
 import UserAvatar from '@/components/auth/UserAvatar';
 import ChangeLanguage from '@/components/helpers/ChangeLanguage';
+import { Button } from '@nextui-org/react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { Button } from '../../Button';
 import SignInButton from '../../auth/button/SignInButton';
 import LandingHamburger from './LandingHamburger';
 
@@ -32,7 +32,7 @@ const LandingNav = ({}) => {
         <div className="sm:flex space-x-4 hidden">
           {session?.user ? (
             <>
-              <Button>
+              <Button color="primary">
                 <Link href="/dashboard">Dashboard</Link>
               </Button>
               <UserAvatar />
@@ -43,7 +43,7 @@ const LandingNav = ({}) => {
                 <SignInButton />
                 <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
               </div>
-              <Button>
+              <Button color="primary" >
                 <Link href="/signup" className="flex items-center ">
                   {t('getstarted')}
                   <svg
