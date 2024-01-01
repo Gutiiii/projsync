@@ -1,5 +1,5 @@
 'use client';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Checkbox } from '@nextui-org/react';
 import { useTranslations } from 'next-intl';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -26,7 +26,7 @@ const ShowClosedProjects: FC<ShowClosedProjectsProps> = ({}) => {
   const showClosed = searchParams.get('showClosed') === 'true';
 
   return (
-    <div className="flex items-center space-x-2 cursor-pointer">
+    <div className="flex items-center  cursor-pointer">
       <Checkbox
         defaultChecked={showClosed}
         id="showclosed"
