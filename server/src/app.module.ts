@@ -6,13 +6,14 @@ import { ZodValidationPipe } from 'nestjs-zod';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { LogModule } from './log/log.module';
 import { ProjectModule } from './project/project.module';
 import { UserModule } from './user/user.module';
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, UserModule, ProjectModule, ThrottlerModule.forRoot([{
+  imports: [ConfigModule.forRoot(), AuthModule, UserModule, ProjectModule, LogModule, ThrottlerModule.forRoot([{
     ttl: 30000,
     limit: 20,
-  }]),],
+  }]), LogModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: APP_PIPE,
@@ -21,7 +22,8 @@ import { UserModule } from './user/user.module';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard
-    }
+    },
+
   ],
 })
 export class AppModule { }

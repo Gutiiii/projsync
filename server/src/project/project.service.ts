@@ -1,36 +1,44 @@
 import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { LogService } from 'src/log/log.service';
 import { PrismaService } from 'src/prisma.service';
 import { CreateInvitationDto, CreateProjectDto } from './dto/project.dto';
 
 @Injectable()
 export class ProjectService {
     private logger = new Logger('ProjectService')
-    constructor(private prismaService: PrismaService) { }
+    constructor(private prismaService: PrismaService, private logService: LogService) { }
 
     async createProject(dto: CreateProjectDto) {
-
-        const project = await this.prismaService.project.create({
-            data: {
-                title: dto.title,
-                description: dto.description
-            }
-        })
-        this.logger.verbose(`New Project ${project.id}`)
-        if (project && project.id) {
-            const userProject = await this.prismaService.user_Project.create({
+        try {
+            const project = await this.prismaService.project.create({
                 data: {
-                    userId: dto.id,
-                    role: "CREATOR",
-                    projectId: project.id
+                    title: dto.title,
+                    description: dto.description
                 }
             })
-            this.logger.verbose(`New User_Project: ${userProject.id}`)
-            if (userProject) return { project, userProject }
+            this.logger.verbose(`New Project ${project.id}`)
+            if (project && project.id) {
+                const userProject = await this.prismaService.user_Project.create({
+                    data: {
+                        userId: dto.id,
+                        role: "CREATOR",
+                        projectId: project.id
+                    }
+                })
+                this.logger.verbose(`New User_Project: ${userProject.id}`)
+                await this.logService.createLog(dto.id, "CREATE", `Created Project ${project.id}`)
+                if (userProject) return { project, userProject }
 
-            throw new BadRequestException("Something went wrong!")
-        } else {
+                throw new BadRequestException("Something went wrong!")
+            } else {
+                throw new BadRequestException("Something went wrong!")
+            }
+        } catch (error) {
+            this.logger.verbose("Error on fn: createProject")
             throw new BadRequestException("Something went wrong!")
         }
+
+
     }
 
     async getAllProjects(id: string) {
@@ -118,8 +126,8 @@ export class ProjectService {
                     projectId: dto.projectId
                 }
             })
-            
-            if (user) throw new BadRequestException("User isalready a Member of this Project!")
+
+            if (user) throw new BadRequestException("User is already a Member of this Project!")
             const invitation = await this.prismaService.invitation.create({
                 data: {
                     projectId: dto.projectId,
@@ -127,6 +135,7 @@ export class ProjectService {
                     role: dto.role
                 }
             })
+            this.logService.createLog(userId, "CREATE", `Invited Member to Project ${dto.projectId}`)
             return invitation
         } catch (error) {
             throw new BadRequestException("Something went wrong!")

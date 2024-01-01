@@ -88,3 +88,19 @@ enum InvitationRole {
   EDITOR
   VIEWER
 }
+
+model Log {
+  id String @id @default(uuid()) 
+  type LogTypes
+  message String
+  user String
+  ip String?
+  createdAt DateTime @default(now())
+}
+
+enum LogTypes {
+  CREATE
+  GET
+  UPDATE
+  DELETE
+}
