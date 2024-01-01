@@ -165,8 +165,7 @@ export class AuthService {
 
     async validateUser(dto: SigninDto) {
         const user = await this.userService.findByEmail(dto.email)
-
-        if (!user.password) throw new UnauthorizedException()
+        if (!user?.password) throw new UnauthorizedException()
 
         if (user && (await compare(dto.password, user.password))) {
             const { password, ...result } = user

@@ -1,8 +1,8 @@
 'use client';
 import { sendPasswordEmailForgot } from '@/app/actions';
-import { Button } from '@/components/Button';
 import FormError from '@/components/error/FormError';
 import ForgotPasswordModal from '@/components/modal/ForgotPasswordModal';
+import { Button } from '@nextui-org/react';
 
 import { FRONTEND_URL } from '@/lib/constants';
 import { signinUserSchema } from '@/schemas/user.schema';
@@ -13,7 +13,7 @@ import { Label } from '@radix-ui/react-label';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaGoogle } from 'react-icons/fa';
@@ -25,11 +25,23 @@ const SignInForm = () => {
   const toaster = useTranslations('Toaster');
   const pathName = usePathname();
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+
+  const callbackUrl = searchParams.get('callbackUrl');
+
   const handleGoogleSignin = async () => {
-    signIn('google', {
-      callbackUrl: FRONTEND_URL + '/dashboard',
-      redirect: true,
-    });
+    if (callbackUrl) {
+      signIn('google', {
+        callbackUrl: callbackUrl,
+        redirect: true,
+      });
+    } else {
+      signIn('google', {
+        callbackUrl: FRONTEND_URL + '/dashboard',
+        redirect: true,
+      });
+    }
   };
 
   const {
@@ -43,26 +55,52 @@ const SignInForm = () => {
   const submitData = async (formData: SigninUserFormData) => {
     const email = formData['email'];
     const password = formData['password'];
-    const result = await signIn('credentials', {
-      redirect: false,
-      email,
-      password,
-    });
-    if (result?.error) {
-      toast.error(`${toaster('error')}`, {
-        description: `${toaster('errordescription')}`,
+
+    if (callbackUrl) {
+      console.log('CALLBACK');
+      const result = await signIn('credentials', {
+        callbackUrl: callbackUrl,
+        email,
+        password,
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      if (result?.error) {
+        toast.error(`${toaster('error')}`, {
+          description: `${toaster('errordescription')}`,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        toast.success(`${toaster('login')}`, {
+          description: `${toaster('logindescription')}`,
+          duration: 2000,
+        });
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 2000);
+      }
     } else {
-      toast.success(`${toaster('login')}`, {
-        description: `${toaster('logindescription')}`,
-        duration: 2000,
+      const result = await signIn('credentials', {
+        redirect: false,
+        email,
+        password,
       });
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 2000);
+      if (result?.error) {
+        toast.error(`${toaster('error')}`, {
+          description: `${toaster('errordescription')}`,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        toast.success(`${toaster('login')}`, {
+          description: `${toaster('logindescription')}`,
+          duration: 2000,
+        });
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 2000);
+      }
     }
   };
 
@@ -90,7 +128,15 @@ const SignInForm = () => {
       <div className="flex text-md">
         <p className="mr-1">{t('isregistered')}</p>
         <div className="text-blue-600 cursor-pointer hover:underline">
-          <Link href="/signup">{t('register')}.</Link>
+          <Link
+            href={
+              callbackUrl
+                ? { pathname: '/signup', query: { callbackUrl: callbackUrl } }
+                : { pathname: '/signup' }
+            }
+          >
+            {t('register')}.
+          </Link>
         </div>
       </div>
       <form onSubmit={handleSubmit(submitData)}>
@@ -128,7 +174,7 @@ const SignInForm = () => {
         >
           Forgot Password?
         </p>
-        <Button className="w-full h-10 mt-4" type="submit">
+        <Button className="w-full h-10 mt-4" type="submit" color="primary">
           {t('login')}
         </Button>
       </form>
@@ -138,8 +184,8 @@ const SignInForm = () => {
         <p className="line w-1/2 h-px bg-black" />
       </div>
 
-      <button
-        className="w-full h-10 outline outline-1 rounded-md mt-4 hover:bg-gray-100"
+      <Button
+        className="w-full h-10  rounded-md mt-4"
         onClick={() => handleGoogleSignin()}
       >
         <div className="flex text-center items-center justify-center">
@@ -148,7 +194,7 @@ const SignInForm = () => {
           </div>
           <p>{t('googlesignup')}</p>
         </div>
-      </button>
+      </Button>
       <ForgotPasswordModal
         visible={modalVisible}
         handleOnClose={onModalClose}

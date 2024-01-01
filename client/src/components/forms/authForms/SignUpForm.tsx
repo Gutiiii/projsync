@@ -1,12 +1,11 @@
 'use client';
-import { Button } from '@/components/Button';
 import FormError from '@/components/error/FormError';
+import { Button, Spinner } from '@nextui-org/react';
 
 import { registerUser } from '@/hooks/useRegisterUser';
 import { FRONTEND_URL } from '@/lib/constants';
 import { registerUserSchema } from '@/schemas/user.schema';
 import { RegisterUserFormData } from '@/types/user.types';
-import { Spinner } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@nextui-org/react';
 import { Label } from '@radix-ui/react-label';
@@ -14,7 +13,7 @@ import { useMutation } from '@tanstack/react-query';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { FaGoogle } from 'react-icons/fa';
 import { toast } from 'sonner';
@@ -25,11 +24,24 @@ const SignUpForm = () => {
   const mutation = useMutation({ mutationFn: registerUser });
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+
+  const callbackUrl = searchParams.get('callbackUrl');
+
+  console.log(callbackUrl);
+
   const handleGoogleSignin = async () => {
-    signIn('google', {
-      callbackUrl: FRONTEND_URL + '/dashboard',
-      redirect: true,
-    });
+    if (callbackUrl) {
+      signIn('google', {
+        callbackUrl: callbackUrl,
+        redirect: true,
+      });
+    } else {
+      signIn('google', {
+        callbackUrl: FRONTEND_URL + '/dashboard',
+        redirect: true,
+      });
+    }
   };
 
   const {
@@ -56,9 +68,15 @@ const SignUpForm = () => {
           description: `${toaster('registerdescription')}`,
           duration: 2000,
         });
-        setTimeout(() => {
-          router.push('/signin');
-        }, 2000);
+        if (callbackUrl) {
+          setTimeout(() => {
+            signIn(undefined, { callbackUrl: callbackUrl });
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            router.push('/signin');
+          }, 2000);
+        }
       },
       onError: () => {
         toast.error(`${toaster('error')}`, {
@@ -132,16 +150,9 @@ const SignUpForm = () => {
             )}
           </div>
         </div>
-        <Button className="w-full h-10 mt-4" type="submit">
+        <Button className="w-full h-10 mt-4" type="submit" color="primary">
           {mutation.isLoading ? (
-            <Spinner
-              thickness="4px"
-              speed="0.65s"
-              emptyColor="gray.200"
-              color="black"
-              size="md"
-              className="my-1"
-            />
+            <Spinner color="white" className="my-1" />
           ) : (
             t('createaccount')
           )}
@@ -152,17 +163,14 @@ const SignUpForm = () => {
         <p className="inline text-sm mx-3 -mt-[10px]">{t('or')}</p>
         <p className="line w-1/2 h-px bg-black" />
       </div>
-      <button
-        className="w-full h-10 outline outline-1 rounded-md mt-4 hover:bg-gray-100"
-        onClick={() => handleGoogleSignin()}
-      >
+      <Button className="w-full h-10 mt-4" onClick={() => handleGoogleSignin()}>
         <div className="flex text-center items-center justify-center">
           <div className="mr-2 mb-0.5">
             <FaGoogle />
           </div>
           <p>{t('googlesignup')}</p>
         </div>
-      </button>
+      </Button>
     </main>
   );
 };

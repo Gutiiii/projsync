@@ -31,7 +31,7 @@ const AcceptInvitation = ({ invitationId }: { invitationId: string }) => {
         <p className="text-3xl mb-4">Accept to Join this Project</p>
         <Button
           variant="info"
-          onClick={() => signIn('google', { callbackUrl: path })}
+          onClick={() => signIn(undefined, { callbackUrl: path })}
         >
           Accept Invitation
         </Button>
