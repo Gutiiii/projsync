@@ -59,10 +59,10 @@ const InviteMemberModal: FC<InviteMemberModalProps> = ({
                 label="Select a Role"
               >
                 <SelectItem value="EDITOR" key={'EDITOR'}>
-                  {t('select2')}
+                  {t('select1')}
                 </SelectItem>
                 <SelectItem value="VIEWER" key={'VIEWER'}>
-                  {t('select3')}
+                  {t('select2')}
                 </SelectItem>
               </Select>
             </FormControl>
@@ -80,7 +80,7 @@ const InviteMemberModal: FC<InviteMemberModalProps> = ({
               {t('sendinvite')}
             </Button>
 
-            <Button onClick={handleOnClose}>{t('cancle')}</Button>
+            <Button onClick={handleOnClose}>{t('cancel')}</Button>
           </ModalFooter>
         </form>
       </ModalContent>

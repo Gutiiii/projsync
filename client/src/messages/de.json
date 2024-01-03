@@ -92,7 +92,7 @@
     "title": "Titel",
     "description": "Beschreibung",
     "create": "Erstellen",
-    "cancle": "Abbrechen",
+    "cancel": "Abbrechen",
     "dropdown1": "Nach Titel aufsteigend sortieren",
     "dropdown2": "Nach Titel absteigend sortieren",
     "dropdown3": "Nach Erstellungsdatum aufsteigend sortieren",
@@ -107,9 +107,17 @@
     "inputemail": "E-Mail-Adresse eingeben",
     "selectheader": "Rolle auswählen",
     "select1": "Ersteller (Voller Zugriff)",
-    "select2": "Bearbeiter (Kann Projekt bearbeiten)",
-    "select3": "Betrachter (Kann Projekt ansehen)",
+    "select1": "Bearbeiter (Kann Projekt bearbeiten)",
+    "select2": "Betrachter (Kann Projekt ansehen)",
     "sendinvite": "Einladung senden",
     "invitations": "Einladungen"
+  },
+  "EditMemberModal": {
+    "header": "Mitglied bearbeiten",
+    "role": "Rolle",
+    "select1": "Bearbeiter (Kann Projekt bearbeiten)",
+    "select1": "Betrachter (Kann Projekt ansehen)",
+    "safe": "Speichern",
+    "cancel": "Abbrechen"
   }
 }

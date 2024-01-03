@@ -98,7 +98,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
             <Button color="primary" className="mr-3" type="submit">
               {t('create')}
             </Button>
-            <Button onClick={handleOnClose}>{t('cancle')}</Button>
+            <Button onClick={handleOnClose}>{t('cancel')}</Button>
           </ModalFooter>
         </form>
       </ModalContent>

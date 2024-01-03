@@ -65,7 +65,7 @@ const ProjectsMember = ({
     useState<boolean>(false);
 
   const [editMemberModalVisible, setEditMemberModalVisible] =
-    useState<boolean>(false);
+    useState<boolean>(true);
 
   const [invitationsArray, setInvitationsArray] = useState(invitations);
 

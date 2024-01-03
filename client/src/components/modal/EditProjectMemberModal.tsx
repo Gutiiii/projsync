@@ -12,11 +12,10 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Input } from '@nextui-org/react';
+import { Button, Input, Select, SelectItem } from '@nextui-org/react';
 import { useTranslations } from 'next-intl';
 import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
-import FormError from '../error/FormError';
 
 interface EditProjectMemberModalProps {
   visible: boolean;
@@ -29,7 +28,7 @@ const EditProjectMemberModal: FC<EditProjectMemberModalProps> = ({
   handleOnClose,
   handleOnSubmit,
 }) => {
-  const t = useTranslations('Project');
+  const t = useTranslations('EditMemberModal');
   const {
     handleSubmit,
     register,
@@ -48,47 +47,27 @@ const EditProjectMemberModal: FC<EditProjectMemberModalProps> = ({
     <Modal isOpen={visible} onClose={handleOnClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{t('modalheader')}</ModalHeader>
+        <ModalHeader>{t('header')}</ModalHeader>
         <ModalCloseButton onClick={handleOnClose} />
         <form onSubmit={handleSubmit(submitData)}>
           <ModalBody pb={6}>
             <div className="">
               <div className="">
-                <FormControl className="mb-2">
-                  <FormLabel>{t('title')}</FormLabel>
-                  <Input
+                <FormControl>
+                  <Select
                     isRequired
+    defaultSelectedKeys={React.}
                     size="sm"
-                    label={t('title')}
-                    type="text"
-                    {...register('title')}
-                    className={errors.title ? 'border-red-500' : ''}
-                  />
-                  {errors.title && (
-                    <FormError
-                      variant="createproject"
-                      error={errors.title.message}
-                    />
-                  )}
-                </FormControl>
-              </div>
-              <div className="">
-                <FormControl className="mb-2">
-                  <FormLabel>{t('description')}</FormLabel>
-                  <Input
-                    isRequired
-                    size="sm"
-                    label={t('description')}
-                    type="text"
-                    className={errors.description ? 'border-red-500' : ''}
-                    {...register('description')}
-                  />
-                  {errors.description && (
-                    <FormError
-                      variant="createproject"
-                      error={errors.description.message}
-                    />
-                  )}
+                    onChange={(e: any) => setRole(e.target.value)}
+                    label="Select a Role"
+                  >
+                    <SelectItem value="EDITOR" key={'EDITOR'}>
+                      {t('select1')}
+                    </SelectItem>
+                    <SelectItem value="VIEWER" key={'VIEWER'}>
+                      {t('select2')}
+                    </SelectItem>
+                  </Select>
                 </FormControl>
               </div>
             </div>
@@ -96,9 +75,9 @@ const EditProjectMemberModal: FC<EditProjectMemberModalProps> = ({
 
           <ModalFooter>
             <Button color="primary" className="mr-3" type="submit">
-              {t('create')}
+              {t('safe')}
             </Button>
-            <Button onClick={handleOnClose}>{t('cancle')}</Button>
+            <Button onClick={handleOnClose}>{t('cancel')}</Button>
           </ModalFooter>
         </form>
       </ModalContent>
