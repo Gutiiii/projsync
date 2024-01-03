@@ -1,5 +1,6 @@
 'use client';
 import { ProjectCardType } from '@/types/project.types';
+import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { FC, useState } from 'react';
 import ProjectCard from '../card/ProjectCard';
@@ -10,6 +11,7 @@ interface ProjectsMapProps {
 }
 
 const ProjectsMap: FC<ProjectsMapProps> = ({ projects, search }) => {
+  const { data: session } = useSession();
   const [isOpening, setIsOpening] = useState<boolean>(true);
   const router = useRouter();
   const searchParams = useSearchParams()!;
@@ -119,19 +121,31 @@ const ProjectsMap: FC<ProjectsMapProps> = ({ projects, search }) => {
     <div className="relative">
       {filteredProjects().length > 0 ? (
         <div className="grid lg:grid-cols-3 gap-8 md:grid-cols-2 grid-cols-1">
-          {sortedProjects().map((project: ProjectCardType) => (
-            <ProjectCard
-              project={project}
-              createdAt={project.createdAt}
-              status={project.status}
-              title={project.title}
-              description={project.description}
-              role={project.userProject[0].role}
-              id={project.id}
-              key={project.id}
-              onOpen={openingProject}
-            />
-          ))}
+          {sortedProjects().map((project: ProjectCardType) => {
+            // Find the userProject entry for the current session user
+            const userProject = project.userProject.find(
+              (entry) => entry.userId === session?.user.id,
+            );
+
+            if (!userProject) return null;
+
+            // Check if userProject is found, and get the role
+            const role = userProject.role;
+
+            return (
+              <ProjectCard
+                project={project}
+                createdAt={project.createdAt}
+                status={project.status}
+                title={project.title}
+                description={project.description}
+                role={role} // Use the found role
+                id={project.id}
+                key={project.id}
+                onOpen={openingProject}
+              />
+            );
+          })}
         </div>
       ) : (
         <div className="text-xl mt-2">No Projects Found</div>

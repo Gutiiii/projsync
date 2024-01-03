@@ -53,7 +53,8 @@ export class ProjectService {
             include: {
                 userProject: {
                     select: {
-                        role: true
+                        role: true,
+                        userId: true
                     }
                 }
             }
@@ -205,7 +206,7 @@ export class ProjectService {
             })
             if (!user_Project) throw new BadRequestException("Something went wrong")
 
-            await this.removeInvitationOnAccept(invitationId)
+            await this.deleteInvitation(invitationId)
             return { projectId: user_Project.projectId }
 
         } catch (error) {
@@ -213,7 +214,7 @@ export class ProjectService {
         }
     }
 
-    async removeInvitationOnAccept(invitationId: string) {
+    async deleteInvitation(invitationId: string) {
         try {
             const invitation = await this.prismaService.invitation.delete({
                 where: {

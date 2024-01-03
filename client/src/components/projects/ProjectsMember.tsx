@@ -1,6 +1,7 @@
 'use client';
 import { sendProjectInvitation } from '@/app/actions';
 import { useCreateInvitation } from '@/hooks/projectHooks/useCreateInvitation';
+import { useDeleteInvitation } from '@/hooks/projectHooks/useDeleteInvitation';
 import { BACKEND_URL } from '@/lib/constants';
 import { Button } from '@nextui-org/react';
 import { useMutation } from '@tanstack/react-query';
@@ -19,6 +20,7 @@ import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
+import EditProjectMemberModal from '../modal/EditProjectMemberModal';
 import InviteMemberModal from '../modal/InviteMemberModal';
 import LoadingSpinner from '../ui/LoadingSpinner';
 
@@ -62,11 +64,16 @@ const ProjectsMember = ({
   const [inviteMemberModalVisible, setInviteMemberModalVisible] =
     useState<boolean>(false);
 
+  const [editMemberModalVisible, setEditMemberModalVisible] =
+    useState<boolean>(false);
+
   const [invitationsArray, setInvitationsArray] = useState(invitations);
 
   const { data: session } = useSession();
 
   const mutation = useMutation({ mutationFn: useCreateInvitation });
+
+  const deleteMutation = useMutation({ mutationFn: useDeleteInvitation });
 
   const t = useTranslations('Project');
 
@@ -77,16 +84,10 @@ const ProjectsMember = ({
     return dateWithoutWeekday;
   };
 
-  const handleDeleteInvitation = (id: string) => {
-    setInvitationsArray(
-      invitationsArray.filter((invitation) => invitation.id !== id),
-    );
-  };
-
-  const token = session?.backendTokens.accessToken;
   const projectId = projectMembers[0].projectId;
 
   const handleInvite = async (email: string, role: 'EDITOR' | 'VIEWER') => {
+    const token = session?.backendTokens.accessToken;
     setInviteMemberModalVisible(false);
 
     const userExists =
@@ -127,6 +128,30 @@ const ProjectsMember = ({
     });
   };
 
+  const handleDeleteInvitation = (invitationId: string) => {
+    setInvitationsArray(
+      invitationsArray.filter((invitation) => invitation.id !== invitationId),
+    );
+
+    const token = session?.backendTokens.accessToken;
+    const values = {
+      invitationId,
+      token,
+    };
+    deleteMutation.mutateAsync(values, {
+      onSuccess: (data) => {
+        toast.success('Invitation has been Deleted');
+      },
+      onError: () => {
+        toast.error('Something went wrong!');
+      },
+    });
+  };
+
+  const handleEdit = () => {
+    console.log('EDIT');
+  };
+
   return (
     <>
       <div className="grid justify-center">
@@ -164,9 +189,11 @@ const ProjectsMember = ({
                 <div>{projectMember.user.name}</div>
               </div>
               {/* TODO Add Edit Member Functionality */}
-              {role === 'CREATOR' ? (
+              {role === 'CREATOR' &&
+              projectMember.userId !== session?.user.id ? (
                 <div className="-mt-1">
                   <UserCog
+                    onClick={() => setEditMemberModalVisible(true)}
                     size="28"
                     className="hover:rounded-full hover:bg-gray-300 active:bg-gray-400 active:Scale-95 cursor-pointer p-1 mt-1"
                   />
@@ -207,7 +234,6 @@ const ProjectsMember = ({
                   </div>
                   <div className="opacity-80">{invitation.email}</div>
                 </div>
-                {/* TODO Add Edit Member Functionality */}
                 {role === 'CREATOR' ? (
                   <div className="-mt-1 ml-1">
                     <Trash
@@ -237,6 +263,13 @@ const ProjectsMember = ({
           visible={inviteMemberModalVisible}
           handleOnClose={() => setInviteMemberModalVisible(false)}
           handleOnSubmit={handleInvite}
+        />
+      )}
+      {editMemberModalVisible && (
+        <EditProjectMemberModal
+          visible={editMemberModalVisible}
+          handleOnClose={() => setEditMemberModalVisible(false)}
+          handleOnSubmit={handleEdit}
         />
       )}
       {mutation.isLoading && <LoadingSpinner />}

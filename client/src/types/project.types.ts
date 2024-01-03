@@ -14,6 +14,7 @@ export type ProjectCardType = {
     createdAt: string;
     userProject: {
         role: "CREATOR" | "EDITOR" | "VIEWER";
+        userId: string
     }[];
 };
 
@@ -57,4 +58,9 @@ export type CreateInvitationFormData = {
 export type AcceptInvitationFormData = {
     invitationId: string
     token?: string,
+}
+
+export type DeleteInvitationFormData = {
+    invitationId: string
+    token?: string
 }

@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { Button } from '@nextui-org/react';
 import { FileEdit, Pencil, Trash2 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 
@@ -25,10 +26,20 @@ const ProjectInfoModal: FC<ProjectInfoModalProps> = ({
   handleOnClose,
 }) => {
   // const t = useTranslations('Create');
+  const { data: session } = useSession();
   const date = new Date(project.createdAt);
   const dateStr = date.toDateString();
   const router = useRouter();
   const dateWithoutWeekday = dateStr.substring(dateStr.indexOf(' ') + 1);
+
+  const userProject = project.userProject.find(
+    (entry) => entry.userId === session?.user.id,
+  );
+
+  if (!userProject) return null;
+
+  // Check if userProject is found, and get the role
+  const role = userProject.role;
 
   return (
     <Modal isOpen={visible} onClose={handleOnClose}>
@@ -49,8 +60,7 @@ const ProjectInfoModal: FC<ProjectInfoModalProps> = ({
           <div className="text-lg text-center">
             <p>Created: {dateWithoutWeekday}</p>
             <p className="flex justify-center">
-              Role:{' '}
-              <p className="font-bold ml-1">{project.userProject['0'].role}</p>
+              Role: <p className="font-bold ml-1">{role}</p>
             </p>
             <div className="flex space-x-1 justify-center">
               <p>Status: </p>
@@ -63,7 +73,7 @@ const ProjectInfoModal: FC<ProjectInfoModalProps> = ({
               >
                 {project.status}
               </p>
-              {project.userProject['0'].role === 'CREATOR' && (
+              {role === 'CREATOR' && (
                 <Pencil className="h-7 w-7 hover:rounded-full hover:bg-gray-300 active:bg-gray-400 active:scale-95 cursor-pointer p-1 mx-2 " />
               )}
             </div>
@@ -71,12 +81,12 @@ const ProjectInfoModal: FC<ProjectInfoModalProps> = ({
         </ModalBody>
         <footer
           className={
-            project.userProject[0].role === 'CREATOR'
+            role === 'CREATOR'
               ? 'flex m-2 justify-between mx-4'
               : 'flex m-2 justify-end mx-4'
           }
         >
-          {project.userProject['0'].role === 'CREATOR' && (
+          {role === 'CREATOR' && (
             <div className="flex items-center space-x-3">
               {' '}
               <FileEdit
