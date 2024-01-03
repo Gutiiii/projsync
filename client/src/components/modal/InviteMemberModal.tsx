@@ -17,13 +17,13 @@ import { useTranslations } from 'next-intl';
 
 import React, { FC, useState } from 'react';
 
-interface ForgotPasswordModalProps {
+interface InviteMemberModalProps {
   visible: boolean;
   handleOnClose: () => void;
   handleOnSubmit: (email: string, role: 'EDITOR' | 'VIEWER') => void;
 }
 
-const InviteMemberModal: FC<ForgotPasswordModalProps> = ({
+const InviteMemberModal: FC<InviteMemberModalProps> = ({
   visible,
   handleOnClose,
   handleOnSubmit,

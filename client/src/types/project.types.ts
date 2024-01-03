@@ -53,3 +53,8 @@ export type CreateInvitationFormData = {
     projectId: string
     token?: string
 }
+
+export type AcceptInvitationFormData = {
+    invitationId: string
+    token?: string,
+}

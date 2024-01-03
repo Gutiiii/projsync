@@ -77,7 +77,7 @@ export class UserService {
             })
             this.logger.verbose(`${user.email} Changed his Password`)
             const log = await this.logService.createLog(user.name, "CREATE", "changed their Password")
-            console.log(log)
+
 
             return user
 

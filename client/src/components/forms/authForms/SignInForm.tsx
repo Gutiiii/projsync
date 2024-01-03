@@ -57,7 +57,6 @@ const SignInForm = () => {
     const password = formData['password'];
 
     if (callbackUrl) {
-      console.log('CALLBACK');
       const result = await signIn('credentials', {
         callbackUrl: callbackUrl,
         email,

@@ -122,12 +122,13 @@ export class ProjectService {
 
             const user = await this.prismaService.user_Project.findMany({
                 where: {
-                    userId: userId,
+                    user: {
+                        email: dto.email
+                    },
                     projectId: dto.projectId
                 }
             })
-
-            if (user) throw new BadRequestException("User is already a Member of this Project!")
+            if (user.length > 0) throw new BadRequestException("User is already a Member of this Project!")
             const invitation = await this.prismaService.invitation.create({
                 data: {
                     projectId: dto.projectId,
@@ -175,6 +176,40 @@ export class ProjectService {
             return invitation
         } catch (error) {
             throw new UnauthorizedException("Unauthorized")
+        }
+    }
+
+    async acceptInvitation(invitationId: string, email: string) {
+
+        try {
+            const invitation = await this.prismaService.invitation.findFirst({
+                where: {
+                    id: invitationId
+                }
+            })
+
+            if (!invitation) throw new UnauthorizedException("Unauthorized")
+            const user = await this.prismaService.user.findFirst({
+                where: {
+                    email: email
+                }
+            })
+
+            if (!user) throw new BadRequestException("Something went wrong")
+            const user_Project = await this.prismaService.user_Project.create({
+                data: {
+                    userId: user.id,
+                    projectId: invitation.projectId,
+                    role: invitation.role,
+                }
+            })
+            if (!user_Project) throw new BadRequestException("Something went wrong")
+
+            await this.removeInvitationOnAccept(invitationId)
+            return { projectId: user_Project.projectId }
+
+        } catch (error) {
+            throw new BadRequestException("Something went wrong")
         }
     }
 

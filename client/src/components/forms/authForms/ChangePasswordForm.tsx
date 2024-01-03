@@ -72,20 +72,20 @@ const ChangePasswordForm = ({ code }: { code: string }) => {
           pathName.includes('/de') ? 'font-light mx-[60px] ' : 'font-light '
         }
       >
-        <Skeleton className="w-32 h-4 bg-gray-300 mb-3" />
-        <Skeleton className="w-36 h-6 bg-gray-300" />
+        <Skeleton className="w-32 h-4 bg-gray-400 mb-3" />
+        <Skeleton className="w-36 h-6 bg-gray-400" />
         <div className="mt-4">
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
-            <Skeleton className="h-4 w-24 bg-gray-300" />
-            <Skeleton className="w-80 h-10 bg-gray-300" />
+            <Skeleton className="h-4 w-24 bg-gray-400" />
+            <Skeleton className="w-80 h-10 bg-gray-400" />
           </div>
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
-            <Skeleton className="h-4 w-24 bg-gray-300" />
-            <Skeleton className="w-80 h-10 bg-gray-300" />
+            <Skeleton className="h-4 w-24 bg-gray-400" />
+            <Skeleton className="w-80 h-10 bg-gray-400" />
           </div>
         </div>
 
-        <Skeleton className="w-80 h-10 bg-gray-300 mt-4" />
+        <Skeleton className="w-80 h-10 bg-gray-400 mt-4" />
       </main>
     );
   }

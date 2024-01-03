@@ -28,8 +28,6 @@ const SignUpForm = () => {
 
   const callbackUrl = searchParams.get('callbackUrl');
 
-  console.log(callbackUrl);
-
   const handleGoogleSignin = async () => {
     if (callbackUrl) {
       signIn('google', {

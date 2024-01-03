@@ -14,5 +14,10 @@ const CreateInvitationSchema = z.object({
     projectId: z.string(),
 })
 
+const AcceptInvitationSchema = z.object({
+    invitationId: z.string(),
+})
+
 export class CreateProjectDto extends createZodDto(CreateProjectSchema) { }
 export class CreateInvitationDto extends createZodDto(CreateInvitationSchema) { }
+export class AcceptInvitationDto extends createZodDto(AcceptInvitationSchema) { }
