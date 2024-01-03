@@ -178,4 +178,19 @@ export class ProjectService {
         }
     }
 
+    async removeInvitationOnAccept(invitationId: string) {
+        try {
+            const invitation = await this.prismaService.invitation.delete({
+                where: {
+                    id: invitationId
+                }
+            })
+            if (!invitation) throw new BadRequestException("Something went wrong")
+
+            return invitation
+        } catch (error) {
+            throw new BadRequestException("Something went wrong!")
+        }
+    }
+
 }
