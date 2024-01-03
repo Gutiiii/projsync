@@ -4,9 +4,16 @@ import useAuthForProjects from '@/hooks/authHooks/useAuthForProjects';
 import { useSigninRequiredServer } from '@/hooks/authHooks/useSigninRequiredServer';
 import { BACKEND_URL } from '@/lib/constants';
 import { CurrentUser } from '@/types/project.types';
+import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import React from 'react';
+
+export const metadata: Metadata = {
+  title: 'Information · ProjSync',
+  description:
+    'Project Sync let&apos;s you seemlessly communicate with your clients.',
+};
 
 const ProjectInformationPage = async ({
   params,

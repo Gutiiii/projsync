@@ -1,8 +1,14 @@
 import ChangePasswordForm from '@/components/forms/authForms/ChangePasswordForm';
 import ChangeLanguage from '@/components/helpers/ChangeLanguage';
 import HomeComponent from '@/components/helpers/HomeComponent';
+import { Metadata } from 'next';
 import { FC } from 'react';
 
+export const metadata: Metadata = {
+  title: 'Change Password · ProjSync',
+  description:
+    'Project Sync let&apos;s you seemlessly communicate with your clients.',
+};
 const ChangePassword = ({ params }: { params: { code: string } }) => {
   return (
     <main>

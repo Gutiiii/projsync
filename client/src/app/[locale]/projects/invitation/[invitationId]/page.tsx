@@ -1,8 +1,14 @@
 import ChangeLanguage from '@/components/helpers/ChangeLanguage';
 import HomeComponent from '@/components/helpers/HomeComponent';
 import AcceptInvitation from '@/components/projects/AcceptInvitation';
+import { Metadata } from 'next';
 import React from 'react';
 
+export const metadata: Metadata = {
+  title: 'Invitation · ProjSync',
+  description:
+    'Project Sync let&apos;s you seemlessly communicate with your clients.',
+};
 const page = ({ params }: { params: { invitationId: string } }) => {
   return (
     <main>

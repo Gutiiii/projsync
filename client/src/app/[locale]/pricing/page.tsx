@@ -2,7 +2,14 @@ import Footer from '@/components/Footer';
 import FreeCard from '@/components/card/FreeCard';
 import PremiumCard from '@/components/card/PremiumCard';
 import LandingNav from '@/components/navbar/landing/LandingNav';
+import { Metadata } from 'next';
 import React from 'react';
+
+export const metadata: Metadata = {
+  title: 'Pricing · ProjSync',
+  description:
+    'Project Sync let&apos;s you seemlessly communicate with your clients.',
+};
 
 const Pricing = () => {
   return (

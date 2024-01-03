@@ -11,7 +11,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: 'Project Sync',
+  title: 'ProjSync',
   description:
     'Project Sync let&apos;s you seemlessly communicate with your clients.',
 };
