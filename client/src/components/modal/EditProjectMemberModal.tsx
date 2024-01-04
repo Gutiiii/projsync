@@ -56,9 +56,10 @@ const EditProjectMemberModal: FC<EditProjectMemberModalProps> = ({
                 <FormControl>
                   <Select
                     isRequired
-    defaultSelectedKeys={React.}
+                    selectionMode="single"
+                    defaultSelectedKeys={['VIEWER']}
                     size="sm"
-                    onChange={(e: any) => setRole(e.target.value)}
+                    // onChange={(e: any) => setRole(e.target.value)}
                     label="Select a Role"
                   >
                     <SelectItem value="EDITOR" key={'EDITOR'}>
