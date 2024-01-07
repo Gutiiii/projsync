@@ -2,10 +2,10 @@
 import { sendProjectInvitation } from '@/app/actions';
 import { useCreateInvitation } from '@/hooks/projectHooks/useCreateInvitation';
 import { useDeleteInvitation } from '@/hooks/projectHooks/useDeleteInvitation';
-import { BACKEND_URL } from '@/lib/constants';
+import { useEditMember } from '@/hooks/projectHooks/useEditMember';
+import { useRemoveMember } from '@/hooks/projectHooks/useRemoveMember';
 import { Button } from '@nextui-org/react';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import {
   Clock,
   Eye,
@@ -14,10 +14,10 @@ import {
   User2,
   UserCog,
   UserPlus,
-  X,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import EditProjectMemberModal from '../modal/EditProjectMemberModal';
@@ -29,6 +29,7 @@ type User = {
 };
 
 type ProjectMember = {
+  id: string;
   userId: string;
   role: string;
   createdAt: string;
@@ -55,25 +56,40 @@ const ProjectsMember = ({
   invitations,
   projectTitle,
   projectDescription,
+  id,
 }: ProjectsMemberProps & {
   role: 'VIEWER' | 'EDITOR' | 'CREATOR';
   projectTitle: string;
   projectDescription: string;
+  id: string;
 }) => {
-  // Your component logic here
+  const router = useRouter();
+
   const [inviteMemberModalVisible, setInviteMemberModalVisible] =
     useState<boolean>(false);
 
   const [editMemberModalVisible, setEditMemberModalVisible] =
-    useState<boolean>(true);
+    useState<boolean>(false);
+
+  const [editMemberId, setEditMemberId] = useState<string>('');
+
+  const [editMemberRole, setEditMemberRole] = useState<string>('');
 
   const [invitationsArray, setInvitationsArray] = useState(invitations);
 
   const { data: session } = useSession();
 
+  const token = session?.backendTokens.accessToken;
+
   const mutation = useMutation({ mutationFn: useCreateInvitation });
 
-  const deleteMutation = useMutation({ mutationFn: useDeleteInvitation });
+  const deleteInvitationMutation = useMutation({
+    mutationFn: useDeleteInvitation,
+  });
+
+  const editMemberMutaion = useMutation({ mutationFn: useEditMember });
+
+  const removeMemberMutation = useMutation({ mutationFn: useRemoveMember });
 
   const t = useTranslations('Project');
 
@@ -133,13 +149,12 @@ const ProjectsMember = ({
       invitationsArray.filter((invitation) => invitation.id !== invitationId),
     );
 
-    const token = session?.backendTokens.accessToken;
     const values = {
       invitationId,
       token,
     };
-    deleteMutation.mutateAsync(values, {
-      onSuccess: (data) => {
+    deleteInvitationMutation.mutateAsync(values, {
+      onSuccess: () => {
         toast.success('Invitation has been Deleted');
       },
       onError: () => {
@@ -148,8 +163,28 @@ const ProjectsMember = ({
     });
   };
 
-  const handleEdit = () => {
-    console.log('EDIT');
+  const handleOpenEditModal = (id: string, role: string) => {
+    setEditMemberId(id);
+    setEditMemberRole(role);
+    setEditMemberModalVisible(true);
+  };
+
+  const handleEdit = (role: string, userProjectId: string) => {
+    const values = {
+      userProjectId,
+      token,
+      role,
+    };
+    editMemberMutaion.mutateAsync(values, {
+      onSuccess: () => {
+        router.refresh();
+        toast.success('Member Edited');
+      },
+      onError: () => {
+        toast.error('Something went wrong');
+      },
+    });
+    setEditMemberModalVisible(false);
   };
 
   return (
@@ -172,7 +207,7 @@ const ProjectsMember = ({
         </div>
         {projectMembers.map((projectMember) => (
           <div
-            key={projectMember.userId}
+            key={projectMember.id}
             className=" text-lg border-b-2 border-gray-500 border-opacity-20 mb-2 pb-1 "
           >
             <div className="flex justify-between">
@@ -189,11 +224,13 @@ const ProjectsMember = ({
                 <div>{projectMember.user.name}</div>
               </div>
               {/* TODO Add Edit Member Functionality */}
-              {role === 'CREATOR' &&
-              projectMember.userId !== session?.user.id ? (
+              {role === 'CREATOR' && projectMember.userId !== id ? (
                 <div className="-mt-1">
                   <UserCog
-                    onClick={() => setEditMemberModalVisible(true)}
+                    onClick={() =>
+                      //TODO Change to projectMember.id
+                      handleOpenEditModal(projectMember.id, projectMember.role)
+                    }
                     size="28"
                     className="hover:rounded-full hover:bg-gray-300 active:bg-gray-400 active:Scale-95 cursor-pointer p-1 mt-1"
                   />
@@ -270,6 +307,8 @@ const ProjectsMember = ({
           visible={editMemberModalVisible}
           handleOnClose={() => setEditMemberModalVisible(false)}
           handleOnSubmit={handleEdit}
+          userProjectId={editMemberId}
+          userRole={editMemberRole}
         />
       )}
       {mutation.isLoading && <LoadingSpinner />}

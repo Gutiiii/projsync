@@ -1,3 +1,4 @@
+
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'nestjs-zod/z';
 
@@ -18,6 +19,12 @@ const AcceptInvitationSchema = z.object({
     invitationId: z.string(),
 })
 
+const EditMemberSchema = z.object({
+    userProjectId: z.string(),
+    role: z.enum(["EDITOR", "VIEWER"])
+})
+
 export class CreateProjectDto extends createZodDto(CreateProjectSchema) { }
 export class CreateInvitationDto extends createZodDto(CreateInvitationSchema) { }
 export class AcceptInvitationDto extends createZodDto(AcceptInvitationSchema) { }
+export class EditMemberDto extends createZodDto(EditMemberSchema) { }

@@ -64,3 +64,14 @@ export type DeleteInvitationFormData = {
     invitationId: string
     token?: string
 }
+
+export type EditMemberFormData = {
+    userProjectId: string,
+    role: string
+    token?: string
+}
+
+export type RemoveMemberFormData = {
+    id: string
+    token?: string
+}

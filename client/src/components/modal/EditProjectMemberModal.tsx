@@ -1,47 +1,39 @@
-import { createProjectSchema } from '@/schemas/project.schema';
-import { CreateProjectFormData } from '@/types/project.types';
 import {
   FormControl,
-  FormLabel,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Input, Select, SelectItem } from '@nextui-org/react';
+import { Button, Select, SelectItem } from '@nextui-org/react';
 import { useTranslations } from 'next-intl';
-import React, { FC } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { FC, useEffect, useState } from 'react';
 
 interface EditProjectMemberModalProps {
   visible: boolean;
   handleOnClose: () => void;
-  handleOnSubmit: (title: string, description: string) => void;
+  handleOnSubmit: (role: string, userProjectId: string) => void;
+  userProjectId: string;
+  userRole: string;
 }
 
 const EditProjectMemberModal: FC<EditProjectMemberModalProps> = ({
   visible,
   handleOnClose,
   handleOnSubmit,
+  userProjectId,
+  userRole,
 }) => {
   const t = useTranslations('EditMemberModal');
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm<CreateProjectFormData>({
-    resolver: zodResolver(createProjectSchema),
-  });
 
-  const submitData = async (formData: CreateProjectFormData) => {
-    const title = formData['title'];
-    const description = formData['description'];
-    handleOnSubmit(title, description);
-  };
+  const [role, setRole] = useState<string>(userRole);
+  const [isRoleChanged, setIsRoleChanged] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsRoleChanged(role !== userRole);
+  }, [role, userRole]);
 
   return (
     <Modal isOpen={visible} onClose={handleOnClose}>
@@ -49,7 +41,7 @@ const EditProjectMemberModal: FC<EditProjectMemberModalProps> = ({
       <ModalContent>
         <ModalHeader>{t('header')}</ModalHeader>
         <ModalCloseButton onClick={handleOnClose} />
-        <form onSubmit={handleSubmit(submitData)}>
+        <form onSubmit={() => handleOnSubmit(role, userProjectId)}>
           <ModalBody pb={6}>
             <div className="">
               <div className="">
@@ -57,9 +49,9 @@ const EditProjectMemberModal: FC<EditProjectMemberModalProps> = ({
                   <Select
                     isRequired
                     selectionMode="single"
-                    defaultSelectedKeys={['VIEWER']}
+                    defaultSelectedKeys={[userRole]}
                     size="sm"
-                    // onChange={(e: any) => setRole(e.target.value)}
+                    onChange={(e: any) => setRole(e.target.value)}
                     label="Select a Role"
                   >
                     <SelectItem value="EDITOR" key={'EDITOR'}>
@@ -74,12 +66,21 @@ const EditProjectMemberModal: FC<EditProjectMemberModalProps> = ({
             </div>
           </ModalBody>
 
-          <ModalFooter>
-            <Button color="primary" className="mr-3" type="submit">
-              {t('safe')}
-            </Button>
-            <Button onClick={handleOnClose}>{t('cancel')}</Button>
-          </ModalFooter>
+          <footer className="flex justify-between mx-6 my-4">
+            <div>
+              <Button color="danger" className="">
+                Remove{' '}
+              </Button>
+            </div>
+            <div>
+              {isRoleChanged && (
+                <Button color="primary" className="mr-3" type="submit">
+                  {t('safe')}
+                </Button>
+              )}
+              <Button onClick={handleOnClose}>{t('cancel')}</Button>
+            </div>
+          </footer>
         </form>
       </ModalContent>
     </Modal>

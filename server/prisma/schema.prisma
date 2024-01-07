@@ -66,6 +66,8 @@ model User_Project {
   role ProjectRole @default(VIEWER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([userId, projectId])
 }
 
 enum ProjectRole {

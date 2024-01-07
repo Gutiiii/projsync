@@ -53,6 +53,7 @@ const ProjectInformation = ({
             projectDescription={project.description}
             projectMembers={project.userProject}
             role={currentUser.role}
+            id={currentUser.userId}
             invitations={invitations}
           />
         </div>

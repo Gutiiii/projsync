@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { LogService } from 'src/log/log.service';
 import { PrismaService } from 'src/prisma.service';
-import { CreateInvitationDto, CreateProjectDto } from './dto/project.dto';
+import { CreateInvitationDto, CreateProjectDto, EditMemberDto } from './dto/project.dto';
 
 @Injectable()
 export class ProjectService {
@@ -226,6 +226,44 @@ export class ProjectService {
             return invitation
         } catch (error) {
             throw new BadRequestException("Something went wrong!")
+        }
+    }
+
+    async editMember(dto: EditMemberDto) {
+        try {
+            const member = await this.prismaService.user_Project.update({
+                where: {
+                    id: dto.userProjectId
+                }, data: {
+                    role: dto.role
+                }
+            })
+            if (!member) throw new BadRequestException("Something went wrong")
+
+            return member
+        } catch (error) {
+            throw new BadRequestException("Something went wrong")
+        }
+    }
+
+    async removeMember(id: string, userId: string) {
+        try {
+            const hasRight = await this.prismaService.user_Project.findFirst({
+                where: {
+                    userId: userId
+                }
+            })
+
+            if (!hasRight && hasRight.role !== "CREATOR") throw new UnauthorizedException("Unauthorized")
+
+            const member = await this.prismaService.user_Project.delete({
+                where: {
+                    id: id
+                }
+            })
+            if (!member) throw new BadRequestException("Something went wrong")
+        } catch (error) {
+            throw new BadRequestException("Something went wrong")
         }
     }
 

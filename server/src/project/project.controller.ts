@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { AcceptInvitationDto, CreateInvitationDto, CreateProjectDto } from './dto/project.dto';
+import { AcceptInvitationDto, CreateInvitationDto, CreateProjectDto, EditMemberDto } from './dto/project.dto';
 import { ProjectService } from './project.service';
 
 @Controller('project')
@@ -62,5 +62,17 @@ export class ProjectController {
     @Delete("/invitation/:invitationId")
     async deleteInvitation(@Param('invitationId') invitationId) {
         return await this.projectService.deleteInvitation(invitationId)
+    }
+
+    @UseGuards(JwtGuard)
+    @Patch("member")
+    async editMember(@Body() dto: EditMemberDto) {
+        return await this.projectService.editMember(dto)
+    }
+
+    @UseGuards(JwtGuard)
+    @Delete("member/:id")
+    async removeMember(@Param('id') id, @Req() request) {
+        return await this.projectService.removeMember(id, request.user.id)
     }
 }
