@@ -261,6 +261,7 @@ export class ProjectService {
                     id: id
                 }
             })
+            console.log(member)
             if (!member) throw new BadRequestException("Something went wrong")
         } catch (error) {
             throw new BadRequestException("Something went wrong")

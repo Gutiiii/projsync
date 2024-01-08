@@ -187,6 +187,23 @@ const ProjectsMember = ({
     setEditMemberModalVisible(false);
   };
 
+  const handleRemove = (userProjectId: string) => {
+    setEditMemberModalVisible(false);
+    const values = {
+      userProjectId,
+      token,
+    };
+    removeMemberMutation.mutateAsync(values, {
+      onSuccess: () => {
+        router.refresh();
+        toast.success('Member Removed from Project');
+      },
+      onError: () => {
+        toast.error('Something went wrong');
+      },
+    });
+  };
+
   return (
     <>
       <div className="grid justify-center">
@@ -307,6 +324,7 @@ const ProjectsMember = ({
           visible={editMemberModalVisible}
           handleOnClose={() => setEditMemberModalVisible(false)}
           handleOnSubmit={handleEdit}
+          handleOnRemove={handleRemove}
           userProjectId={editMemberId}
           userRole={editMemberRole}
         />

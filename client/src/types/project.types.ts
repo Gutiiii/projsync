@@ -72,6 +72,6 @@ export type EditMemberFormData = {
 }
 
 export type RemoveMemberFormData = {
-    id: string
+    userProjectId: string
     token?: string
 }

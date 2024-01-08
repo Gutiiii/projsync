@@ -15,6 +15,7 @@ interface EditProjectMemberModalProps {
   visible: boolean;
   handleOnClose: () => void;
   handleOnSubmit: (role: string, userProjectId: string) => void;
+  handleOnRemove: (userProjectId: string) => void;
   userProjectId: string;
   userRole: string;
 }
@@ -22,6 +23,7 @@ interface EditProjectMemberModalProps {
 const EditProjectMemberModal: FC<EditProjectMemberModalProps> = ({
   visible,
   handleOnClose,
+  handleOnRemove,
   handleOnSubmit,
   userProjectId,
   userRole,
@@ -68,7 +70,11 @@ const EditProjectMemberModal: FC<EditProjectMemberModalProps> = ({
 
           <footer className="flex justify-between mx-6 my-4">
             <div>
-              <Button color="danger" className="">
+              <Button
+                color="danger"
+                className=""
+                onClick={() => handleOnRemove(userProjectId)}
+              >
                 Remove{' '}
               </Button>
             </div>
