@@ -2,7 +2,7 @@
 import FormError from '@/components/error/FormError';
 import { Button, Spinner } from '@nextui-org/react';
 
-import { registerUser } from '@/hooks/useRegisterUser';
+import { registerUser } from '@/hooks/authHooks/useRegisterUser';
 import { FRONTEND_URL } from '@/lib/constants';
 import { registerUserSchema } from '@/schemas/user.schema';
 import { RegisterUserFormData } from '@/types/user.types';
