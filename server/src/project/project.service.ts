@@ -250,18 +250,19 @@ export class ProjectService {
         try {
             const hasRight = await this.prismaService.user_Project.findFirst({
                 where: {
-                    userId: userId
+                    userId: userId,
+                    role: "CREATOR"
                 }
             })
 
-            if (!hasRight && hasRight.role !== "CREATOR") throw new UnauthorizedException("Unauthorized")
+            if (!hasRight) throw new UnauthorizedException("Unauthorized")
 
             const member = await this.prismaService.user_Project.delete({
                 where: {
                     id: id
                 }
             })
-            console.log(member)
+
             if (!member) throw new BadRequestException("Something went wrong")
         } catch (error) {
             throw new BadRequestException("Something went wrong")
