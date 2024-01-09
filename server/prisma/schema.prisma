@@ -37,7 +37,8 @@ model Project {
   id String @id @default(uuid())
   userProject User_Project[]
   invitation Invitation[]
-  projectEntries ProjectEntries[]
+  projectEntries ProjectCard[]
+  comments Comment[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   title String @db.VarChar(50)
@@ -50,19 +51,14 @@ enum ProjectStatus {
   CLOSED
 }
 
-//TODO Add ProjectEntries Fields
-model ProjectEntries {
-  id String @id @default(uuid())
-  project Project @relation(fields: [projectId], references: [id])
-  projectId String
-}
-
 model User_Project {
   id String @id @default(uuid())
   user User @relation(fields: [userId], references: [id])
   userId String
   project Project @relation(fields: [projectId], references: [id])
   projectId String
+  projectCardMember ProjectCard_Member[]
+  comments Comment[]
   role ProjectRole @default(VIEWER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -74,6 +70,39 @@ enum ProjectRole {
   CREATOR
   EDITOR
   VIEWER
+}
+
+//TODO Add ProjectEntries Fields
+model ProjectCard {
+  id String @id @default(uuid())
+  project Project @relation(fields: [projectId], references: [id])
+  projectCardMember ProjectCard_Member[]
+  projectId String
+  title String
+  description String
+  dueDate DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  position Float 
+}
+
+model ProjectCard_Member {
+  id String @id @default(uuid())
+  userProject User_Project @relation(fields: [userProjectId], references: [id])
+  userProjectId String
+  projectCard ProjectCard @relation(fields: [projectCardId], references: [id])
+  projectCardId String
+}
+
+model Comment {
+  id String @id @default(uuid())
+  content String
+  author User_Project @relation(fields: [authorId], references: [id])
+  authorId String
+  project Project @relation(fields: [projectId], references: [id])
+  projectId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Invitation {
