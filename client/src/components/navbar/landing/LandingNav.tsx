@@ -1,16 +1,14 @@
-'use client';
+import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import UserAvatar from '@/components/auth/UserAvatar';
 import ChangeLanguage from '@/components/helpers/ChangeLanguage';
 import { Button } from '@nextui-org/react';
-import { useSession } from 'next-auth/react';
-import { useTranslations } from 'next-intl';
+import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 import SignInButton from '../../auth/button/SignInButton';
 import LandingHamburger from './LandingHamburger';
 
-const LandingNav = ({}) => {
-  const { data: session } = useSession();
-  const t = useTranslations('Landingnav');
+const LandingNav = async ({}) => {
+  const session = await getServerSession(authOptions);
   return (
     <div className="h-[55px] pt-2 sticky top-0 inset-x-0 z-10 shadow-xl bg-gray-200">
       <div className="flex text-xl text-center items-center sm:justify-around justify-between mx-4">
@@ -24,7 +22,7 @@ const LandingNav = ({}) => {
             }
           >
             <button>
-              <Link href="/pricing">{t('pricing')}</Link>
+              <Link href="/pricing">Pricing</Link>
             </button>
             <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
           </div>
@@ -43,9 +41,9 @@ const LandingNav = ({}) => {
                 <SignInButton />
                 <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
               </div>
-              <Button color="primary" >
+              <Button color="primary">
                 <Link href="/signup" className="flex items-center ">
-                  {t('getstarted')}
+                  Get Started
                   <svg
                     width="30"
                     height="30"
