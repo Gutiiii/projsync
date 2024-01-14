@@ -9,6 +9,12 @@ const CreateProjectSchema = z.object({
     description: z.string().max(250)
 })
 
+const UpdateProjectSchema = z.object({
+    title: z.string(),
+    description: z.string(),
+    status: z.enum(["OPEN", "CLOSED"])
+})
+
 const CreateInvitationSchema = z.object({
     email: z.string().email(),
     role: z.enum(["EDITOR", "VIEWER"]),
@@ -25,6 +31,7 @@ const EditMemberSchema = z.object({
 })
 
 export class CreateProjectDto extends createZodDto(CreateProjectSchema) { }
+export class UpdateProjectDto extends createZodDto(UpdateProjectSchema) { }
 export class CreateInvitationDto extends createZodDto(CreateInvitationSchema) { }
 export class AcceptInvitationDto extends createZodDto(AcceptInvitationSchema) { }
 export class EditMemberDto extends createZodDto(EditMemberSchema) { }

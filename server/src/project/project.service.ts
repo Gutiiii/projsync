@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { LogService } from 'src/log/log.service';
 import { PrismaService } from 'src/prisma.service';
-import { CreateInvitationDto, CreateProjectDto, EditMemberDto } from './dto/project.dto';
+import { CreateInvitationDto, CreateProjectDto, EditMemberDto, UpdateProjectDto } from './dto/project.dto';
 
 @Injectable()
 export class ProjectService {
@@ -39,6 +39,10 @@ export class ProjectService {
         }
 
 
+    }
+
+    async updateProject(userId: string, projectId: string, dto: UpdateProjectDto) {
+        console.log("HELLO")
     }
 
     async getAllProjects(id: string) {

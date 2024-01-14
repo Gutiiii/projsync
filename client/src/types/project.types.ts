@@ -6,6 +6,14 @@ export type CreateProjectFormData = {
     role?: string,
 }
 
+export type EditProjectFormData = {
+    id?: string | undefined,
+    token?: string | undefined
+    title: string
+    description: string
+    status: string
+}
+
 export type ProjectCardType = {
     id: string;
     title: string;

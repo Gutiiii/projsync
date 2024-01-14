@@ -12,7 +12,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Input } from '@nextui-org/react';
+import { Button, Input, Textarea } from '@nextui-org/react';
 import { useTranslations } from 'next-intl';
 import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
@@ -30,6 +30,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
   handleOnSubmit,
 }) => {
   const t = useTranslations('Project');
+
   const {
     handleSubmit,
     register,
@@ -72,20 +73,20 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
                   )}
                 </FormControl>
               </div>
-              <div className="">
+              <div className="w-full">
                 <FormControl className="mb-2">
                   <FormLabel>{t('description')}</FormLabel>
-                  <Input
+                  <Textarea
                     isRequired
-                    size="sm"
                     label={t('description')}
-                    type="text"
-                    className={errors.description ? 'border-red-500' : ''}
+                    placeholder="Enter your description"
+                    className="w-full"
                     {...register('description')}
                   />
                   {errors.description && (
                     <FormError
                       variant="createproject"
+                      className="min-w-full"
                       error={errors.description.message}
                     />
                   )}

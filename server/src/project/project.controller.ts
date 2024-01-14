@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { AcceptInvitationDto, CreateInvitationDto, CreateProjectDto, EditMemberDto } from './dto/project.dto';
+import { AcceptInvitationDto, CreateInvitationDto, CreateProjectDto, EditMemberDto, UpdateProjectDto } from './dto/project.dto';
 import { ProjectService } from './project.service';
 
 @Controller('project')
@@ -11,10 +11,16 @@ export class ProjectController {
 
     @UseGuards(JwtGuard)
     @Post()
-    async project(@Body() dto: CreateProjectDto, @GetUser() user) {
+    async createProject(@Body() dto: CreateProjectDto, @GetUser() user) {
         this.logger.log("-------------------------")
         this.logger.verbose(`${user.name} Created a new Project:`)
         return await this.projectService.createProject(dto)
+    }
+
+    @UseGuards(JwtGuard)
+    @Patch(":projectId")
+    async updateProject(@Param("projectId") projectId, @Body() dto: UpdateProjectDto, @Req() request) {
+        return await this.projectService.updateProject(request.user.id, projectId, dto)
     }
 
     @UseGuards(JwtGuard)
