@@ -1,6 +1,7 @@
 'use client';
 import { Button } from '@/components/Button';
 import FormError from '@/components/error/FormError';
+import Logo from '@/components/ui/Logo';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useChangePassword } from '@/hooks/authHooks/useChangePassword';
@@ -89,7 +90,6 @@ const ChangePasswordForm = ({ code }: { code: string }) => {
       </main>
     );
   }
-  //TODO Replace Logo
   if (isSuccess) {
     return (
       <main
@@ -97,7 +97,7 @@ const ChangePasswordForm = ({ code }: { code: string }) => {
           pathName.includes('/de') ? 'font-light mx-[60px]' : 'font-light'
         }
       >
-        <div className="mb-2 ">Logo.(REPLACE)</div>
+        <Logo />
         <h1 className="text-xl mb-2">{t('header')}</h1>
 
         <form onSubmit={handleSubmit(submitData)}>

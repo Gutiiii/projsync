@@ -1,6 +1,7 @@
 'use client';
 import UserAvatar from '@/components/auth/UserAvatar';
 import ChangeLanguage from '@/components/helpers/ChangeLanguage';
+import Logo from '@/components/ui/Logo';
 import { X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -19,8 +20,8 @@ const LandingNavMobile: FC<LandingNavMobileProps> = ({ onClose }) => {
   return (
     <main className="absolute inset-0 text-center w-full z-20 bg-gray-400 h-screen grid overflow-hidden ">
       <div className="flex justify-between">
-        <div className="mt-2 ml-4 text-xl">
-          <Link href="/">ProjSync.</Link>
+        <div className="mt-1 ml-4 text-xl">
+          <Logo />
         </div>
         <div
           className="h-10 w-10 hover:rounded-full hover:bg-gray-500 active:bg-gray-600 active:scale-95 cursor-pointer p-1 mt-1 mx-2"

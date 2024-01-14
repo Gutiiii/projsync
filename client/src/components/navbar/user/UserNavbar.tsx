@@ -1,5 +1,6 @@
 import UserAvatar from '@/components/auth/UserAvatar';
 import ChangeLanguage from '@/components/helpers/ChangeLanguage';
+import Logo from '@/components/ui/Logo';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import UserHamburger from './UserHamburger';
@@ -10,7 +11,9 @@ const UserNavbar = ({}) => {
     <div className="h-[55px] pt-2 sticky top-0 inset-x-0 z-10 shadow-xl bg-gray-200">
       <div className="flex text-xl text-center items-center sm:justify-around justify-between mx-4">
         <button className="flex text-center items-center">
-          <Link href="/dashboard">ProjSync.</Link>
+          <Link href="/dashboard">
+            <Logo />
+          </Link>
         </button>
         <div className="items-center text-center hidden sm:flex">
           <div className="flex space-x-52">

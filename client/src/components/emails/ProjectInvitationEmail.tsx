@@ -40,7 +40,7 @@ const ProjectInvitationEmail = ({
           fontFamily="Roboto"
           fallbackFontFamily="Verdana"
           webFont={{
-            url: 'https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2',     
+            url: 'https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2',
             format: 'woff2',
           }}
           fontWeight={400}
@@ -66,11 +66,11 @@ const ProjectInvitationEmail = ({
           >
             Accept Invitation
           </Link>
-          {/* <Text className="text-gray-500 mt-8">
+          <Text className="text-gray-500 mt-8">
             If you did not request a password reset, you can safely ignore this
             email. Only a person with access to your email can reset your
             account password.
-          </Text> */}
+          </Text>
         </Container>
       </Body>
     </Html>

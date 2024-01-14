@@ -4,6 +4,7 @@ import FormError from '@/components/error/FormError';
 import ForgotPasswordModal from '@/components/modal/ForgotPasswordModal';
 import { Button } from '@nextui-org/react';
 
+import Logo from '@/components/ui/Logo';
 import { FRONTEND_URL } from '@/lib/constants';
 import { signinUserSchema } from '@/schemas/user.schema';
 import { SigninUserFormData } from '@/types/user.types';
@@ -115,14 +116,13 @@ const SignInForm = () => {
     );
   };
 
-  //TODO Replace Logo
   return (
     <main
       className={
         pathName.includes('/de') ? 'font-light mx-[60px]' : 'font-light'
       }
     >
-      <div className="mb-2 ">Logo.(REPLACE)</div>
+      <Logo />
       <h1 className="text-xl mb-2">{t('header')}</h1>
       <div className="flex text-md">
         <p className="mr-1">{t('isregistered')}</p>

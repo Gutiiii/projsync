@@ -1,4 +1,5 @@
 import UserAvatar from '@/components/auth/UserAvatar';
+import Logo from '@/components/ui/Logo';
 import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
@@ -16,7 +17,9 @@ const AdminNavMobile: FC<AdminNavMobileProps> = ({ onClose }) => {
   return (
     <main className="absolute inset-0 text-center w-full z-20 bg-gray-400 h-screen grid overflow-hidden ">
       <div className="flex justify-between">
-        <div className="mt-2 ml-4 text-xl">ProjSync.</div>
+        <div className="mt-1 ml-4 text-xl">
+          <Logo />
+        </div>
         <div
           className="h-10 w-10 hover:rounded-full hover:bg-gray-500 active:bg-gray-600 active:scale-95 cursor-pointer p-1 mt-1 mx-2"
           onClick={onClose}

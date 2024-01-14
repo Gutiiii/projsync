@@ -2,6 +2,7 @@
 import FormError from '@/components/error/FormError';
 import { Button, Spinner } from '@nextui-org/react';
 
+import Logo from '@/components/ui/Logo';
 import { registerUser } from '@/hooks/authHooks/useRegisterUser';
 import { FRONTEND_URL } from '@/lib/constants';
 import { registerUserSchema } from '@/schemas/user.schema';
@@ -86,10 +87,9 @@ const SignUpForm = () => {
       },
     });
   };
-  //TODO Replace Logo
   return (
     <main className="font-light">
-      <div className="mb-2">Logo.(REPLACE)</div>
+      <Logo />
       <h1 className="text-2xl mb-2">{t('header')}</h1>
       <div className="flex text-md">
         <p className="mr-1">{t('isregistered')}</p>

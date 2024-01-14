@@ -1,6 +1,7 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import UserAvatar from '@/components/auth/UserAvatar';
 import ChangeLanguage from '@/components/helpers/ChangeLanguage';
+import Logo from '@/components/ui/Logo';
 import { Button } from '@nextui-org/react';
 import { getServerSession } from 'next-auth';
 import Link from 'next/link';
@@ -13,12 +14,14 @@ const LandingNav = async ({}) => {
     <div className="h-[55px] pt-2 sticky top-0 inset-x-0 z-10 shadow-xl bg-gray-200">
       <div className="flex text-xl text-center items-center sm:justify-around justify-between mx-4">
         <button className="flex text-center items-center">
-          <Link href="/">ProjSync.</Link>
+          <Link href="/">
+            <Logo />
+          </Link>
         </button>
         <div className="items-center text-center hidden sm:flex">
           <div
             className={
-              session?.user ? 'group mx-auto ml-44' : 'group mx-auto ml-56'
+              session?.user ? 'group mx-auto ml-24' : 'group mx-auto ml-36'
             }
           >
             <button>
