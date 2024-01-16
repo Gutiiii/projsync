@@ -3,7 +3,7 @@ import { ProjectCardType } from '@/types/project.types';
 import { Eye, FileEdit, Info, User2 } from 'lucide-react';
 import { FC, useState } from 'react';
 import OpenProjectModal from '../modal/OpenProjectModal';
-import ProjectInfoModal from '../modal/ProjectInfoModal';
+import ProjectModal from '../modal/ProjectModal';
 
 interface ProjectCardProps {
   title: string;
@@ -96,19 +96,24 @@ const ProjectCard: FC<ProjectCardProps> = ({
           </div>
         </div>
         <p className="text-lg mt-12">{description}</p>
-        <p>Created At: {dateWithoutWeekday}</p>
+        <p>Created: {dateWithoutWeekday}</p>
       </div>
-      <OpenProjectModal
-        visible={modalVisible}
-        handleOnClose={onClose}
-        handleOnSubmit={onSubmit}
-        id={id}
-      />
-      <ProjectInfoModal
-        project={project}
-        visible={infoModalVisible}
-        handleOnClose={onInfoClose}
-      />
+      {modalVisible && (
+        <OpenProjectModal
+          visible={modalVisible}
+          handleOnClose={onClose}
+          handleOnSubmit={onSubmit}
+          id={id}
+        />
+      )}
+
+      {infoModalVisible && (
+        <ProjectModal
+          project={project}
+          visible={infoModalVisible}
+          handleOnClose={onInfoClose}
+        />
+      )}
     </>
   );
 };

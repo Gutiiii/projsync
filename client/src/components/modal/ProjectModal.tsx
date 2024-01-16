@@ -1,0 +1,68 @@
+'use client';
+import { ProjectCardType } from '@/types/project.types';
+import { Modal, ModalContent, ModalOverlay } from '@chakra-ui/react';
+import { Router } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { FC, useState } from 'react';
+import ProjectEdit from './ProjectEdit';
+import ProjectInfo from './ProjectInfo';
+
+interface ProjectModalProps {
+  project: ProjectCardType;
+  visible: boolean;
+  handleOnClose: () => void;
+}
+
+const ProjectModal: FC<ProjectModalProps> = ({
+  project,
+  visible,
+  handleOnClose,
+}) => {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+
+  const userProject = project.userProject.find(
+    (entry) => entry.userId === session?.user.id,
+  );
+
+  if (!userProject) return router.push('/projects');
+
+  const role = userProject.role;
+
+  const handleChangeIsEdit = () => {
+    setIsEdit(!isEdit);
+  };
+
+  return (
+    <Modal
+      isOpen={visible}
+      onClose={() => {
+        handleOnClose();
+      }}
+    >
+      <ModalOverlay />
+      <ModalContent>
+        {isEdit ? (
+          <ProjectEdit
+            handleOnClose={handleOnClose}
+            project={project}
+            isEdit={isEdit}
+            changeIsEdit={handleChangeIsEdit}
+          />
+        ) : (
+          <ProjectInfo
+            handleOnClose={handleOnClose}
+            project={project}
+            role={role}
+            changeIsEdit={handleChangeIsEdit}
+          />
+        )}
+      </ModalContent>
+    </Modal>
+  );
+};
+
+export default ProjectModal;
