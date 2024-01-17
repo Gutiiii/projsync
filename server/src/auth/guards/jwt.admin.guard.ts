@@ -16,6 +16,7 @@ export class JwtGuard implements CanActivate {
             const payload: UserPayload = await this.jwtServive.verifyAsync(token, {
                 secret: process.env.jwtSecretKey
             })
+            if (payload.role !== "ADMIN") throw new UnauthorizedException()
             request["user"] = payload
         } catch (error) {
             throw new UnauthorizedException()
