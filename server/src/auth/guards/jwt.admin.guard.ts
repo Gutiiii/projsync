@@ -3,7 +3,7 @@ import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { UserPayload } from "src/types/user.type";
 @Injectable()
-export class JwtGuard implements CanActivate {
+export class JwtAdminGuard implements CanActivate {
     constructor(private jwtServive: JwtService) { }
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest()
