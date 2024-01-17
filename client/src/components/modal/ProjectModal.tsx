@@ -27,7 +27,10 @@ const ProjectModal: FC<ProjectModalProps> = ({
     (entry) => entry.userId === session?.user.id,
   );
 
-  if (!userProject) return null;
+  if (!userProject) {
+    router.push('/projects');
+    return null;
+  }
 
   const role = userProject.role;
 

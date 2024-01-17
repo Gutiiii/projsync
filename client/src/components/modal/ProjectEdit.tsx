@@ -134,6 +134,7 @@ const ProjectEdit: FC<ProjectEditProps> = ({
                   selectionMode="single"
                   defaultSelectedKeys={[project.status]}
                   size="sm"
+                  // {...register('status')}
                   onChange={(e) => setStatus(e.target.value)}
                   label="Change Project Status"
                 >
