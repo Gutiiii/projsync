@@ -19,8 +19,8 @@ export class ProjectController {
 
     @UseGuards(JwtGuard)
     @Patch(":projectId")
-    async updateProject(@Param("projectId") projectId, @Body() dto: UpdateProjectDto, @Req() request) {
-        return await this.projectService.updateProject(request.user.id, projectId, dto)
+    async editProject(@Param("projectId") projectId, @Body() dto: UpdateProjectDto, @Req() request) {
+        return await this.projectService.edidProject(request.user.id, projectId, dto)
     }
 
     @UseGuards(JwtGuard)

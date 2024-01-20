@@ -9,9 +9,9 @@ export type CreateProjectFormData = {
 export type EditProjectFormData = {
     id?: string | undefined,
     token?: string | undefined
-    title?: string
-    description?: string
-    status?: string
+    title: string
+    description: string
+    status: string
 }
 
 export type ProjectCardType = {
@@ -83,3 +83,4 @@ export type RemoveMemberFormData = {
     userProjectId: string
     token?: string
 }
+

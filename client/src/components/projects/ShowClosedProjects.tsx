@@ -24,11 +24,10 @@ const ShowClosedProjects: FC<ShowClosedProjectsProps> = ({}) => {
   );
 
   const showClosed = searchParams.get('showClosed') === 'true';
-
   return (
     <div className="flex items-center  cursor-pointer">
       <Checkbox
-        defaultChecked={showClosed}
+        defaultSelected={showClosed}
         id="showclosed"
         onClick={() => {
           router.push(
