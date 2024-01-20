@@ -4,8 +4,8 @@ import { Modal, ModalContent, ModalOverlay } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
-import ProjectEdit from './ProjectEdit';
-import ProjectInfo from './ProjectInfo';
+import ProjectEdit from './ProjectEditModal';
+import ProjectInfo from './ProjectInfoModal';
 
 interface ProjectModalProps {
   project: ProjectCardType;

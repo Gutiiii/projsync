@@ -11,7 +11,7 @@ export type EditProjectFormData = {
     token?: string | undefined
     title: string
     description: string
-    status: string
+    status?: string
 }
 
 export type DeleteProjectFormData = {
