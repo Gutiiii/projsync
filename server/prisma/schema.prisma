@@ -75,7 +75,7 @@ enum ProjectRole {
 //TODO Add ProjectEntries Fields
 model ProjectCard {
   id String @id @default(uuid())
-  project Project @relation(fields: [projectId], references: [id])
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectCardMember ProjectCard_Member[]
   projectId String
   title String
@@ -88,18 +88,18 @@ model ProjectCard {
 
 model ProjectCard_Member {
   id String @id @default(uuid())
-  userProject User_Project @relation(fields: [userProjectId], references: [id])
+  userProject User_Project @relation(fields: [userProjectId], references: [id], onDelete: Cascade)
   userProjectId String
-  projectCard ProjectCard @relation(fields: [projectCardId], references: [id])
+  projectCard ProjectCard @relation(fields: [projectCardId], references: [id], onDelete: Cascade)
   projectCardId String
 }
 
 model Comment {
   id String @id @default(uuid())
   content String
-  author User_Project @relation(fields: [authorId], references: [id])
+  author User_Project @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String
-  project Project @relation(fields: [projectId], references: [id])
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -108,7 +108,7 @@ model Comment {
 model Invitation {
   id String @id @default(uuid())
   email String
-  project Project @relation(fields: [projectId], references: [id])
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
   role InvitationRole @default(VIEWER) 
   createdAt DateTime @default(now())
