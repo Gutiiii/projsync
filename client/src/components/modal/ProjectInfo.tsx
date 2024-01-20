@@ -30,7 +30,7 @@ const ProjectInfo: FC<ProjectInfoProps> = ({
   const mutation = useMutation({ mutationFn: useDeleteProject });
   const { data: session } = useSession();
   const token = session?.backendTokens.accessToken;
-
+  //TODO Add Modal for Delete Confirmation
   const deleteProject = () => {
     const id = project.id;
     const values = {

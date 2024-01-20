@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@nextui-org/react';
+import { useRouter } from 'next/navigation';
 import CreateProjectModal from '../modal/CreateProjectModal';
 
 const CreateProjectButton = () => {
@@ -18,14 +19,25 @@ const CreateProjectButton = () => {
   const token = session?.backendTokens.accessToken;
   const id = session?.user.id;
   const role = 'CREATOR';
+  const router = useRouter();
 
   const createProject = (title: string, description: string) => {
     setCreateProjectModalVisible(false);
-    mutation.mutateAsync({ title, description, id, token, role });
-    toast.success(`${t('createprojecttoast')}`);
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
+    mutation.mutateAsync(
+      { title, description, id, token, role },
+      {
+        onSuccess: () => {
+          router.refresh();
+          toast.success(`${t('createprojecttoast')}`);
+        },
+        onError: () => {
+          router.refresh();
+          toast.error('Something went wrong', {
+            description: 'Please try again later',
+          });
+        },
+      },
+    );
   };
 
   return (
