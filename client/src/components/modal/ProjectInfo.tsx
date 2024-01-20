@@ -1,10 +1,15 @@
 'use client';
+
+import { useDeleteProject } from '@/hooks/projectHooks/useDeleteProject';
 import { ProjectCardType } from '@/types/project.types';
 import { ModalBody, ModalCloseButton, ModalHeader } from '@chakra-ui/react';
-import { Button } from '@nextui-org/react';
-import { FileEdit, Trash2 } from 'lucide-react';
+import { Button, Spinner } from '@nextui-org/react';
+import { useMutation } from '@tanstack/react-query';
+import { FileEdit, Lasso, Trash2 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FC } from 'react';
+import { toast } from 'sonner';
 
 interface ProjectInfoProps {
   handleOnClose: () => void;
@@ -22,6 +27,31 @@ const ProjectInfo: FC<ProjectInfoProps> = ({
   const dateStr = date.toDateString();
   const router = useRouter();
   const dateWithoutWeekday = dateStr.substring(dateStr.indexOf(' ') + 1);
+  const mutation = useMutation({ mutationFn: useDeleteProject });
+  const { data: session } = useSession();
+  const token = session?.backendTokens.accessToken;
+
+  const deleteProject = () => {
+    const id = project.id;
+    const values = {
+      id,
+      token,
+    };
+    mutation.mutateAsync(values, {
+      onSuccess: () => {
+        handleOnClose();
+        router.refresh();
+        toast.success('Project Deleted');
+      },
+      onError: () => {
+        handleOnClose();
+        router.refresh();
+        toast.error('Something went wrong', {
+          description: 'Please try again later',
+        });
+      },
+    });
+  };
   return (
     <>
       <ModalHeader>
@@ -63,17 +93,31 @@ const ProjectInfo: FC<ProjectInfoProps> = ({
         }
       >
         {role === 'CREATOR' && (
-          <div className="flex items-center space-x-3">
-            {' '}
-            <FileEdit
-              onClick={changeIsEdit}
-              size={18}
-              className="h-10 w-10 hover:rounded-full hover:bg-gray-300 active:bg-gray-400 active:scale-95 cursor-pointer p-1 mt-1 mx-2"
-            />
-            <Trash2
-              size={18}
-              className="h-10 w-10 hover:rounded-full hover:bg-gray-300 active:bg-gray-400 active:scale-95 cursor-pointer p-1 mt-1 mx-2 "
-            />
+          <div className="flex items-center space-x-2">
+            <div className="hover:rounded-full hover:bg-gray-300 active:bg-gray-400 active:scale-95 cursor-pointer p-1 mt-1 ">
+              <FileEdit
+                onClick={changeIsEdit}
+                size={18}
+                className="h-10 w-10 p-1"
+              />
+            </div>
+            <div
+              className={
+                mutation.isLoading
+                  ? ' mt-1 '
+                  : 'hover:rounded-full hover:bg-gray-300 active:bg-gray-400 active:scale-95 cursor-pointer p-1 mt-1 '
+              }
+            >
+              {mutation.isLoading ? (
+                <Spinner size="md" className="mt-1 ml-1" />
+              ) : (
+                <Trash2
+                  onClick={deleteProject}
+                  size={18}
+                  className="h-10 w-10 p-1"
+                />
+              )}
+            </div>
           </div>
         )}
 

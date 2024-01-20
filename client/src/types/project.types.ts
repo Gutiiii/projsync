@@ -14,6 +14,11 @@ export type EditProjectFormData = {
     status: string
 }
 
+export type DeleteProjectFormData = {
+    id: string
+    token?: string
+}
+
 export type ProjectCardType = {
     id: string;
     title: string;

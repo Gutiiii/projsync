@@ -41,7 +41,7 @@ export class ProjectService {
 
     }
 
-    async edidProject(userId: string, projectId: string, dto: UpdateProjectDto) {
+    async editProject(userId: string, projectId: string, dto: UpdateProjectDto) {
         try {
             const hasRight = await this.prismaService.user_Project.findFirst({
                 where: {
@@ -62,6 +62,25 @@ export class ProjectService {
                     status: dto.status
                 }
             })
+            if (!project) throw new BadRequestException("Something went wrong")
+        } catch (error) {
+            throw new BadRequestException("Something went wrong")
+        }
+    }
+
+    async deleteProject(userId: string, projectId: string) {
+        try {
+            const hasRight = await this.prismaService.user_Project.findFirst({
+                where: {
+                    projectId: projectId,
+                    userId: userId,
+                    role: "CREATOR"
+                }
+            })
+            if (!hasRight) throw new UnauthorizedException("Unauthorized")
+
+            const project = await this.prismaService.project.delete({ where: { id: projectId } })
+
             if (!project) throw new BadRequestException("Something went wrong")
         } catch (error) {
             throw new BadRequestException("Something went wrong")

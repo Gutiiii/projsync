@@ -10,7 +10,14 @@ import {
   ModalHeader,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Input, Select, SelectItem, Textarea } from '@nextui-org/react';
+import {
+  Button,
+  Input,
+  Select,
+  SelectItem,
+  Spinner,
+  Textarea,
+} from '@nextui-org/react';
 import { useMutation } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -19,6 +26,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import FormError from '../error/FormError';
+import LoadingSpinner from '../ui/LoadingSpinner';
 
 interface ProjectEditProps {
   handleOnClose: () => void;
@@ -189,7 +197,11 @@ const ProjectEdit: FC<ProjectEditProps> = ({
           <div className="flex">
             {isChanged ? (
               <Button className="mr-3" color="primary" type="submit">
-                Save
+                {mutation.isLoading ? (
+                  <Spinner color="white" size="sm" />
+                ) : (
+                  <p>Save</p>
+                )}
               </Button>
             ) : null}
             <Button

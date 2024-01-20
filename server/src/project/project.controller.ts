@@ -20,7 +20,13 @@ export class ProjectController {
     @UseGuards(JwtGuard)
     @Patch(":projectId")
     async editProject(@Param("projectId") projectId, @Body() dto: UpdateProjectDto, @Req() request) {
-        return await this.projectService.edidProject(request.user.id, projectId, dto)
+        return await this.projectService.editProject(request.user.id, projectId, dto)
+    }
+
+    @UseGuards(JwtGuard)
+    @Delete(":projectId")
+    async deleteProject(@Param("projectId") projectId, @Req() request) {
+        return await this.projectService.deleteProject(request.user.id, projectId)
     }
 
     @UseGuards(JwtGuard)
