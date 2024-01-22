@@ -18,7 +18,9 @@ model User {
   role UserRole @default(USER)
   provider Provider
   resetPasswordCode String? @unique
+
   userProject User_Project[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -35,15 +37,16 @@ enum Provider {
 
 model Project {
   id String @id @default(uuid())
-  userProject User_Project[]
-  invitation Invitation[]
-  projectEntries ProjectCard[]
-  comments Comment[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
   title String @db.VarChar(50)
   description String @db.VarChar(250)
   status ProjectStatus @default(OPEN)
+
+  userProject User_Project[]
+  invitation Invitation[]
+  lists ProjectList[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum ProjectStatus {
@@ -53,13 +56,16 @@ enum ProjectStatus {
 
 model User_Project {
   id String @id @default(uuid())
+  role ProjectRole @default(VIEWER)
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
+
   projectCardMember ProjectCard_Member[]
   comments Comment[]
-  role ProjectRole @default(VIEWER)
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -72,22 +78,40 @@ enum ProjectRole {
   VIEWER
 }
 
-//TODO Add ProjectEntries Fields
+model ProjectList {
+  id String @id @default(uuid())
+  title String
+  position Float
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  
+  cards ProjectCard[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model ProjectCard {
   id String @id @default(uuid())
-  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectCardMember ProjectCard_Member[]
   projectId String
   title String
   description String
   dueDate DateTime
+  position Float 
+
+  list ProjectList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId String
+
+  projectCardMember ProjectCard_Member[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  position Float 
 }
 
 model ProjectCard_Member {
   id String @id @default(uuid())
+
   userProject User_Project @relation(fields: [userProjectId], references: [id], onDelete: Cascade)
   userProjectId String
   projectCard ProjectCard @relation(fields: [projectCardId], references: [id], onDelete: Cascade)
@@ -97,10 +121,10 @@ model ProjectCard_Member {
 model Comment {
   id String @id @default(uuid())
   content String
+
   author User_Project @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String
-  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId String
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -108,9 +132,11 @@ model Comment {
 model Invitation {
   id String @id @default(uuid())
   email String
+  role InvitationRole @default(VIEWER) 
+
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
-  role InvitationRole @default(VIEWER) 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
