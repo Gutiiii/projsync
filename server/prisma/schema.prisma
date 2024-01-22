@@ -81,7 +81,7 @@ enum ProjectRole {
 model ProjectList {
   id String @id @default(uuid())
   title String
-  position Float
+  position Int
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
@@ -90,6 +90,9 @@ model ProjectList {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  
+  @@index([projectId])
 }
 
 model ProjectCard {
@@ -98,7 +101,7 @@ model ProjectCard {
   title String
   description String
   dueDate DateTime
-  position Float 
+  position Int 
 
   list ProjectList @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId String
@@ -107,6 +110,8 @@ model ProjectCard {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([listId])
 }
 
 model ProjectCard_Member {

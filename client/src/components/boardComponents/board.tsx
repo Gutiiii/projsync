@@ -1,4 +1,4 @@
-import { DndContext } from '@dnd-kit/core';
+import { DragDropContext } from '@hello-pangea/dnd';
 export const BoardContainer = ({ children }: React.PropsWithChildren) => {
   return (
     <div>
@@ -8,5 +8,5 @@ export const BoardContainer = ({ children }: React.PropsWithChildren) => {
 };
 
 export const Board = ({ children }: React.PropsWithChildren) => {
-  return <DndContext>{children}</DndContext>;
+  return <div>{children}</div>;
 };
