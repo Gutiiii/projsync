@@ -1,14 +1,12 @@
 'use client';
 import FormError from '@/components/error/FormError';
-import { Button, Spinner } from '@nextui-org/react';
-
 import Logo from '@/components/ui/Logo';
 import { registerUser } from '@/hooks/authHooks/useRegisterUser';
 import { FRONTEND_URL } from '@/lib/constants';
 import { registerUserSchema } from '@/schemas/user.schema';
 import { RegisterUserFormData } from '@/types/user.types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '@nextui-org/react';
+import { Button, Input, Spinner } from '@nextui-org/react';
 import { Label } from '@radix-ui/react-label';
 import { useMutation } from '@tanstack/react-query';
 import { signIn } from 'next-auth/react';

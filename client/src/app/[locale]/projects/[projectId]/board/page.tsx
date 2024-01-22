@@ -1,3 +1,4 @@
+import ProjectBoard from '@/components/projects/ProjectBoard';
 import { Metadata } from 'next';
 import React from 'react';
 
@@ -6,8 +7,8 @@ export const metadata: Metadata = {
   description:
     'Project Sync let&apos;s you seemlessly communicate with your clients.',
 };
-const page = () => {
-  return <div>page</div>;
+const ProjectBoardPage = () => {
+  return <ProjectBoard />;
 };
 
-export default page;
+export default ProjectBoardPage;
