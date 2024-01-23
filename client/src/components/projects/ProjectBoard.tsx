@@ -5,7 +5,6 @@ import BoardColumn from '../boardComponents/column';
 const ProjectBoard = () => {
   return (
     <>
-      <div className="pr-8 text-3xl font-thin">Project Board</div>
       <BoardContainer>
         <Board>
           <BoardColumn></BoardColumn>
