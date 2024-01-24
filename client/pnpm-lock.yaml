@@ -65,6 +65,9 @@ dependencies:
   country-flag-icons:
     specifier: ^1.5.9
     version: 1.5.9
+  dayjs:
+    specifier: ^1.11.10
+    version: 1.11.10
   envalid:
     specifier: ^8.0.0
     version: 8.0.0

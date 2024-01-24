@@ -1,17 +1,32 @@
 'use client';
 import { PlusOutlined } from '@ant-design/icons';
-import { useDroppable } from '@dnd-kit/core';
+import { UseDroppableArguments, useDroppable } from '@dnd-kit/core';
 // import { Button } from '@nextui-org/react';
 
 import { Badge, Button, Space } from 'antd';
-import React from 'react';
+import React, { FC } from 'react';
 import { Text } from '../../components/text';
 
-const BoardColumn = ({ children }: React.PropsWithChildren) => {
-  const count = 1;
+interface BoardColumnProps {
+  children: React.ReactNode;
+  id: string;
+  title: string;
+  description: string;
+  count: number;
+  data?: UseDroppableArguments['data'];
+}
+
+const BoardColumn: FC<BoardColumnProps> = ({
+  children,
+  id,
+  title,
+  description,
+  count,
+  data,
+}) => {
   const { isOver, setNodeRef, active } = useDroppable({
-    id: '',
-    data: '',
+    id,
+    data,
   });
 
   return (
@@ -44,7 +59,7 @@ const BoardColumn = ({ children }: React.PropsWithChildren) => {
                 whiteSpace: 'nowrap',
               }}
             >
-              Title
+              {title}
             </Text>
             {!!count && <Badge count={count} color="cyan" />}
           </Space>
@@ -54,7 +69,7 @@ const BoardColumn = ({ children }: React.PropsWithChildren) => {
             // onClick={onAddClickHandler}
           />
         </Space>
-        Description
+        {description}
       </div>
       <div
         style={{

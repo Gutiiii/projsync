@@ -87,4 +87,16 @@ export class ProjectController {
     async removeMember(@Param('id') id, @Req() request) {
         return await this.projectService.removeMember(id, request.user.id)
     }
+
+    @UseGuards(JwtGuard)
+    @Get("list/:projectId")
+    async getLists(@Param('projectId') projectId, @Req() request) {
+        return await this.projectService.getLists(projectId, request.user.id)
+    }
+
+    @UseGuards(JwtGuard)
+    @Get("card/:projectId")
+    async getCards(@Param("projectId") projectId, @Req() request) {
+        return await this.projectService.getCards(projectId, request.user.id)
+    }
 }

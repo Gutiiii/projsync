@@ -95,12 +95,13 @@ model ProjectList {
   @@index([projectId])
 }
 
+// TODO Add User Project or Project to ProjectCard, so that the creator of card name avatar can be displayed in Card. Or do it with ProjectCardMember and role
+
 model ProjectCard {
   id String @id @default(uuid())
-  projectId String
   title String
   description String
-  dueDate DateTime
+  dueDate DateTime?
   position Int 
 
   list ProjectList @relation(fields: [listId], references: [id], onDelete: Cascade)

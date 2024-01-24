@@ -18,14 +18,15 @@ const BoardItem = ({
   data,
 }: React.PropsWithChildren<BoardItemProps>) => {
   const { attributes, listeners, setNodeRef, active } = useDraggable({
-    id: '',
-    data: '',
+    id,
+    data,
   });
   return (
     <div
       style={{
         position: 'relative',
       }}
+      className="ml-3"
     >
       <div
         ref={setNodeRef}

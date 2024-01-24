@@ -315,4 +315,71 @@ export class ProjectService {
         }
     }
 
+    async getLists(projectId: string, userId: string) {
+        try {
+            const hasRight = await this.prismaService.user_Project.findFirst({
+                where: {
+                    userId: userId,
+                    projectId: projectId
+                }
+            })
+
+            if (!hasRight) throw new UnauthorizedException("Unauthorized")
+
+            const lists = await this.prismaService.projectList.findMany({
+                where: { projectId: projectId }, orderBy: {
+                    position: "asc"
+                },
+            })
+
+            return lists
+        } catch (error) {
+            throw new BadRequestException("Something went wrong!")
+        }
+    }
+
+    async getCards(projectId: string, userId: string) {
+        try {
+            const hasRight = await this.prismaService.user_Project.findFirst({
+                where: {
+                    userId: userId,
+                    projectId: projectId
+                }
+            })
+
+            if (!hasRight) throw new UnauthorizedException("Unauthorized")
+
+            const cards = await this.prismaService.projectCard.findMany({
+                where: {
+                    list: {
+                        projectId: projectId
+                    }
+                }, orderBy: {
+                    position: "asc"
+                }, include: {
+                    list: {
+                        include: {
+                            project: {
+                                include: {
+                                    userProject: {
+                                        include: {
+                                            user: {
+                                                select: {
+                                                    name: true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            return cards
+        } catch (error) {
+            throw new BadRequestException("Something went wrong")
+        }
+    }
+
 }

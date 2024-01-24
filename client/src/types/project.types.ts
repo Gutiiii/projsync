@@ -89,3 +89,21 @@ export type RemoveMemberFormData = {
     token?: string
 }
 
+export type List = {
+    id: string
+    title: string
+    description: string
+    position: number
+
+}
+
+export type Card = {
+    id: string
+    title: string
+    description: string
+    position: number
+    listId: string
+    dueDate: string
+    updatedAt: string
+}
+
