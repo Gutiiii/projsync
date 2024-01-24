@@ -2,8 +2,24 @@
 import { DndContext } from '@dnd-kit/core';
 export const BoardContainer = ({ children }: React.PropsWithChildren) => {
   return (
-    <div className="w-[calc(100%+64px)] h-[calc(100%-64px)] flex justify-evenly m-[-32px]">
-      <div className="w-[100%] h-[100%] flex p-[32px] overflow-scroll">
+    <div
+      style={{
+        width: 'calc(100% + 64px)',
+        height: 'calc(100vh - 64px)',
+        display: 'flex',
+        justifyContent: 'column',
+        margin: '-32px',
+      }}
+    >
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          padding: '32px',
+          overflow: 'scroll',
+        }}
+      >
         {children}
       </div>
     </div>
@@ -11,5 +27,9 @@ export const BoardContainer = ({ children }: React.PropsWithChildren) => {
 };
 
 export const Board = ({ children }: React.PropsWithChildren) => {
-  return <DndContext>{children}</DndContext>;
+  return (
+    <DndContext>
+      <BoardContainer>{children}</BoardContainer>
+    </DndContext>
+  );
 };
