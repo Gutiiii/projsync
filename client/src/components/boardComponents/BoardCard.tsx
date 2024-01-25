@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from 'antd';
 
-import { Text } from '../../components/text';
+import { Text } from '../text';
 
 import {
   ClockCircleOutlined,
@@ -33,7 +33,7 @@ interface CardProps {
   dueDate?: string;
 }
 
-const ListCard: FC<CardProps> = ({
+const BoardCard: FC<CardProps> = ({
   id,
   title,
   description,
@@ -199,4 +199,4 @@ const ListCard: FC<CardProps> = ({
   );
 };
 
-export default ListCard;
+export default BoardCard;

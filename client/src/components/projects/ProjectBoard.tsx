@@ -5,10 +5,10 @@ import { Card, List } from '@/types/project.types';
 import { CaretDownFilled } from '@ant-design/icons';
 import { useSession } from 'next-auth/react';
 import React from 'react';
-import { Board, BoardContainer } from '../boardComponents/board';
-import ListCard from '../boardComponents/card';
-import BoardColumn from '../boardComponents/column';
-import BoardItem from '../boardComponents/item';
+import ListCard from '../boardComponents/BoardCard';
+import BoardColumn from '../boardComponents/BoardColumn';
+import BoardItem from '../boardComponents/BoardItem';
+import { Board, BoardContainer } from '../boardComponents/Board';
 import ProjectCard from '../card/ProjectCard';
 
 const ProjectBoard = ({

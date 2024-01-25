@@ -1,8 +1,18 @@
 'use client';
 import { ProjectCardType } from '@/types/project.types';
+
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Divider,
+  Image,
+  Link,
+} from '@nextui-org/react';
+
 import { Eye, FileEdit, Info, User2 } from 'lucide-react';
 import { FC, useState } from 'react';
-import OpenProjectModal from '../modal/OpenProjectModal';
 import ProjectModal from '../modal/ProjectModal';
 
 interface ProjectCardProps {
@@ -26,23 +36,17 @@ const ProjectCard: FC<ProjectCardProps> = ({
   role,
   project,
 }) => {
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [infoModalVisible, setInfoModalVisible] = useState<boolean>(false);
   const date = new Date(createdAt);
   const dateStr = date.toDateString();
   const dateWithoutWeekday = dateStr.substring(dateStr.indexOf(' ') + 1);
 
   const onClose = () => {
-    setModalVisible(false);
-  };
-
-  const onInfoClose = () => {
     setInfoModalVisible(false);
   };
 
   const onCardClick = (e: any) => {
-    if (e.target.id === 'info') return setInfoModalVisible(true);
-    setModalVisible(true);
+    setInfoModalVisible(true);
   };
 
   const onSubmit = (id: string) => {
@@ -50,68 +54,44 @@ const ProjectCard: FC<ProjectCardProps> = ({
     onOpen(id);
   };
 
-  // const startSimulatedProgress = () => {
-  //   setOpenProgress(0);
-
-  //   const interval = setInterval(() => {
-  //     setOpenProgress((prevProgress) => {
-  //       if (prevProgress >= 95) {
-  //         clearInterval(interval);
-  //         return prevProgress;
-  //       }
-  //       return prevProgress + 5;
-  //     });
-  //   }, 500);
-
-  //   return interval;
-  // };
-
   return (
     <>
-      <div
-        className={
-          status === 'OPEN'
-            ? 'px-4 border-2 pt-4  rounded-xl shadow-xl w-80 h-80 cursor-pointer hover:bg-gray-300 transition-background duration-200 border-black'
-            : 'px-4 border-2 pt-4  rounded-xl shadow-xl w-80 h-80 cursor-pointer hover:bg-gray-300 transition-background duration-200 border-red-700'
-        }
-        onClick={(e) => onCardClick(e)}
-      >
-        <div className="flex justify-between ">
-          <p className="text-xl font-bold">{title}</p>
-          <div className="flex space-x-2">
-            {role === 'CREATOR' ? (
-              <User2 size={26} />
-            ) : role === 'VIEWER' ? (
-              <Eye className="" size={28} />
-            ) : role === 'EDITOR' ? (
-              <FileEdit className="mt-0.5" />
-            ) : null}
-            <Info
-              id="info"
-              color="blue"
-              size={25}
-              width={25}
-              className="text-end mt-0.5 cursor-pointer hover:opacity-50 transition-opacity duration-200"
-            />
-          </div>
-        </div>
-        <p className="text-lg mt-12">{description}</p>
-        <p>Created: {dateWithoutWeekday}</p>
+      <div onClick={(e) => onCardClick(e)}>
+        <Card
+          className={
+            status === 'OPEN'
+              ? 'px-4 border-2 pt-4  rounded-xl shadow-xl w-80 h-60 cursor-pointer hover:bg-gray-300 transition-background duration-200 border-black'
+              : 'px-4 border-2 pt-4  rounded-xl shadow-xl w-80 h-60 cursor-pointer hover:bg-gray-300 transition-background duration-200 border-red-700'
+          }
+        >
+          <CardHeader className="flex justify-between">
+            <p className="text-xl font-bold">{title}</p>
+            <div className="flex space-x-2">
+              {role === 'CREATOR' ? (
+                <User2 size={26} />
+              ) : role === 'VIEWER' ? (
+                <Eye className="" size={28} />
+              ) : role === 'EDITOR' ? (
+                <FileEdit className="mt-0.5" />
+              ) : null}
+            </div>
+          </CardHeader>
+          <Divider />
+          <CardBody>
+            <p>{description}</p>
+          </CardBody>
+          <Divider />
+          <CardFooter>
+            <p>Created: {dateWithoutWeekday}</p>
+          </CardFooter>
+        </Card>
       </div>
-      {modalVisible && (
-        <OpenProjectModal
-          visible={modalVisible}
-          handleOnClose={onClose}
-          handleOnSubmit={onSubmit}
-          id={id}
-        />
-      )}
 
       {infoModalVisible && (
         <ProjectModal
           project={project}
           visible={infoModalVisible}
-          handleOnClose={onInfoClose}
+          handleOnClose={onClose}
         />
       )}
     </>

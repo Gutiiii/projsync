@@ -5,7 +5,7 @@ import { UseDroppableArguments, useDroppable } from '@dnd-kit/core';
 
 import { Badge, Button, Space } from 'antd';
 import React, { FC } from 'react';
-import { Text } from '../../components/text';
+import { Text } from '../text';
 
 interface BoardColumnProps {
   children: React.ReactNode;
