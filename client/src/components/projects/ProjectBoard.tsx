@@ -2,14 +2,11 @@
 import { useGetCards } from '@/hooks/projectHooks/useGetCards';
 import { useGetLists } from '@/hooks/projectHooks/useGetLists';
 import { Card, List } from '@/types/project.types';
-import { CaretDownFilled } from '@ant-design/icons';
-import { useSession } from 'next-auth/react';
 import React from 'react';
+import { Board, BoardContainer } from '../boardComponents/Board';
 import ListCard from '../boardComponents/BoardCard';
 import BoardColumn from '../boardComponents/BoardColumn';
 import BoardItem from '../boardComponents/BoardItem';
-import { Board, BoardContainer } from '../boardComponents/Board';
-import ProjectCard from '../card/ProjectCard';
 
 const ProjectBoard = ({
   projectId,
