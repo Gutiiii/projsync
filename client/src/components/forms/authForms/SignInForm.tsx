@@ -1,6 +1,5 @@
 'use client';
 import { sendPasswordEmailForgot } from '@/app/actions';
-import FormError from '@/components/error/FormError';
 import ForgotPasswordModal from '@/components/modal/ForgotPasswordModal';
 import { Button } from '@nextui-org/react';
 
@@ -151,8 +150,9 @@ const SignInForm = () => {
               size="sm"
               isRequired
               {...register('email')}
+              isInvalid={errors.email?.message !== undefined}
+              errorMessage={errors.email?.message}
             />
-            {errors.email && <FormError error={errors.email.message} />}
           </div>
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
             <Label className="ml-1">{t('password')}</Label>
@@ -163,8 +163,9 @@ const SignInForm = () => {
               id="password"
               label={t('password')}
               {...register('password')}
+              isInvalid={errors.password?.message !== undefined}
+              errorMessage={errors.password?.message}
             />
-            {errors.password && <FormError error={errors.password.message} />}
           </div>
         </div>
         <p

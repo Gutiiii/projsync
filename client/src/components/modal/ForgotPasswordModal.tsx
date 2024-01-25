@@ -1,7 +1,6 @@
 'use client';
-import { Input } from '@/components/ui/input';
+
 import {
-  Button,
   FormControl,
   FormLabel,
   Modal,
@@ -12,6 +11,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
+import { Button, Input } from '@nextui-org/react';
 
 import React, { FC, useState } from 'react';
 
@@ -37,7 +37,9 @@ const ForgotPasswordModal: FC<ForgotPasswordModalProps> = ({
           <p className="ml-1">Input your E-Mail Adresse.</p>
           <FormControl className="mb-2 mt-4">
             <Input
-              placeholder="E-Mail"
+              size="sm"
+              isRequired
+              label="E-Mail"
               type="email"
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -45,8 +47,7 @@ const ForgotPasswordModal: FC<ForgotPasswordModalProps> = ({
         </ModalBody>
         <ModalFooter>
           <Button
-            colorScheme="blue"
-            mr={3}
+            className="mr-3"
             onClick={() => {
               setEmail('');
               handleOnSubmit(email);
@@ -54,7 +55,9 @@ const ForgotPasswordModal: FC<ForgotPasswordModalProps> = ({
           >
             Submit
           </Button>
-          <Button onClick={handleOnClose}>Cancel</Button>
+          <Button onClick={handleOnClose} color="primary">
+            Cancel
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

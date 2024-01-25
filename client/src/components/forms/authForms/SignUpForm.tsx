@@ -1,5 +1,4 @@
 'use client';
-import FormError from '@/components/error/FormError';
 import Logo from '@/components/ui/Logo';
 import { registerUser } from '@/hooks/authHooks/useRegisterUser';
 import { FRONTEND_URL } from '@/lib/constants';
@@ -102,17 +101,16 @@ const SignUpForm = () => {
               {t('fullname')}
             </Label>
             <Input
+              errorMessage={errors.name?.message}
               type="text"
               id="fullname"
               size="sm"
               isRequired
+              isInvalid={errors.name?.message !== undefined}
               className={errors.name ? 'border-red-500' : ''}
               label={t('fullname')}
               {...register('name')}
             />
-            {errors.name && (
-              <FormError variant="signup" error={errors.name.message} />
-            )}
           </div>
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
             <Label className="ml-1" htmlFor="email">
@@ -120,15 +118,14 @@ const SignUpForm = () => {
             </Label>
             <Input
               id="email"
+              errorMessage={errors.email?.message}
               className={errors.email ? 'border-red-500' : ''}
               label={t('email')}
               isRequired
               size="sm"
+              isInvalid={errors.email?.message !== undefined}
               {...register('email')}
             />
-            {errors.email && (
-              <FormError variant="signup" error={errors.email.message} />
-            )}
           </div>
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
             <Label className="ml-1">{t('password')}</Label>
@@ -138,12 +135,11 @@ const SignUpForm = () => {
               className={errors.password ? 'border-red-500' : ''}
               label={t('password')}
               isRequired
+              isInvalid={errors.password?.message !== undefined}
+              errorMessage={errors.password?.message}
               size="sm"
               {...register('password')}
             />
-            {errors.password && (
-              <FormError variant="signup" error={errors.password.message} />
-            )}
           </div>
         </div>
         <Button className="w-full h-10 mt-4" type="submit" color="primary">

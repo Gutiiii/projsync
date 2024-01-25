@@ -25,8 +25,6 @@ import { useRouter } from 'next/navigation';
 import React, { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import FormError from '../error/FormError';
-import LoadingSpinner from '../ui/LoadingSpinner';
 
 interface ProjectEditProps {
   handleOnClose: () => void;
@@ -129,14 +127,9 @@ const ProjectEdit: FC<ProjectEditProps> = ({
                 type="text"
                 {...register('title')}
                 onChange={(e) => setTitle(e.target.value)}
-                className={errors.title ? 'border-red-500' : ''}
+                isInvalid={errors.title?.message !== undefined}
+                errorMessage={errors.title?.message}
               />
-              {errors.title && (
-                <FormError
-                  variant="createproject"
-                  error={errors.title.message}
-                />
-              )}
             </FormControl>
           </div>
           <hr className="mx-4" />
@@ -151,14 +144,9 @@ const ProjectEdit: FC<ProjectEditProps> = ({
                 className="w-full"
                 {...register('description')}
                 onChange={(e) => setDescription(e.target.value)}
+                isInvalid={errors.description?.message !== undefined}
+                errorMessage={errors.description?.message}
               />
-              {errors.description && (
-                <FormError
-                  variant="createproject"
-                  className="min-w-full"
-                  error={errors.description.message}
-                />
-              )}
             </FormControl>
           </div>
           <hr className="mx-4 mb-2" />

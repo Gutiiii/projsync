@@ -16,7 +16,6 @@ import { Button, Input, Textarea } from '@nextui-org/react';
 import { useTranslations } from 'next-intl';
 import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
-import FormError from '../error/FormError';
 
 interface CreateProjectModalProps {
   visible: boolean;
@@ -63,14 +62,9 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
                     label={t('title')}
                     type="text"
                     {...register('title')}
-                    className={errors.title ? 'border-red-500' : ''}
+                    isInvalid={errors.title?.message !== undefined}
+                    errorMessage={errors.title?.message}
                   />
-                  {errors.title && (
-                    <FormError
-                      variant="createproject"
-                      error={errors.title.message}
-                    />
-                  )}
                 </FormControl>
               </div>
               <div className="w-full">
@@ -82,14 +76,9 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({
                     placeholder="Enter your description"
                     className="w-full"
                     {...register('description')}
+                    isInvalid={errors.description?.message !== undefined}
+                    errorMessage={errors.description?.message}
                   />
-                  {errors.description && (
-                    <FormError
-                      variant="createproject"
-                      className="min-w-full"
-                      error={errors.description.message}
-                    />
-                  )}
                 </FormControl>
               </div>
             </div>

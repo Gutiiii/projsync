@@ -1,15 +1,13 @@
 'use client';
 import { Button } from '@/components/Button';
-import FormError from '@/components/error/FormError';
 import Logo from '@/components/ui/Logo';
-import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useChangePassword } from '@/hooks/authHooks/useChangePassword';
 import { useGetByResetPasswordCode } from '@/hooks/authHooks/useGetByResetPasswordCode';
 import { changePasswordSchema } from '@/schemas/user.schema';
 import { ChangePasswordFormData } from '@/types/user.types';
-import { Spinner } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Input, Spinner } from '@nextui-org/react';
 import { Label } from '@radix-ui/react-label';
 import { useMutation } from '@tanstack/react-query';
 import { signOut, useSession } from 'next-auth/react';
@@ -107,46 +105,33 @@ const ChangePasswordForm = ({ code }: { code: string }) => {
                 {t('password')}
               </Label>
               <Input
+                size="sm"
                 type="password"
                 className="w-80"
                 id="email"
                 placeholder={t('password')}
                 {...register('password')}
+                isInvalid={errors.password?.message !== undefined}
+                errorMessage={errors.password?.message}
               />
-              {errors.password && (
-                <FormError
-                  error={errors.password.message}
-                  className="rounded-b-lg -mt-3"
-                />
-              )}
             </div>
             <div className="grid w-full max-w-sm items-center gap-1.5 mt-3">
               <Label className="ml-1">{t('passwordconfirmation')}</Label>
               <Input
+                size="sm"
                 type="password"
                 id="password"
                 placeholder={t('passwordconfirmation')}
                 {...register('passwordConfirmation')}
                 className="w-80"
+                isInvalid={errors.passwordConfirmation?.message !== undefined}
+                errorMessage={errors.passwordConfirmation?.message}
               />
-              {errors.passwordConfirmation && (
-                <FormError
-                  error={errors.passwordConfirmation.message}
-                  className="rounded-b-lg -mt-3"
-                />
-              )}
             </div>
           </div>
           <Button className="w-full h-10 mt-4" type="submit">
             {mutation.isLoading ? (
-              <Spinner
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="black"
-                size="md"
-                className="my-1"
-              />
+              <Spinner color="white" className="my-1" size="sm" />
             ) : (
               t('submit')
             )}
