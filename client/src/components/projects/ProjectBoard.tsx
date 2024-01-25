@@ -21,6 +21,7 @@ const ProjectBoard = ({
   token?: string;
 }) => {
   const router = useRouter();
+  const [createdListId, setCreatedListId] = useState<string | undefined>('');
   const queryClient = useQueryClient();
   const { data: list, isLoading: listIsLoading } = useGetLists(
     token,
@@ -52,9 +53,10 @@ const ProjectBoard = ({
     };
 
     mutationCreateList.mutateAsync(values, {
-      onSuccess: () => {
+      onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: ['getLists'] });
         toast.success('List has been created');
+        setCreatedListId(data.data.id);
       },
       onError: () => {
         toast.error('Something went wrong');
@@ -71,6 +73,7 @@ const ProjectBoard = ({
               id={list.id}
               title={list.title}
               count={cards.filter((card) => card.listId === list.id).length}
+              createdListId={createdListId}
             >
               {cards
                 .filter((card) => card.listId === list.id)

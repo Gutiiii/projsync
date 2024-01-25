@@ -14,6 +14,7 @@ interface BoardColumnProps {
   title: string;
   count: number;
   data?: UseDroppableArguments['data'];
+  createdListId?: string;
 }
 
 const BoardColumn: FC<BoardColumnProps> = ({
@@ -22,12 +23,17 @@ const BoardColumn: FC<BoardColumnProps> = ({
   title,
   count,
   data,
+  createdListId,
 }) => {
-  const [titleEdit, setTitleEdit] = useState<boolean>(false);
+  const [titleEdit, setTitleEdit] = useState<boolean>(createdListId === id);
   const { isOver, setNodeRef, active } = useDroppable({
     id,
     data,
   });
+
+  const handleTitleEdit = () => {
+    setTitleEdit(false);
+  };
 
   return (
     <div
@@ -51,7 +57,18 @@ const BoardColumn: FC<BoardColumnProps> = ({
         >
           <Space>
             {titleEdit ? (
-              <Input defaultValue={title} size="sm" className="h-10 -mt-2" />
+              <Input
+                isRequired
+                defaultValue={title}
+                size="sm"
+                className=" -mt-2"
+                autoFocus={createdListId === id}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleTitleEdit();
+                  }
+                }}
+              />
             ) : (
               <Text
                 ellipsis={{ tooltip: 'Title' }}
