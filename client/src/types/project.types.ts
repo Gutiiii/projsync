@@ -96,11 +96,18 @@ export type CreateListFormData = {
     token?: string
 }
 
+export type EditListFormData = {
+    id: string
+    projectId: string
+    title: string
+    position: number
+    token?: string
+}
+
 export type List = {
     id: string
     title: string
     position: number
-
 }
 
 export type Card = {

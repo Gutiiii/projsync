@@ -5,7 +5,6 @@ import axios from 'axios';
 
 export const useCreateList = async (values: CreateListFormData) => {
     const { token, ...data } = values
-    console.log(data)
     return await axios.post(BACKEND_URL + '/project/list', data, {
         headers: {
             'Content-Type': 'application/json',

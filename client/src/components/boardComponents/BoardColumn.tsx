@@ -1,11 +1,14 @@
 'use client';
-import { PlusOutlined } from '@ant-design/icons';
+import { useEditList } from '@/hooks/projectHooks/useEditList';
+import { UserPayload } from '@/types/user.types';
 import { UseDroppableArguments, useDroppable } from '@dnd-kit/core';
-// import { Button } from '@nextui-org/react';
-
-import { Input } from '@nextui-org/react';
+import { Input, Spinner } from '@nextui-org/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge, Button, Space } from 'antd';
+import { useSession } from 'next-auth/react';
+import { useParams, useRouter } from 'next/navigation';
 import React, { FC, useState } from 'react';
+import { toast } from 'sonner';
 import { Text } from '../text';
 
 interface BoardColumnProps {
@@ -15,6 +18,8 @@ interface BoardColumnProps {
   count: number;
   data?: UseDroppableArguments['data'];
   createdListId?: string;
+  user: UserPayload;
+  position: number;
 }
 
 const BoardColumn: FC<BoardColumnProps> = ({
@@ -24,15 +29,40 @@ const BoardColumn: FC<BoardColumnProps> = ({
   count,
   data,
   createdListId,
+  user,
+  position,
 }) => {
+  const { data: session } = useSession();
+  const params = useParams<{ projectId: string }>();
+  const queryClient = useQueryClient();
+  const projectId = params.projectId;
+  const token = session?.backendTokens.accessToken;
   const [titleEdit, setTitleEdit] = useState<boolean>(createdListId === id);
+  const [titleChange, setTitleChange] = useState<string>('');
+  const listEdit = useMutation({ mutationFn: useEditList });
   const { isOver, setNodeRef, active } = useDroppable({
     id,
     data,
   });
 
   const handleTitleEdit = () => {
-    setTitleEdit(false);
+    if (user.role === 'VIEWER') return;
+    handleListEdit();
+  };
+
+  const handleListEdit = () => {
+    var title = titleChange;
+    const values = { id, token, projectId, position, title };
+    listEdit.mutateAsync(values, {
+      onSuccess: () => {
+        toast.success('List has been Edited');
+        queryClient.invalidateQueries({ queryKey: ['getLists'] });
+        setTitleEdit(false);
+      },
+      onError: () => {
+        toast.error('Something went wrong');
+      },
+    });
   };
 
   return (
@@ -57,22 +87,32 @@ const BoardColumn: FC<BoardColumnProps> = ({
         >
           <Space>
             {titleEdit ? (
-              <Input
-                isRequired
-                defaultValue={title}
-                size="sm"
-                className=" -mt-2"
-                autoFocus={createdListId === id}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleTitleEdit();
-                  }
-                }}
-              />
+              <div className="relative">
+                <Input
+                  isDisabled={listEdit.isLoading}
+                  isRequired
+                  defaultValue={title}
+                  onChange={(e: any) => setTitleChange(e.target.value)}
+                  size="sm"
+                  className=" -mt-2"
+                  autoFocus={createdListId === id}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleTitleEdit();
+                    }
+                  }}
+                />
+                {listEdit.isLoading && (
+                  <Spinner className="absolute top-2 left-1/3 z-10" />
+                )}
+              </div>
             ) : (
               <Text
                 ellipsis={{ tooltip: 'Title' }}
-                onClick={() => setTitleEdit(true)}
+                onClick={() => {
+                  if (user.role === 'VIEWER') return;
+                  setTitleEdit(true);
+                }}
                 size="xs"
                 strong
                 style={{

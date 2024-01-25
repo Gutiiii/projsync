@@ -117,7 +117,6 @@ model ProjectCard {
 
 model ProjectCard_Member {
   id String @id @default(uuid())
-
   userProject User_Project @relation(fields: [userProjectId], references: [id], onDelete: Cascade)
   userProjectId String
   projectCard ProjectCard @relation(fields: [projectCardId], references: [id], onDelete: Cascade)

@@ -11,6 +11,8 @@ const useAuthForProjects = async (projectId: string) => {
     },
   });
   if (res.status !== 200) return redirect('/signin');
+  const data = await res.json();
+  return { data };
 };
 
 export default useAuthForProjects;

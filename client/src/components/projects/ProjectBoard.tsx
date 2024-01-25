@@ -3,6 +3,7 @@ import { useCreateList } from '@/hooks/projectHooks/useCreateList';
 import { useGetCards } from '@/hooks/projectHooks/useGetCards';
 import { useGetLists } from '@/hooks/projectHooks/useGetLists';
 import { Card, List } from '@/types/project.types';
+import { UserPayload } from '@/types/user.types';
 import { Button, Spinner } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -16,9 +17,11 @@ import BoardItem from '../boardComponents/BoardItem';
 const ProjectBoard = ({
   projectId,
   token,
+  user,
 }: {
   projectId: string;
   token?: string;
+  user: UserPayload;
 }) => {
   const router = useRouter();
   const [createdListId, setCreatedListId] = useState<string | undefined>('');
@@ -69,6 +72,8 @@ const ProjectBoard = ({
         <Board>
           {lists.map((list) => (
             <BoardColumn
+              user={user}
+              position={list.position}
               key={list.id}
               id={list.id}
               title={list.title}

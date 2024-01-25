@@ -1,7 +1,6 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import ProjectBoard from '@/components/projects/ProjectBoard';
-import { BACKEND_URL } from '@/lib/constants';
-import axios from 'axios';
+import useAuthForProjects from '@/hooks/authHooks/useAuthForProjects';
 import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import React from 'react';
@@ -18,10 +17,11 @@ const ProjectBoardPage = async ({
 }) => {
   const session = await getServerSession(authOptions);
 
-  const token = session?.backendTokens.accessToken;
+  const auth = await useAuthForProjects(params.projectId);
 
   return (
     <ProjectBoard
+      user={auth.data}
       projectId={params.projectId}
       token={session?.backendTokens.accessToken}
     />
