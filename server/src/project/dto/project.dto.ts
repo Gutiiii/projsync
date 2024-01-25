@@ -30,8 +30,16 @@ const EditMemberSchema = z.object({
     role: z.enum(["EDITOR", "VIEWER"])
 })
 
+const CreateListSchema = z.object({
+    projectId: z.string(),
+    title: z.string(),
+    position: z.number()
+
+})
+
 export class CreateProjectDto extends createZodDto(CreateProjectSchema) { }
 export class UpdateProjectDto extends createZodDto(UpdateProjectSchema) { }
 export class CreateInvitationDto extends createZodDto(CreateInvitationSchema) { }
 export class AcceptInvitationDto extends createZodDto(AcceptInvitationSchema) { }
 export class EditMemberDto extends createZodDto(EditMemberSchema) { }
+export class CreateListDto extends createZodDto(CreateListSchema) { }

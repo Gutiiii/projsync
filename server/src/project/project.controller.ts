@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { AcceptInvitationDto, CreateInvitationDto, CreateProjectDto, EditMemberDto, UpdateProjectDto } from './dto/project.dto';
+import { AcceptInvitationDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditMemberDto, UpdateProjectDto } from './dto/project.dto';
 import { ProjectService } from './project.service';
 
 @Controller('project')
@@ -92,6 +92,12 @@ export class ProjectController {
     @Get("list/:projectId")
     async getLists(@Param('projectId') projectId, @Req() request) {
         return await this.projectService.getLists(projectId, request.user.id)
+    }
+
+    @UseGuards(JwtGuard)
+    @Post("list")
+    async createList(@Body() dto: CreateListDto, @Req() request) {
+        return await this.projectService.createList(dto, request.user.id)
     }
 
     @UseGuards(JwtGuard)

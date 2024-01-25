@@ -3,15 +3,15 @@ import { PlusOutlined } from '@ant-design/icons';
 import { UseDroppableArguments, useDroppable } from '@dnd-kit/core';
 // import { Button } from '@nextui-org/react';
 
+import { Input } from '@nextui-org/react';
 import { Badge, Button, Space } from 'antd';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Text } from '../text';
 
 interface BoardColumnProps {
   children: React.ReactNode;
   id: string;
   title: string;
-  description: string;
   count: number;
   data?: UseDroppableArguments['data'];
 }
@@ -20,10 +20,10 @@ const BoardColumn: FC<BoardColumnProps> = ({
   children,
   id,
   title,
-  description,
   count,
   data,
 }) => {
+  const [titleEdit, setTitleEdit] = useState<boolean>(false);
   const { isOver, setNodeRef, active } = useDroppable({
     id,
     data,
@@ -50,26 +50,26 @@ const BoardColumn: FC<BoardColumnProps> = ({
           }}
         >
           <Space>
-            <Text
-              ellipsis={{ tooltip: 'Title' }}
-              size="xs"
-              strong
-              style={{
-                textTransform: 'uppercase',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {title}
-            </Text>
+            {titleEdit ? (
+              <Input defaultValue={title} size="sm" className="h-10 -mt-2" />
+            ) : (
+              <Text
+                ellipsis={{ tooltip: 'Title' }}
+                onClick={() => setTitleEdit(true)}
+                size="xs"
+                strong
+                style={{
+                  textTransform: 'uppercase',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {title}
+              </Text>
+            )}
+
             {!!count && <Badge count={count} color="cyan" />}
           </Space>
-          <Button
-            shape="circle"
-            icon={<PlusOutlined />}
-            // onClick={onAddClickHandler}
-          />
         </Space>
-        {description}
       </div>
       <div
         style={{

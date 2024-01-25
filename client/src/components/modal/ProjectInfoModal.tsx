@@ -125,7 +125,7 @@ const ProjectInfo: FC<ProjectInfoProps> = ({
           <Button
             className="mr-3"
             color="primary"
-            onClick={() => router.push('/projects/' + project.id)}
+            onClick={() => router.push('/projects/board' + project.id)}
           >
             Open Project
           </Button>

@@ -89,10 +89,16 @@ export type RemoveMemberFormData = {
     token?: string
 }
 
+export type CreateListFormData = {
+    title: string
+    position: number
+    projectId: string
+    token?: string
+}
+
 export type List = {
     id: string
     title: string
-    description: string
     position: number
 
 }
