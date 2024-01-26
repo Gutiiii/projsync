@@ -100,7 +100,7 @@ model ProjectList {
 model ProjectCard {
   id String @id @default(uuid())
   title String
-  description String
+  description String?
   dueDate DateTime?
   position Int 
 

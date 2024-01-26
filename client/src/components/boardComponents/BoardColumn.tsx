@@ -153,15 +153,16 @@ const BoardColumn: FC<BoardColumnProps> = ({
                   : 'rounded-full hover:bg-gray-300 active:bg-gray-400 active:scale-95 cursor-pointer p-1 mt-1 '
               }
             >
-              {listDelete.isLoading ? (
-                <Spinner size="sm" />
-              ) : (
-                <Trash2
-                  onClick={handleListDelete}
-                  className="text-center items-center justify"
-                  size={'20'}
-                />
-              )}
+              {user.role !== 'VIEWER' &&
+                (listDelete.isLoading ? (
+                  <Spinner size="sm" />
+                ) : (
+                  <Trash2
+                    onClick={handleListDelete}
+                    className="text-center items-center justify"
+                    size={'20'}
+                  />
+                ))}
             </div>
           </Space>
         </Space>

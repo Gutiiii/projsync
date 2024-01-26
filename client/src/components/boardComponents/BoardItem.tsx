@@ -1,10 +1,11 @@
 'use client';
+import { UserPayload } from '@/types/user.types';
 import {
   DragOverlay,
   useDraggable,
   UseDraggableArguments,
 } from '@dnd-kit/core';
-import React from 'react';
+import React, { useState } from 'react';
 import { string } from 'zod';
 
 interface BoardItemProps {
@@ -21,6 +22,8 @@ const BoardItem = ({
     id,
     data,
   });
+
+  
   return (
     <div
       style={{

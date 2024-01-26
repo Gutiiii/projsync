@@ -20,10 +20,12 @@ import {
   MoreOutlined,
 } from '@ant-design/icons';
 
+import { UserPayload } from '@/types/user.types';
 import { getDateColor } from '@/utilities/getDateColor';
+import { Input } from '@nextui-org/react';
 import dayjs from 'dayjs';
 import { TextIcon } from 'lucide-react';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 
 interface CardProps {
   id: string;
@@ -31,6 +33,8 @@ interface CardProps {
   description: string;
   updatedAt: string;
   dueDate?: string;
+  user: UserPayload;
+  createdCardId?: string;
 }
 
 const BoardCard: FC<CardProps> = ({
@@ -39,8 +43,21 @@ const BoardCard: FC<CardProps> = ({
   description,
   updatedAt,
   dueDate,
+  createdCardId,
+  user,
 }) => {
+  const [titleEdit, setTitleEdit] = useState<boolean>(createdCardId === id);
+  const [titleChange, setTitleChange] = useState<string>(title);
   const { token } = theme.useToken();
+
+  const handleTitleEdit = () => {
+    if (user.role === 'VIEWER') return;
+    handleCardEdit();
+  };
+
+  const handleCardEdit = () => {
+    setTitleEdit(false);
+  };
 
   const dropdownItems = useMemo(() => {
     const dropdownItems: MenuProps['items'] = [
@@ -98,7 +115,23 @@ const BoardCard: FC<CardProps> = ({
     >
       <Card
         size="small"
-        title={<Text ellipsis={{ tooltip: title }}>{title}</Text>}
+        title={
+          titleEdit ? (
+            <input
+              className="w-20"
+              autoFocus={createdCardId === id}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleTitleEdit();
+                }
+              }}
+              defaultValue={title}
+              onChange={(e) => setTitleChange(e.target.value)}
+            />
+          ) : (
+            <Text ellipsis={{ tooltip: title }}>{title}</Text>
+          )
+        }
         // onClick={() => {
         //   edit('tasks', id, 'replace');
         // }}

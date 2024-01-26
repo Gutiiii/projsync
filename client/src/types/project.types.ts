@@ -110,6 +110,14 @@ export type DeleteListFormData = {
     token?: string
 }
 
+export type CreateCardFormData = {
+    listId: string
+    title: string
+    position: number
+    projectId: string
+    token?: string
+}
+
 export type List = {
     id: string
     title: string
