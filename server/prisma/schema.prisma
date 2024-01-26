@@ -82,6 +82,7 @@ model ProjectList {
   id String @id @default(uuid())
   title String
   position Int
+  status ProjectCardStatus @default(OPEN)
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
@@ -93,6 +94,11 @@ model ProjectList {
 
   
   @@index([projectId])
+}
+
+enum ProjectCardStatus {
+  OPEN
+  CLOSED
 }
 
 // TODO Add User Project or Project to ProjectCard, so that the creator of card name avatar can be displayed in Card. Or do it with ProjectCardMember and role
