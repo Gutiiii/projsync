@@ -1,10 +1,12 @@
 'use client';
+import { useDeleteList } from '@/hooks/projectHooks/useDeleteList';
 import { useEditList } from '@/hooks/projectHooks/useEditList';
 import { UserPayload } from '@/types/user.types';
 import { UseDroppableArguments, useDroppable } from '@dnd-kit/core';
-import { Input, Spinner } from '@nextui-org/react';
+import { Button, Input, Spinner } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Badge, Button, Space } from 'antd';
+import { Badge, Space } from 'antd';
+import { Trash2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { FC, useState } from 'react';
@@ -38,8 +40,9 @@ const BoardColumn: FC<BoardColumnProps> = ({
   const projectId = params.projectId;
   const token = session?.backendTokens.accessToken;
   const [titleEdit, setTitleEdit] = useState<boolean>(createdListId === id);
-  const [titleChange, setTitleChange] = useState<string>('');
+  const [titleChange, setTitleChange] = useState<string>(title);
   const listEdit = useMutation({ mutationFn: useEditList });
+  const listDelete = useMutation({ mutationFn: useDeleteList });
   const { isOver, setNodeRef, active } = useDroppable({
     id,
     data,
@@ -58,6 +61,24 @@ const BoardColumn: FC<BoardColumnProps> = ({
         toast.success('List has been Edited');
         queryClient.invalidateQueries({ queryKey: ['getLists'] });
         setTitleEdit(false);
+      },
+      onError: () => {
+        toast.error('Something went wrong');
+      },
+    });
+  };
+
+  const handleListDelete = () => {
+    const values = {
+      id,
+      projectId,
+      token,
+    };
+
+    listDelete.mutateAsync(values, {
+      onSuccess: () => {
+        toast.success('List has been Deleted');
+        queryClient.invalidateQueries({ queryKey: ['getLists'] });
       },
       onError: () => {
         toast.error('Something went wrong');
@@ -125,6 +146,23 @@ const BoardColumn: FC<BoardColumnProps> = ({
             )}
 
             {!!count && <Badge count={count} color="cyan" />}
+            <div
+              className={
+                listDelete.isLoading
+                  ? 'mt-1.5'
+                  : 'rounded-full hover:bg-gray-300 active:bg-gray-400 active:scale-95 cursor-pointer p-1 mt-1 '
+              }
+            >
+              {listDelete.isLoading ? (
+                <Spinner size="sm" />
+              ) : (
+                <Trash2
+                  onClick={handleListDelete}
+                  className="text-center items-center justify"
+                  size={'20'}
+                />
+              )}
+            </div>
           </Space>
         </Space>
       </div>

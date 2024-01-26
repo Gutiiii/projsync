@@ -441,4 +441,28 @@ export class ProjectService {
         }
     }
 
+    async deleteList(listId: string, projectId: string, userId: string) {
+        try {
+            const hasRight = await this.prismaService.user_Project.findFirst({
+                where: {
+                    userId: userId,
+                    projectId: projectId,
+                    OR: [
+                        { role: "CREATOR" },
+                        { role: "EDITOR" }
+                    ]
+                }
+            })
+            if (!hasRight) throw new UnauthorizedException("Unauthorized")
+
+            const list = await this.prismaService.projectList.delete({ where: { id: listId } })
+
+            if (!list) throw new BadRequestException("Something went wrong")
+
+            return list
+        } catch (error) {
+            throw new BadRequestException("Something went wrong")
+        }
+    }
+
 }

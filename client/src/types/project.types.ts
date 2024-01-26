@@ -104,6 +104,12 @@ export type EditListFormData = {
     token?: string
 }
 
+export type DeleteListFormData = {
+    id: string
+    projectId: string
+    token?: string
+}
+
 export type List = {
     id: string
     title: string

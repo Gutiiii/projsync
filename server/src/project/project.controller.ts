@@ -105,6 +105,11 @@ export class ProjectController {
     async editList(@Body() dto: EditListDto, @Param("listId") listId, @Req() request) {
         return await this.projectService.editList(dto, listId, request.user.id)
     }
+    @UseGuards(JwtGuard)
+    @Delete("list/:listId/:projectId")
+    async deleteList(@Param("listId") listId, @Param("projectId") projectId, @Req() request) {
+        return await this.projectService.deleteList(listId, projectId, request.user.id)
+    }
 
     @UseGuards(JwtGuard)
     @Get("card/:projectId")
