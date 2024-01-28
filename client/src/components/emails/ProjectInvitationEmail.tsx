@@ -1,7 +1,6 @@
 import { FRONTEND_URL } from '@/lib/constants';
 import {
   Body,
-  Button,
   Container,
   Font,
   Head,

@@ -1,12 +1,11 @@
 'use client';
-import { UserPayload } from '@/types/user.types';
 import {
   DragOverlay,
   useDraggable,
   UseDraggableArguments,
 } from '@dnd-kit/core';
-import React, { useState } from 'react';
-import { string } from 'zod';
+import { useSortable } from '@dnd-kit/sortable';
+import React from 'react';
 
 interface BoardItemProps {
   id: string;
@@ -18,12 +17,11 @@ const BoardItem = ({
   id,
   data,
 }: React.PropsWithChildren<BoardItemProps>) => {
-  const { attributes, listeners, setNodeRef, active } = useDraggable({
+  const { attributes, listeners, setNodeRef, active } = useSortable({
     id,
     data,
   });
 
-  
   return (
     <div
       style={{

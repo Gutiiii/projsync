@@ -15,17 +15,22 @@ import { Text } from '../text';
 
 import {
   ClockCircleOutlined,
-  DeleteOutlined,
   EyeOutlined,
   MoreOutlined,
 } from '@ant-design/icons';
 
+import { useDeleteCard } from '@/hooks/projectHooks/useDeleteCard';
 import { UserPayload } from '@/types/user.types';
 import { getDateColor } from '@/utilities/getDateColor';
 import { Input } from '@nextui-org/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { TextIcon } from 'lucide-react';
+import { TextIcon, Trash2 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import React, { FC, useMemo, useState } from 'react';
+import Avatar from 'react-avatar';
+import { toast } from 'sonner';
+import UserAvatar from '../auth/UserAvatar';
 
 interface CardProps {
   id: string;
@@ -35,6 +40,7 @@ interface CardProps {
   dueDate?: string;
   user: UserPayload;
   createdCardId?: string;
+  projectId: string;
 }
 
 const BoardCard: FC<CardProps> = ({
@@ -45,9 +51,13 @@ const BoardCard: FC<CardProps> = ({
   dueDate,
   createdCardId,
   user,
+  projectId,
 }) => {
   const [titleEdit, setTitleEdit] = useState<boolean>(createdCardId === id);
   const [titleChange, setTitleChange] = useState<string>(title);
+  const queryClient = useQueryClient();
+  const deleteCardMutation = useMutation({ mutationFn: useDeleteCard });
+  const { data: session } = useSession();
   const { token } = theme.useToken();
 
   const handleTitleEdit = () => {
@@ -60,33 +70,54 @@ const BoardCard: FC<CardProps> = ({
   };
 
   const dropdownItems = useMemo(() => {
-    const dropdownItems: MenuProps['items'] = [
-      {
-        label: 'View card',
-        key: '1',
-        icon: <EyeOutlined />,
-        // onClick: () => {
-        //   edit('tasks', id, 'replace');
-        // },
-      },
-      {
-        danger: true,
-        label: 'Delete card',
-        key: '2',
-        icon: <DeleteOutlined />,
-        // onClick: () => {
-        //   mutate({
-        //     resource: 'tasks',
-        //     id,
-        //     meta: {
-        //       operation: 'task',
-        //     },
-        //   });
-        // },
-      },
-    ];
-
-    return dropdownItems;
+    if (user.role === 'VIEWER') {
+      const dropdownItems: MenuProps['items'] = [
+        {
+          label: 'View card',
+          key: '1',
+          icon: <EyeOutlined />,
+          // onClick: () => {
+          //   edit('tasks', id, 'replace');
+          // },
+        },
+      ];
+      return dropdownItems;
+    } else {
+      const dropdownItems: MenuProps['items'] = [
+        {
+          label: 'View card',
+          key: '1',
+          icon: <EyeOutlined />,
+          // onClick: () => {
+          //   edit('tasks', id, 'replace');
+          // },
+        },
+        {
+          danger: true,
+          label: 'Delete card',
+          key: '2',
+          icon: <Trash2 size={12} />,
+          onClick: () => {
+            const token = session?.backendTokens.accessToken;
+            const values = {
+              id,
+              projectId,
+              token,
+            };
+            deleteCardMutation.mutateAsync(values, {
+              onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ['getCards'] });
+                toast.success('Card has been Deleted');
+              },
+              onError: () => {
+                toast.error('Something went wrong');
+              },
+            });
+          },
+        },
+      ];
+      return dropdownItems;
+    }
   }, []);
 
   const dueDateOptions = useMemo(() => {
@@ -115,23 +146,7 @@ const BoardCard: FC<CardProps> = ({
     >
       <Card
         size="small"
-        title={
-          titleEdit ? (
-            <input
-              className="w-20"
-              autoFocus={createdCardId === id}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleTitleEdit();
-                }
-              }}
-              defaultValue={title}
-              onChange={(e) => setTitleChange(e.target.value)}
-            />
-          ) : (
-            <Text ellipsis={{ tooltip: title }}>{title}</Text>
-          )
-        }
+        title={<Text ellipsis={{ tooltip: title }}>{title}</Text>}
         // onClick={() => {
         //   edit('tasks', id, 'replace');
         // }}
@@ -173,12 +188,14 @@ const BoardCard: FC<CardProps> = ({
         <div
           style={{
             display: 'flex',
+            justifyContent: 'space-between',
             flexWrap: 'wrap',
             alignItems: 'center',
             gap: '8px',
           }}
         >
           <TextIcon
+            width={15}
             style={{
               marginRight: '4px',
             }}
@@ -204,6 +221,7 @@ const BoardCard: FC<CardProps> = ({
               {dueDateOptions.text}
             </Tag>
           )}
+          <Avatar name={'Samuel Gutmans'} color="black " round size="30" />
           {/* {!!users?.length && (
             <Space
               size={4}

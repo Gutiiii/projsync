@@ -119,7 +119,13 @@ export class ProjectController {
 
     @UseGuards(JwtGuard)
     @Post("card")
-    async createTask(@Body() dto: CreateCardDto, @Req() request) {
+    async createCard(@Body() dto: CreateCardDto, @Req() request) {
         return await this.projectService.createCard(dto, request.user.id)
+    }
+
+    @UseGuards(JwtGuard)
+    @Delete("card/:cardId/:projectId")
+    async deleteCard(@Param("cardId") cardId, @Param("projectId") projectId, @Req() request) {
+        return await this.projectService.deleteCard(cardId, projectId, request.user.id)
     }
 }

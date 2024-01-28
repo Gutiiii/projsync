@@ -118,6 +118,12 @@ export type CreateCardFormData = {
     token?: string
 }
 
+export type DeleteCardFormData = {
+    id: string
+    projectId: string
+    token?: string
+}
+
 export type List = {
     id: string
     title: string
@@ -134,3 +140,6 @@ export type Card = {
     updatedAt: string
 }
 
+export type CreateBoardCardFormData = {
+    title: string
+}

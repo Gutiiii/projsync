@@ -495,5 +495,35 @@ export class ProjectService {
             throw new BadRequestException("Something went wrong")
         }
     }
+
+    async deleteCard(cardId: string, projectId: string, userId: string) {
+        try {
+            const hasRight = await this.prismaService.user_Project.findFirst({
+                where: {
+                    userId: userId,
+                    projectId: projectId,
+                    OR: [
+                        { role: "CREATOR" },
+                        { role: "EDITOR" }
+                    ]
+                }
+            })
+
+            if (!hasRight) throw new UnauthorizedException("Unauthorized")
+
+            const card = await this.prismaService.projectCard.delete({
+                where: {
+                    id: cardId
+                }
+            })
+
+            if (!card) throw new BadRequestException("Something went wrong")
+
+            return card
+        } catch (error) {
+            throw new BadRequestException("Something went wrong")
+        }
+
+    }
 }
 
