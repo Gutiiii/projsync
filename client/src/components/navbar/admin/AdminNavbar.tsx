@@ -16,7 +16,7 @@ const AdminNavbar = ({}) => {
             <Logo />
           </Link>
         </button>
-        <div className="items-center text-center hidden sm:flex">
+        <div className="items-center text-center hidden sm:flex -ml-12">
           <div className="flex space-x-52">
             <div className="group mx-auto">
               <button>

@@ -13,20 +13,23 @@ const LandingNav = async ({}) => {
   return (
     <div className="h-[55px] pt-2 sticky top-0 inset-x-0 z-10 shadow-xl bg-gray-200">
       <div className="flex text-xl text-center items-center sm:justify-around justify-between mx-4">
-        <button className="flex text-center items-center">
-          <Link href="/">
-            <Logo />
-          </Link>
-        </button>
+        <div className="flex space-x-8">
+          <button className="flex text-center items-center">
+            <Link href="/">
+              <Logo />
+            </Link>
+          </button>
+          <button className="mt-1 hidden sm:flex">
+            <Link href="/pricing">Pricing</Link>
+          </button>
+        </div>
+
         <div className="items-center text-center hidden sm:flex">
           <div
             className={
               session?.user ? 'group mx-auto ml-24' : 'group mx-auto ml-36'
             }
           >
-            <button>
-              <Link href="/pricing">Pricing</Link>
-            </button>
             <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
           </div>
         </div>
