@@ -19,9 +19,12 @@ const LandingNav = async ({}) => {
               <Logo />
             </Link>
           </button>
-          <button className="mt-1 hidden sm:flex">
-            <Link href="/pricing">Pricing</Link>
-          </button>
+          <div className="group mx-auto mt-1.5">
+            <button>
+              <Link href="/pricing">Pricing</Link>
+            </button>
+            <div className="line h-px group-hover:w-full w-0 bg-black mx-auto transition-all duration-300" />
+          </div>
         </div>
 
         <div className="items-center text-center hidden sm:flex">
