@@ -5,12 +5,14 @@ import { useGetCards } from '@/hooks/projectHooks/useGetCards';
 import { useGetLists } from '@/hooks/projectHooks/useGetLists';
 import { Card, List } from '@/types/project.types';
 import { UserPayload } from '@/types/user.types';
+import { DragOverlay } from '@dnd-kit/core';
+import { SortableContext } from '@dnd-kit/sortable';
 import { Button, Spinner } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { Board, BoardContainer } from '../boardComponents/Board';
+import { Board } from '../boardComponents/Board';
 import BoardCard from '../boardComponents/BoardCard';
 import BoardColumn from '../boardComponents/BoardColumn';
 import BoardItem from '../boardComponents/BoardItem';
@@ -27,8 +29,7 @@ const ProjectBoard = ({
 }) => {
   const router = useRouter();
   const [createdListId, setCreatedListId] = useState<string | undefined>('');
-  const [createdCardId, setCreatedCardId] = useState<string | undefined>('');
-  const [createCardListId, setCreatedCardListId] = useState<string>('');
+  const [createdCardListId, setCreatedCardListId] = useState<string>('');
   const [createBoardCardModalVisible, setCreateBoardCardModalVisible] =
     useState<boolean>(false);
   const queryClient = useQueryClient();
@@ -97,7 +98,7 @@ const ProjectBoard = ({
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: ['getCards'] });
         toast.success('Card has been Created');
-        setCreatedCardId(data.data.id);
+        setCreatedCardListId('');
       },
       onError: () => {
         toast.error('Something went wrong');
@@ -105,11 +106,13 @@ const ProjectBoard = ({
     });
   };
 
+  // const listsId = useMemo(() => lists.map((list) => list.id), [lists]);
+
   return (
     <>
       <div className="mx-8">
-        <BoardContainer>
-          <Board>
+        <Board>
+          <SortableContext items={lists}>
             {lists.map((list) => (
               <BoardColumn
                 user={user}
@@ -125,7 +128,6 @@ const ProjectBoard = ({
                   .map((card) => (
                     <BoardItem id={card.id} key={card.id}>
                       <BoardCard
-                        createdCardId={createdCardId}
                         user={user}
                         id={card.id}
                         title={card.title}
@@ -136,6 +138,7 @@ const ProjectBoard = ({
                       />
                     </BoardItem>
                   ))}
+
                 {user.role !== 'VIEWER' && (
                   <Button
                     className="ml-3"
@@ -146,7 +149,7 @@ const ProjectBoard = ({
                     }}
                   >
                     {mutationCreateCard.isLoading &&
-                    createCardListId === list.id ? (
+                    createdCardListId === list.id ? (
                       <Spinner size="sm" />
                     ) : (
                       <svg
@@ -164,36 +167,36 @@ const ProjectBoard = ({
                         />
                       </svg>
                     )}
-                    {!mutationCreateCard.isLoading && 'Add Card'}
+                    Add Card
                   </Button>
                 )}
               </BoardColumn>
             ))}
-            {user.role !== 'VIEWER' && (
-              <Button className="mt-2" onClick={createList}>
-                {mutationCreateList.isLoading ? (
-                  <Spinner size="sm" />
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                    />
-                  </svg>
-                )}
-                {!mutationCreateList.isLoading && 'Add List'}
-              </Button>
-            )}
-          </Board>
-        </BoardContainer>
+          </SortableContext>
+          {user.role !== 'VIEWER' && (
+            <Button className="mt-7" onClick={createList} size="sm">
+              {mutationCreateList.isLoading ? (
+                <Spinner size="sm" />
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                  />
+                </svg>
+              )}
+              {!mutationCreateList.isLoading && 'Add List'}
+            </Button>
+          )}
+        </Board>
       </div>
       {createBoardCardModalVisible && (
         <CreateBoardCardModal
@@ -203,7 +206,7 @@ const ProjectBoard = ({
             setCreatedCardListId('');
           }}
           handleOnSubmit={createCard}
-          listId={createCardListId}
+          listId={createdCardListId}
         />
       )}
     </>

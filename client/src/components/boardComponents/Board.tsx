@@ -1,5 +1,7 @@
 'use client';
-import { DndContext } from '@dnd-kit/core';
+import { List } from '@/types/project.types';
+import { DndContext, DragStartEvent } from '@dnd-kit/core';
+import { useState } from 'react';
 
 export const BoardContainer = ({ children }: React.PropsWithChildren) => {
   return (
@@ -28,8 +30,16 @@ export const BoardContainer = ({ children }: React.PropsWithChildren) => {
 };
 
 export const Board = ({ children }: React.PropsWithChildren) => {
+  const [activeList, setActiveList] = useState<List[] | null>(null);
+
+  const onDragStart = (event: DragStartEvent) => {
+    if (event.active.data.current?.type === 'List') {
+      setActiveList(event.active.data.current.list);
+      return;
+    }
+  };
   return (
-    <DndContext>
+    <DndContext onDragStart={onDragStart}>
       <BoardContainer>{children}</BoardContainer>
     </DndContext>
   );

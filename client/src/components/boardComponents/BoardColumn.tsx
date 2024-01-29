@@ -3,6 +3,8 @@ import { useDeleteList } from '@/hooks/projectHooks/useDeleteList';
 import { useEditList } from '@/hooks/projectHooks/useEditList';
 import { UserPayload } from '@/types/user.types';
 import { UseDroppableArguments, useDroppable } from '@dnd-kit/core';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { Button, Input, Spinner } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge, Space } from 'antd';
@@ -43,10 +45,27 @@ const BoardColumn: FC<BoardColumnProps> = ({
   const [titleChange, setTitleChange] = useState<string>(title);
   const listEdit = useMutation({ mutationFn: useEditList });
   const listDelete = useMutation({ mutationFn: useDeleteList });
-  const { isOver, setNodeRef, active } = useDroppable({
+
+  const {
+    isOver,
+    setNodeRef,
+    active,
+    attributes,
+    listeners,
+    transform,
+    transition,
+  } = useSortable({
     id,
-    data,
+    data: {
+      type: 'List',
+      data,
+    },
   });
+
+  const style = {
+    transition,
+    transform: CSS.Transform.toString(transform),
+  };
 
   const handleTitleEdit = () => {
     if (user.role === 'VIEWER') return;
@@ -89,16 +108,16 @@ const BoardColumn: FC<BoardColumnProps> = ({
   return (
     <div
       ref={setNodeRef}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '0 16px',
-      }}
+      className="flex flex-col p-4 "
+      style={style}
     >
       <div
         style={{
           padding: '12px',
+          cursor: "grab"
         }}
+        {...attributes}
+        {...listeners}
       >
         <Space
           style={{

@@ -39,7 +39,6 @@ interface CardProps {
   updatedAt: string;
   dueDate?: string;
   user: UserPayload;
-  createdCardId?: string;
   projectId: string;
 }
 
@@ -49,25 +48,13 @@ const BoardCard: FC<CardProps> = ({
   description,
   updatedAt,
   dueDate,
-  createdCardId,
   user,
   projectId,
 }) => {
-  const [titleEdit, setTitleEdit] = useState<boolean>(createdCardId === id);
-  const [titleChange, setTitleChange] = useState<string>(title);
   const queryClient = useQueryClient();
   const deleteCardMutation = useMutation({ mutationFn: useDeleteCard });
   const { data: session } = useSession();
   const { token } = theme.useToken();
-
-  const handleTitleEdit = () => {
-    if (user.role === 'VIEWER') return;
-    handleCardEdit();
-  };
-
-  const handleCardEdit = () => {
-    setTitleEdit(false);
-  };
 
   const dropdownItems = useMemo(() => {
     if (user.role === 'VIEWER') {
