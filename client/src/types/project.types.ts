@@ -1,3 +1,5 @@
+import { UniqueIdentifier } from "@dnd-kit/core"
+
 export type CreateProjectFormData = {
     id?: string | undefined,
     token?: string | undefined,
@@ -101,6 +103,15 @@ export type EditListFormData = {
     projectId: string
     title: string
     position: number
+    token?: string
+}
+
+export type MoveListFormData = {
+    projectId: string
+    activeListId: UniqueIdentifier
+    overListId: UniqueIdentifier
+    activeListPosition: number
+    overListPosition: number
     token?: string
 }
 

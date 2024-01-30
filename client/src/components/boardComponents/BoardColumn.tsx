@@ -106,45 +106,41 @@ const BoardColumn: FC<BoardColumnProps> = ({
   };
 
   return (
-    <div
-      ref={setNodeRef}
-      className="flex flex-col p-4 "
-      style={style}
-    >
+    <div ref={setNodeRef} className="flex flex-col p-4 " style={style}>
       <div
         style={{
           padding: '12px',
-          cursor: "grab"
+          cursor: 'grab',
         }}
-        {...attributes}
-        {...listeners}
       >
         <Space
           style={{
             width: '100%',
             justifyContent: 'space-between',
           }}
+          {...attributes}
+          {...listeners}
         >
-          <Space>
+          <Space className="relative">
             {titleEdit ? (
-              <div className="relative">
+              <div>
                 <Input
                   isDisabled={listEdit.isLoading}
                   isRequired
+                  onBlur={() => {
+                    if (listEdit.isLoading) return;
+                    setTitleEdit(false);
+                  }}
                   defaultValue={title}
                   onChange={(e: any) => setTitleChange(e.target.value)}
-                  size="sm"
                   className=" -mt-2"
-                  autoFocus={createdListId === id}
+                  size="sm"
+                  autoFocus
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleTitleEdit();
-                    }
+                    if (e.key !== 'Enter') return;
+                    handleTitleEdit();
                   }}
                 />
-                {listEdit.isLoading && (
-                  <Spinner className="absolute top-2 left-1/3 z-10" />
-                )}
               </div>
             ) : (
               <Text
@@ -153,6 +149,7 @@ const BoardColumn: FC<BoardColumnProps> = ({
                   if (user.role === 'VIEWER') return;
                   setTitleEdit(true);
                 }}
+                className={listEdit.isLoading ? 'opacity-25' : ''}
                 size="xs"
                 strong
                 style={{
@@ -162,6 +159,9 @@ const BoardColumn: FC<BoardColumnProps> = ({
               >
                 {title}
               </Text>
+            )}
+            {listEdit.isLoading && (
+              <Spinner className="absolute top-0.5 left-1 z-10" />
             )}
 
             {!!count && <Badge count={count} color="cyan" />}

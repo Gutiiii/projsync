@@ -42,6 +42,13 @@ const EditListSchema = z.object({
     position: z.number()
 })
 
+const MoveListSchema = z.object({
+    activeListId: z.string(),
+    overListId: z.string(),
+    activeListPosition: z.number(),
+    overListPosition: z.number()
+})
+
 const CreateCardSchema = z.object({
     listId: z.string(),
     projectId: z.string(),
@@ -56,4 +63,5 @@ export class AcceptInvitationDto extends createZodDto(AcceptInvitationSchema) { 
 export class EditMemberDto extends createZodDto(EditMemberSchema) { }
 export class CreateListDto extends createZodDto(CreateListSchema) { }
 export class EditListDto extends createZodDto(EditListSchema) { }
+export class MoveListDto extends createZodDto(MoveListSchema) { }
 export class CreateCardDto extends createZodDto(CreateCardSchema) { }

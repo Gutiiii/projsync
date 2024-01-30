@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { LogService } from 'src/log/log.service';
 import { PrismaService } from 'src/prisma.service';
-import { CreateCardDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditListDto, EditMemberDto, UpdateProjectDto } from './dto/project.dto';
+import { CreateCardDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditListDto, EditMemberDto, MoveListDto, UpdateProjectDto } from './dto/project.dto';
 
 @Injectable()
 export class ProjectService {
@@ -436,6 +436,44 @@ export class ProjectService {
 
             return list
 
+        } catch (error) {
+            throw new BadRequestException("Something went wrong")
+        }
+    }
+
+    async moveList(dto: MoveListDto, projectId: string, userId: string) {
+        try {
+            const hasRight = await this.prismaService.user_Project.findFirst({
+                where: {
+                    userId: userId,
+                    projectId: projectId,
+                }
+            })
+
+            if (!hasRight) throw new UnauthorizedException("Unauthorized")
+            const list = await this.prismaService.$transaction(
+                [
+                    this.prismaService.projectList.update({
+                        where: {
+                            id: dto.activeListId
+                        },
+                        data: {
+                            position: dto.overListPosition
+                        }
+                    }),
+                    this.prismaService.projectList.update({
+                        where: {
+                            id: dto.overListId
+                        },
+                        data: {
+                            position: dto.activeListPosition
+                        }
+                    }),
+                ]
+            )
+            if (!list) throw new BadRequestException("Something went wrong")
+            console.log(list)
+            return list
         } catch (error) {
             throw new BadRequestException("Something went wrong")
         }

@@ -49,7 +49,7 @@ const CreateBoardCardModal: FC<CreateProjectModalProps> = ({
     <Modal isOpen={visible} onClose={handleOnClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{t('modalheader')}</ModalHeader>
+        <ModalHeader>Create Card</ModalHeader>
         <ModalCloseButton onClick={handleOnClose} />
         <form onSubmit={handleSubmit(submitData)}>
           <ModalBody pb={6}>
