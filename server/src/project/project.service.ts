@@ -442,8 +442,6 @@ export class ProjectService {
     }
 
     async moveList(dto: MoveListDto, projectId: string, userId: string) {
-
-
         try {
             const hasRight = await this.prismaService.user_Project.findFirst({
                 where: {
@@ -454,53 +452,63 @@ export class ProjectService {
 
             if (!hasRight) throw new UnauthorizedException("Unauthorized")
 
-            const range = Math.abs(dto.activeListPosition - dto.overListPosition);
+            if (dto.activeListPosition > dto.overListPosition) {
+                const list = await this.prismaService.$transaction(
+                    [
+                        this.prismaService.projectList.updateMany({
+                            where: {
+                                position: {
+                                    gte: dto.overListPosition,
+                                }
+                            },
+                            data: {
+                                position: {
+                                    increment: 1
+                                }
+                            }
+                        }),
+                        this.prismaService.projectList.update({
+                            where: {
+                                id: dto.activeListId
+                            },
+                            data: {
+                                position: dto.overListPosition
+                            }
+                        })
 
+                    ]
+                )
+                if (!list) throw new BadRequestException("Something went wrong")
+                return list
+            } else if (dto.activeListPosition < dto.overListPosition) {
+                const list = await this.prismaService.$transaction(
+                    [
+                        this.prismaService.projectList.updateMany({
+                            where: {
+                                position: {
+                                    lte: dto.overListPosition,
+                                }
+                            },
+                            data: {
+                                position: {
+                                    decrement: 1
+                                }
+                            }
+                        }),
+                        this.prismaService.projectList.update({
+                            where: {
+                                id: dto.activeListId
+                            },
+                            data: {
+                                position: dto.overListPosition
+                            }
+                        }),
 
-            // if (range != 1) {
-            //     const minPosition = Math.min(dto.activeListPosition, dto.overListPosition);
-            //     const maxPosition = Math.max(dto.activeListPosition, dto.overListPosition);
-
-            //     // Determine the direction of movement
-            //     const increment = dto.activeListPosition < dto.overListPosition ? 1 : -1;
-
-            //     // Update positions for the affected range
-            //     const list = await this.prismaService.projectList.updateMany({
-            //         where: {
-            //             position: {
-            //                 gte: minPosition,
-            //                 lte: maxPosition,
-            //             },
-            //         },
-            //         data: {
-            //             position: {
-            //                 increment: increment,
-            //             },
-            //         },
-            //     });
-            // }
-            const list = await this.prismaService.$transaction(
-                [
-                    this.prismaService.projectList.update({
-                        where: {
-                            id: dto.activeListId
-                        },
-                        data: {
-                            position: dto.overListPosition
-                        }
-                    }),
-                    this.prismaService.projectList.update({
-                        where: {
-                            id: dto.overListId
-                        },
-                        data: {
-                            position: dto.activeListPosition
-                        }
-                    }),
-                ]
-            )
-            if (!list) throw new BadRequestException("Something went wrong")
-            return list
+                    ]
+                )
+                if (!list) throw new BadRequestException("Something went wrong")
+                return list
+            }
         } catch (error) {
             throw new BadRequestException("Something went wrong")
         }

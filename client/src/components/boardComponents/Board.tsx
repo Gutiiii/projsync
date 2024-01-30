@@ -52,7 +52,7 @@ export const Board = ({ children }: React.PropsWithChildren) => {
   const projectId = params.projectId;
   const [lists, setLists] = useState<List[]>([]);
 
-  const { mutateAsync, isLoading } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: useMoveList,
     onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey: ['getLists'], exact: true });
@@ -100,12 +100,15 @@ export const Board = ({ children }: React.PropsWithChildren) => {
 
     const overListPosition = over.data.current?.data.position;
 
+    console.log('LISTS: ', lists);
+
     const updatedLists = lists.map((list) => {
       if (list.id === activeListId) {
         return { ...list, position: overListPosition };
       } else if (list.id === overListId) {
         return { ...list, position: activeListPosition };
       }
+      return list; // Add this line to cover other cases
     });
     // setLists((prevLists) => {
     //   const updatedLists = prevLists.map((list) => {

@@ -105,7 +105,6 @@ const ProjectBoard = ({
       },
     });
   };
-  console.log('LISTS: ', lists);
   return (
     <>
       <div className="mx-8">
