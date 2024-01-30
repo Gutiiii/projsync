@@ -55,21 +55,30 @@ export const Board = ({ children }: React.PropsWithChildren) => {
   const { mutateAsync } = useMutation({
     mutationFn: useMoveList,
     onMutate: async (values) => {
-      await queryClient.cancelQueries({ queryKey: ['getLists'], exact: true });
+      await queryClient.cancelQueries(['getLists']);
 
-      console.log(values.updatedLists);
+      console.log('UP: ', values.updatedLists);
 
-      queryClient.setQueryData(['getLists'], { data: values.updatedLists });
+      console.log(queryClient.getQueryData(['getLists']));
 
-      const prevList = lists;
-      return { prevList };
+      console.log(
+        queryClient.setQueryData(['getLists'], (data) => {
+          return {
+            data: {
+              data: values.updatedLists,
+            },
+          };
+        }),
+      );
+
+      return { prevList: lists };
     },
     onError: (_, __, context) => {
       toast.error('Failed');
       queryClient.setQueryData(['getLists'], () => context?.prevList);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['getLists'] });
+      // queryClient.invalidateQueries({ queryKey: ['getLists'] });
     },
     onSuccess: () => {
       toast.success('Moved');
@@ -81,6 +90,7 @@ export const Board = ({ children }: React.PropsWithChildren) => {
     console.log(data.data);
     if (event.active.data.current?.type === 'List') {
       setActiveList(event.active.data.current.list);
+      console.log(data.data);
       setLists(data.data);
       return;
     }
@@ -99,8 +109,6 @@ export const Board = ({ children }: React.PropsWithChildren) => {
     const activeListPosition = active.data.current?.data.position;
 
     const overListPosition = over.data.current?.data.position;
-
-    console.log('LISTS: ', lists);
 
     const updatedLists = lists.map((list) => {
       if (list.id === activeListId) {
