@@ -112,6 +112,7 @@ export type MoveListFormData = {
     overListId: UniqueIdentifier
     activeListPosition: number
     overListPosition: number
+    updatedLists: object
     token?: string
 }
 

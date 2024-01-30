@@ -45,31 +45,31 @@ export const BoardContainer = ({ children }: React.PropsWithChildren) => {
 
 export const Board = ({ children }: React.PropsWithChildren) => {
   const [activeList, setActiveList] = useState<List[] | null>(null);
-  const router = useRouter();
   const queryClient = useQueryClient();
   const { data: session } = useSession();
   const token = session?.backendTokens.accessToken;
   const params = useParams<{ projectId: string }>();
   const projectId = params.projectId;
   const [lists, setLists] = useState<List[]>([]);
-  console.log('LISTS: ', lists);
 
   const { mutateAsync, isLoading } = useMutation({
     mutationFn: useMoveList,
-    onMutate: async () => {
+    onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey: ['getLists'], exact: true });
 
-      console.log(queryClient.setQueryData(['getLists'], { data: lists }));
+      console.log(values.updatedLists);
 
-      // return { prevList };
+      queryClient.setQueryData(['getLists'], { data: values.updatedLists });
+
+      const prevList = lists;
+      return { prevList };
     },
     onError: (_, __, context) => {
       toast.error('Failed');
-      // queryClient.setQueryData(['getLists'], () => context?.prevList);
+      queryClient.setQueryData(['getLists'], () => context?.prevList);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['getLists'] });
-      router.refresh();
     },
     onSuccess: () => {
       toast.success('Moved');
@@ -78,6 +78,7 @@ export const Board = ({ children }: React.PropsWithChildren) => {
 
   const onDragStart = (event: DragStartEvent) => {
     const data: any = queryClient.getQueryData(['getLists']);
+    console.log(data.data);
     if (event.active.data.current?.type === 'List') {
       setActiveList(event.active.data.current.list);
       setLists(data.data);
@@ -99,25 +100,24 @@ export const Board = ({ children }: React.PropsWithChildren) => {
 
     const overListPosition = over.data.current?.data.position;
 
-    // const updatedLists = lists.map((list) => {
-    //   if (list.id === activeListId) {
-    //     return { ...list, position: overListPosition };
-    //   } else if (list.id === overListId) {
-    //     return { ...list, position: activeListPosition };
-    //   }
-    // });
-    // console.log(lists === updatedLists);
-    setLists((prevLists) => {
-      const updatedLists = prevLists.map((list) => {
-        if (list.id === activeListId) {
-          return { ...list, position: overListPosition };
-        } else if (list.id === overListId) {
-          return { ...list, position: activeListPosition };
-        }
-        return list;
-      });
-      return updatedLists;
+    const updatedLists = lists.map((list) => {
+      if (list.id === activeListId) {
+        return { ...list, position: overListPosition };
+      } else if (list.id === overListId) {
+        return { ...list, position: activeListPosition };
+      }
     });
+    // setLists((prevLists) => {
+    //   const updatedLists = prevLists.map((list) => {
+    //     if (list.id === activeListId) {
+    //       return { ...list, position: overListPosition };
+    //     } else if (list.id === overListId) {
+    //       return { ...list, position: activeListPosition };
+    //     }
+    //     return list;
+    //   });
+    //   return updatedLists;
+    // });
 
     const values = {
       projectId,
@@ -126,6 +126,7 @@ export const Board = ({ children }: React.PropsWithChildren) => {
       activeListPosition,
       overListPosition,
       token,
+      updatedLists,
     };
 
     mutateAsync(values);

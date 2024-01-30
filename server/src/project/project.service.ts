@@ -457,28 +457,28 @@ export class ProjectService {
             const range = Math.abs(dto.activeListPosition - dto.overListPosition);
 
 
-            if (range != 1) {
-                const minPosition = Math.min(dto.activeListPosition, dto.overListPosition);
-                const maxPosition = Math.max(dto.activeListPosition, dto.overListPosition);
+            // if (range != 1) {
+            //     const minPosition = Math.min(dto.activeListPosition, dto.overListPosition);
+            //     const maxPosition = Math.max(dto.activeListPosition, dto.overListPosition);
 
-                // Determine the direction of movement
-                const increment = dto.activeListPosition < dto.overListPosition ? 1 : -1;
+            //     // Determine the direction of movement
+            //     const increment = dto.activeListPosition < dto.overListPosition ? 1 : -1;
 
-                // Update positions for the affected range
-                const list = await this.prismaService.projectList.updateMany({
-                    where: {
-                        position: {
-                            gte: minPosition,
-                            lte: maxPosition,
-                        },
-                    },
-                    data: {
-                        position: {
-                            increment: increment,
-                        },
-                    },
-                });
-            }
+            //     // Update positions for the affected range
+            //     const list = await this.prismaService.projectList.updateMany({
+            //         where: {
+            //             position: {
+            //                 gte: minPosition,
+            //                 lte: maxPosition,
+            //             },
+            //         },
+            //         data: {
+            //             position: {
+            //                 increment: increment,
+            //             },
+            //         },
+            //     });
+            // }
             const list = await this.prismaService.$transaction(
                 [
                     this.prismaService.projectList.update({
