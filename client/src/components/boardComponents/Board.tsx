@@ -13,7 +13,7 @@ import {
 } from '@dnd-kit/core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -45,50 +45,42 @@ export const BoardContainer = ({ children }: React.PropsWithChildren) => {
 
 export const Board = ({ children }: React.PropsWithChildren) => {
   const [activeList, setActiveList] = useState<List[] | null>(null);
+  const router = useRouter();
   const queryClient = useQueryClient();
   const { data: session } = useSession();
-
   const token = session?.backendTokens.accessToken;
   const params = useParams<{ projectId: string }>();
   const projectId = params.projectId;
-  const data = queryClient.getQueriesData(['getLists']);
-  const listData: List[] = data['0']['1'].data;
-  const [lists, setLists] = useState<List[]>(listData);
+  const [lists, setLists] = useState<List[]>([]);
+  console.log('LISTS: ', lists);
 
   const { mutateAsync, isLoading } = useMutation({
     mutationFn: useMoveList,
     onMutate: async () => {
-      await queryClient.cancelQueries(['getLists']);
+      await queryClient.cancelQueries({ queryKey: ['getLists'], exact: true });
 
-      const prevList: List[] = data['0']['1'].data;
+      console.log(queryClient.setQueryData(['getLists'], { data: lists }));
 
-      queryClient.setQueryData(['getLists'], { data: lists });
-
-      return { prevList };
+      // return { prevList };
     },
     onError: (_, __, context) => {
       toast.error('Failed');
-      queryClient.setQueryData(['getLists'], () => context?.prevList);
+      // queryClient.setQueryData(['getLists'], () => context?.prevList);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['getLists'] });
+      router.refresh();
     },
     onSuccess: () => {
       toast.success('Moved');
     },
   });
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 3,
-      },
-    }),
-  );
-
   const onDragStart = (event: DragStartEvent) => {
+    const data: any = queryClient.getQueryData(['getLists']);
     if (event.active.data.current?.type === 'List') {
       setActiveList(event.active.data.current.list);
+      setLists(data.data);
       return;
     }
   };
@@ -107,14 +99,14 @@ export const Board = ({ children }: React.PropsWithChildren) => {
 
     const overListPosition = over.data.current?.data.position;
 
-    const values = {
-      projectId,
-      activeListId,
-      overListId,
-      activeListPosition,
-      overListPosition,
-      token,
-    };
+    // const updatedLists = lists.map((list) => {
+    //   if (list.id === activeListId) {
+    //     return { ...list, position: overListPosition };
+    //   } else if (list.id === overListId) {
+    //     return { ...list, position: activeListPosition };
+    //   }
+    // });
+    // console.log(lists === updatedLists);
     setLists((prevLists) => {
       const updatedLists = prevLists.map((list) => {
         if (list.id === activeListId) {
@@ -127,8 +119,25 @@ export const Board = ({ children }: React.PropsWithChildren) => {
       return updatedLists;
     });
 
+    const values = {
+      projectId,
+      activeListId,
+      overListId,
+      activeListPosition,
+      overListPosition,
+      token,
+    };
+
     mutateAsync(values);
   };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 3,
+      },
+    }),
+  );
   return (
     <DndContext
       onDragStart={onDragStart}

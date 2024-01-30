@@ -24,6 +24,7 @@ interface BoardColumnProps {
   createdListId?: string;
   user: UserPayload;
   position: number;
+  onCreate: () => void;
 }
 
 const BoardColumn: FC<BoardColumnProps> = ({
@@ -35,6 +36,7 @@ const BoardColumn: FC<BoardColumnProps> = ({
   createdListId,
   user,
   position,
+  onCreate,
 }) => {
   const { data: session } = useSession();
   const params = useParams<{ projectId: string }>();
@@ -60,6 +62,7 @@ const BoardColumn: FC<BoardColumnProps> = ({
       type: 'List',
       data,
     },
+    disabled: titleEdit,
   });
 
   const style = {
@@ -84,6 +87,10 @@ const BoardColumn: FC<BoardColumnProps> = ({
       onError: () => {
         toast.error('Something went wrong');
       },
+      onSettled: () => {
+        setTitleEdit(false);
+        onCreate();
+      },
     });
   };
 
@@ -106,7 +113,13 @@ const BoardColumn: FC<BoardColumnProps> = ({
   };
 
   return (
-    <div ref={setNodeRef} className="flex flex-col p-4 " style={style}>
+    <div
+      ref={setNodeRef}
+      className="flex flex-col p-4 "
+      style={style}
+      {...attributes}
+      {...listeners}
+    >
       <div
         style={{
           padding: '12px',
@@ -118,8 +131,6 @@ const BoardColumn: FC<BoardColumnProps> = ({
             width: '100%',
             justifyContent: 'space-between',
           }}
-          {...attributes}
-          {...listeners}
         >
           <Space className="relative">
             {titleEdit ? (

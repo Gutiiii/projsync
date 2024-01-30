@@ -442,6 +442,8 @@ export class ProjectService {
     }
 
     async moveList(dto: MoveListDto, projectId: string, userId: string) {
+
+
         try {
             const hasRight = await this.prismaService.user_Project.findFirst({
                 where: {
@@ -451,6 +453,32 @@ export class ProjectService {
             })
 
             if (!hasRight) throw new UnauthorizedException("Unauthorized")
+
+            const range = Math.abs(dto.activeListPosition - dto.overListPosition);
+
+
+            if (range != 1) {
+                const minPosition = Math.min(dto.activeListPosition, dto.overListPosition);
+                const maxPosition = Math.max(dto.activeListPosition, dto.overListPosition);
+
+                // Determine the direction of movement
+                const increment = dto.activeListPosition < dto.overListPosition ? 1 : -1;
+
+                // Update positions for the affected range
+                const list = await this.prismaService.projectList.updateMany({
+                    where: {
+                        position: {
+                            gte: minPosition,
+                            lte: maxPosition,
+                        },
+                    },
+                    data: {
+                        position: {
+                            increment: increment,
+                        },
+                    },
+                });
+            }
             const list = await this.prismaService.$transaction(
                 [
                     this.prismaService.projectList.update({
@@ -472,7 +500,6 @@ export class ProjectService {
                 ]
             )
             if (!list) throw new BadRequestException("Something went wrong")
-            console.log(list)
             return list
         } catch (error) {
             throw new BadRequestException("Something went wrong")

@@ -121,6 +121,7 @@ const ProjectBoard = ({
                 title={list.title}
                 count={cards.filter((card) => card.listId === list.id).length}
                 createdListId={createdListId}
+                onCreate={() => setCreatedListId('')}
               >
                 {cards
                   .filter((card) => card.listId === list.id)

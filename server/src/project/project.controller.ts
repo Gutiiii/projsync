@@ -109,7 +109,6 @@ export class ProjectController {
     @UseGuards(JwtGuard)
     @Patch("list/move/:projectId")
     async moveList(@Body() dto: MoveListDto, @Param('projectId') projectId, @Req() request) {
-        console.log("CALLED")
         return await this.projectService.moveList(dto, projectId, request.user.id)
     }
 
