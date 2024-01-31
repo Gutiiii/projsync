@@ -8,7 +8,7 @@ import { UserPayload } from '@/types/user.types';
 import { DragOverlay } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
 import { Button, Spinner } from '@nextui-org/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import React, { useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -48,7 +48,11 @@ const ProjectBoard = ({
   const mutationCreateCard = useMutation({ mutationFn: useCreateCard });
   //TODO Add Skeleton
   if (listIsLoading || cardIsLoading) return <div>Hello</div>;
+
   const lists: List[] = list?.data;
+
+  console.log('LIST DATA: ', list?.data);
+
   const cards: Card[] = card?.data;
 
   const createList = () => {

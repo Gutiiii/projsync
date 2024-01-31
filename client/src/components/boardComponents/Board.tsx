@@ -1,6 +1,4 @@
 'use client';
-import { useEditList } from '@/hooks/projectHooks/useEditList';
-import { useGetLists } from '@/hooks/projectHooks/useGetLists';
 import { useMoveList } from '@/hooks/projectHooks/useMoveList';
 import { List } from '@/types/project.types';
 import {
@@ -13,8 +11,8 @@ import {
 } from '@dnd-kit/core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 export const BoardContainer = ({ children }: React.PropsWithChildren) => {
@@ -57,19 +55,11 @@ export const Board = ({ children }: React.PropsWithChildren) => {
     onMutate: async (values) => {
       await queryClient.cancelQueries(['getLists']);
 
-      console.log('UP: ', values.updatedLists);
+      queryClient.getQueryData(['getLists']);
 
-      console.log(queryClient.getQueryData(['getLists']));
+      console.log('UPDATED LISTS: ', values.updatedLists);
 
-      console.log(
-        queryClient.setQueryData(['getLists'], (data) => {
-          return {
-            data: {
-              data: values.updatedLists,
-            },
-          };
-        }),
-      );
+      queryClient.setQueryData(['getLists'], { data: values.updatedLists });
 
       return { prevList: lists };
     },
@@ -87,10 +77,8 @@ export const Board = ({ children }: React.PropsWithChildren) => {
 
   const onDragStart = (event: DragStartEvent) => {
     const data: any = queryClient.getQueryData(['getLists']);
-    console.log(data.data);
     if (event.active.data.current?.type === 'List') {
       setActiveList(event.active.data.current.list);
-      console.log(data.data);
       setLists(data.data);
       return;
     }
@@ -109,26 +97,28 @@ export const Board = ({ children }: React.PropsWithChildren) => {
     const activeListPosition = active.data.current?.data.position;
 
     const overListPosition = over.data.current?.data.position;
-
     const updatedLists = lists.map((list) => {
-      if (list.id === activeListId) {
-        return { ...list, position: overListPosition };
-      } else if (list.id === overListId) {
-        return { ...list, position: activeListPosition };
+      if (activeListPosition > overListPosition) {
+        if (
+          list.position >= overListPosition &&
+          list.position < activeListPosition
+        ) {
+          return { ...list, position: list.position + 1 };
+        } else if (list.id === activeListId) {
+          return { ...list, position: overListPosition };
+        }
+      } else if (activeListPosition < overListPosition) {
+        if (
+          list.position <= overListPosition &&
+          list.position > activeListPosition
+        ) {
+          return { ...list, position: list.position - 1 };
+        } else if (list.id === activeListId) {
+          return { ...list, position: overListPosition };
+        }
       }
-      return list; // Add this line to cover other cases
+      return list;
     });
-    // setLists((prevLists) => {
-    //   const updatedLists = prevLists.map((list) => {
-    //     if (list.id === activeListId) {
-    //       return { ...list, position: overListPosition };
-    //     } else if (list.id === overListId) {
-    //       return { ...list, position: activeListPosition };
-    //     }
-    //     return list;
-    //   });
-    //   return updatedLists;
-    // });
 
     const values = {
       projectId,
