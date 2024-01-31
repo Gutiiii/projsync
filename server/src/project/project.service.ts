@@ -275,11 +275,11 @@ export class ProjectService {
         }
     }
 
-    async editMember(dto: EditMemberDto) {
+    async editMember(id: string, dto: EditMemberDto) {
         try {
             const member = await this.prismaService.user_Project.update({
                 where: {
-                    id: dto.userProjectId
+                    id: id
                 }, data: {
                     role: dto.role
                 }

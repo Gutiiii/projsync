@@ -77,9 +77,9 @@ export class ProjectController {
     }
 
     @UseGuards(JwtGuard)
-    @Patch("member")
-    async editMember(@Body() dto: EditMemberDto) {
-        return await this.projectService.editMember(dto)
+    @Patch("member/:id")
+    async editMember(@Param("id") id, @Body() dto: EditMemberDto) {
+        return await this.projectService.editMember(id, dto)
     }
 
     @UseGuards(JwtGuard)

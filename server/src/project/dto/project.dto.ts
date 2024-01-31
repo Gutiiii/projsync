@@ -26,7 +26,6 @@ const AcceptInvitationSchema = z.object({
 })
 
 const EditMemberSchema = z.object({
-    userProjectId: z.string(),
     role: z.enum(["EDITOR", "VIEWER"])
 })
 
