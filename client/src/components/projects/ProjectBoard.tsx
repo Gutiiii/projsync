@@ -8,9 +8,8 @@ import { UserPayload } from '@/types/user.types';
 import { DragOverlay } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
 import { Button, Spinner } from '@nextui-org/react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import React, { useMemo, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { Board } from '../boardComponents/Board';
 import BoardCard from '../boardComponents/BoardCard';
@@ -27,7 +26,6 @@ const ProjectBoard = ({
   token?: string;
   user: UserPayload;
 }) => {
-  const router = useRouter();
   const [createdListId, setCreatedListId] = useState<string | undefined>('');
   const [createdCardListId, setCreatedCardListId] = useState<string>('');
   const [createBoardCardModalVisible, setCreateBoardCardModalVisible] =
@@ -37,6 +35,8 @@ const ProjectBoard = ({
     token,
     projectId,
   );
+
+  console.log('NEW LIST: ', list);
 
   const { data: card, isLoading: cardIsLoading } = useGetCards(
     token,
@@ -49,9 +49,7 @@ const ProjectBoard = ({
   //TODO Add Skeleton
   if (listIsLoading || cardIsLoading) return <div>Hello</div>;
 
-  const lists: List[] = list?.data;
-
-  console.log('LIST DATA: ', list?.data);
+  const lists: List[] = list;
 
   const cards: Card[] = card?.data;
 
@@ -114,7 +112,7 @@ const ProjectBoard = ({
       <div className="mx-8">
         <Board>
           <SortableContext items={lists}>
-            {lists.map((list) => (
+            {lists.map((list: List) => (
               <BoardColumn
                 data={list}
                 user={user}
@@ -196,7 +194,7 @@ const ProjectBoard = ({
                   />
                 </svg>
               )}
-              {!mutationCreateList.isLoading && 'Add List'}
+              Add List
             </Button>
           )}
         </Board>

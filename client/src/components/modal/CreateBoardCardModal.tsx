@@ -58,6 +58,7 @@ const CreateBoardCardModal: FC<CreateProjectModalProps> = ({
                 <FormControl className="mb-2">
                   <FormLabel>{t('title')}</FormLabel>
                   <Input
+                    autoFocus
                     isRequired
                     size="sm"
                     label={t('title')}
