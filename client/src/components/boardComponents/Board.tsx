@@ -87,6 +87,8 @@ export const Board = ({ children }: React.PropsWithChildren) => {
   const onDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
+    console.log(active, over);
+
     if (!over) return;
 
     const activeListId = active.id;

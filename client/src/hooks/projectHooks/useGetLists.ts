@@ -6,13 +6,15 @@ export const useGetLists = (token: string | undefined, projectId: string) => {
     return useQuery({
         queryKey: ["getLists"],
         queryFn: async () => {
-            return await axios.get(BACKEND_URL + '/project/list/' + projectId, {
+            const res = await axios.get(BACKEND_URL + '/project/list/' + projectId, {
                 headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
                     Authorization: "Bearer " + token
                 },
             });
+
+            return res.data
         },
     });
 }
