@@ -19,7 +19,10 @@ const BoardItem = ({
 }: React.PropsWithChildren<BoardItemProps>) => {
   const { attributes, listeners, setNodeRef, active } = useSortable({
     id,
-    data,
+    data: {
+      type: 'Card',
+      data,
+    },
   });
 
   return (

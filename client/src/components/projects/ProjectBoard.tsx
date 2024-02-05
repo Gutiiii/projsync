@@ -31,12 +31,10 @@ const ProjectBoard = ({
   const [createBoardCardModalVisible, setCreateBoardCardModalVisible] =
     useState<boolean>(false);
   const queryClient = useQueryClient();
-  const { data: list, isLoading: listIsLoading } = useGetLists(
+  const { data: lists, isLoading: listIsLoading } = useGetLists(
     token,
     projectId,
   );
-
-  console.log('NEW LIST: ', list);
 
   const { data: card, isLoading: cardIsLoading } = useGetCards(
     token,
@@ -49,12 +47,13 @@ const ProjectBoard = ({
   //TODO Add Skeleton
   if (listIsLoading || cardIsLoading) return <div>Hello</div>;
 
-  const lists: List[] = list;
-
   const cards: Card[] = card?.data;
 
   const createList = () => {
-    const maxPosition = Math.max(...lists.map((list) => list.position), 0);
+    const maxPosition = Math.max(
+      ...lists.map((list: List) => list.position),
+      0,
+    );
 
     const position = maxPosition + 1;
 
@@ -112,67 +111,69 @@ const ProjectBoard = ({
       <div className="mx-8">
         <Board>
           <SortableContext items={lists}>
-            {lists.map((list: List) => (
-              <BoardColumn
-                data={list}
-                user={user}
-                position={list.position}
-                key={list.id}
-                id={list.id}
-                title={list.title}
-                count={cards.filter((card) => card.listId === list.id).length}
-                createdListId={createdListId}
-                onCreate={() => setCreatedListId('')}
-              >
-                {cards
-                  .filter((card) => card.listId === list.id)
-                  .map((card) => (
-                    <BoardItem id={card.id} key={card.id}>
-                      <BoardCard
-                        user={user}
-                        id={card.id}
-                        title={card.title}
-                        description={card.description}
-                        updatedAt={card.updatedAt}
-                        dueDate={card.dueDate}
-                        projectId={projectId}
-                      />
-                    </BoardItem>
-                  ))}
-
-                {user.role !== 'VIEWER' && (
-                  <Button
-                    className="ml-3"
-                    size="sm"
-                    onClick={() => {
-                      setCreatedCardListId(list.id);
-                      setCreateBoardCardModalVisible(true);
-                    }}
-                  >
-                    {mutationCreateCard.isLoading &&
-                    createdCardListId === list.id ? (
-                      <Spinner size="sm" />
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+            {lists
+              .sort((a: List, b: List) => a.position - b.position)
+              .map((list: List) => (
+                <BoardColumn
+                  data={list}
+                  user={user}
+                  position={list.position}
+                  key={list.id}
+                  id={list.id}
+                  title={list.title}
+                  count={cards.filter((card) => card.listId === list.id).length}
+                  createdListId={createdListId}
+                  onCreate={() => setCreatedListId('')}
+                >
+                  {cards
+                    .filter((card) => card.listId === list.id)
+                    .map((card) => (
+                      <BoardItem id={card.id} key={card.id}>
+                        <BoardCard
+                          user={user}
+                          id={card.id}
+                          title={card.title}
+                          description={card.description}
+                          updatedAt={card.updatedAt}
+                          dueDate={card.dueDate}
+                          projectId={projectId}
                         />
-                      </svg>
-                    )}
-                    Add Card
-                  </Button>
-                )}
-              </BoardColumn>
-            ))}
+                      </BoardItem>
+                    ))}
+
+                  {user.role !== 'VIEWER' && (
+                    <Button
+                      className="ml-3"
+                      size="sm"
+                      onClick={() => {
+                        setCreatedCardListId(list.id);
+                        setCreateBoardCardModalVisible(true);
+                      }}
+                    >
+                      {mutationCreateCard.isLoading &&
+                      createdCardListId === list.id ? (
+                        <Spinner size="sm" />
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                          />
+                        </svg>
+                      )}
+                      Add Card
+                    </Button>
+                  )}
+                </BoardColumn>
+              ))}
           </SortableContext>
           {user.role !== 'VIEWER' && (
             <Button className="mt-7" onClick={createList} size="sm">

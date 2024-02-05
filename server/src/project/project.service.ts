@@ -459,6 +459,10 @@ export class ProjectService {
                             where: {
                                 position: {
                                     gte: dto.overListPosition,
+                                }, AND: {
+                                    position: {
+                                        not: dto.activeListPosition
+                                    }
                                 }
                             },
                             data: {
@@ -487,6 +491,10 @@ export class ProjectService {
                             where: {
                                 position: {
                                     lte: dto.overListPosition,
+                                }, AND: {
+                                    position: {
+                                        not: dto.activeListPosition
+                                    }
                                 }
                             },
                             data: {
