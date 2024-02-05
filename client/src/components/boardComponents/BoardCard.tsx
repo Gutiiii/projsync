@@ -20,6 +20,7 @@ import {
 } from '@ant-design/icons';
 
 import { useDeleteCard } from '@/hooks/projectHooks/useDeleteCard';
+import { Card as CardType, Project } from '@/types/project.types';
 import { UserPayload } from '@/types/user.types';
 import { getDateColor } from '@/utilities/getDateColor';
 import { Input } from '@nextui-org/react';
@@ -31,6 +32,7 @@ import React, { FC, useMemo, useState } from 'react';
 import Avatar from 'react-avatar';
 import { toast } from 'sonner';
 import UserAvatar from '../auth/UserAvatar';
+import EditBoardCardModal from '../modal/EditBoardCardModal';
 
 interface CardProps {
   id: string;
@@ -40,6 +42,7 @@ interface CardProps {
   dueDate?: string;
   user: UserPayload;
   projectId: string;
+  card: CardType;
 }
 
 const BoardCard: FC<CardProps> = ({
@@ -50,8 +53,11 @@ const BoardCard: FC<CardProps> = ({
   dueDate,
   user,
   projectId,
+  card,
 }) => {
   const queryClient = useQueryClient();
+  const [editBoardCardModalVisible, setEditBoardCardModalVisible] =
+    useState<boolean>(false);
   const deleteCardMutation = useMutation({ mutationFn: useDeleteCard });
   const { data: session } = useSession();
   const { token } = theme.useToken();
@@ -63,9 +69,9 @@ const BoardCard: FC<CardProps> = ({
           label: 'View card',
           key: '1',
           icon: <EyeOutlined />,
-          // onClick: () => {
-          //   edit('tasks', id, 'replace');
-          // },
+          onClick: () => {
+            setEditBoardCardModalVisible(true);
+          },
         },
       ];
       return dropdownItems;
@@ -75,9 +81,9 @@ const BoardCard: FC<CardProps> = ({
           label: 'View card',
           key: '1',
           icon: <EyeOutlined />,
-          // onClick: () => {
-          //   edit('tasks', id, 'replace');
-          // },
+          onClick: () => {
+            setEditBoardCardModalVisible(true);
+          },
         },
         {
           danger: true,
@@ -119,97 +125,100 @@ const BoardCard: FC<CardProps> = ({
   }, [dueDate]);
 
   return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Tag: {
-            colorText: token.colorTextSecondary,
+    <>
+      <ConfigProvider
+        theme={{
+          components: {
+            Tag: {
+              colorText: token.colorTextSecondary,
+            },
+            Card: {
+              headerBg: 'transparent',
+            },
           },
-          Card: {
-            headerBg: 'transparent',
-          },
-        },
-      }}
-    >
-      <Card
-        size="small"
-        title={<Text ellipsis={{ tooltip: title }}>{title}</Text>}
-        // onClick={() => {
-        //   edit('tasks', id, 'replace');
-        // }}
-        extra={
-          <Dropdown
-            trigger={['click']}
-            menu={{
-              items: dropdownItems,
-              onPointerDown: (e) => {
-                e.stopPropagation();
-              },
-              onClick: (e) => {
-                e.domEvent.stopPropagation();
-              },
-            }}
-            placement="bottom"
-            arrow={{ pointAtCenter: true }}
-          >
-            <Button
-              type="text"
-              shape="circle"
-              icon={
-                <MoreOutlined
-                  style={{
-                    transform: 'rotate(90deg)',
-                  }}
-                />
-              }
-              onPointerDown={(e) => {
-                e.stopPropagation();
+        }}
+      >
+        <Card
+          size="small"
+          title={<Text ellipsis={{ tooltip: title }}>{title}</Text>}
+          // onClick={() => {
+          //   edit('tasks', id, 'replace');
+          // }}
+          extra={
+            <Dropdown
+              trigger={['click']}
+              menu={{
+                items: dropdownItems,
+                onPointerDown: (e) => {
+                  e.stopPropagation();
+                },
+                onClick: (e) => {
+                  e.domEvent.stopPropagation();
+                },
               }}
-              onClick={(e) => {
-                e.stopPropagation();
+              placement="bottom"
+              arrow={{ pointAtCenter: true }}
+            >
+              <Button
+                type="text"
+                shape="circle"
+                icon={
+                  <MoreOutlined
+                    style={{
+                      transform: 'rotate(90deg)',
+                    }}
+                  />
+                }
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              />
+            </Dropdown>
+          }
+        >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            <TextIcon
+              width={15}
+              style={{
+                marginRight: '4px',
               }}
             />
-          </Dropdown>
-        }
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            gap: '8px',
-          }}
-        >
-          <TextIcon
-            width={15}
-            style={{
-              marginRight: '4px',
-            }}
-          />
-          {dueDateOptions && (
-            <Tag
-              icon={
-                <ClockCircleOutlined
-                  style={{
-                    fontSize: '12px',
-                  }}
-                />
-              }
-              style={{
-                padding: '0 4px',
-                marginInlineEnd: '0',
-                backgroundColor:
-                  dueDateOptions.color === 'default' ? 'transparent' : 'unset',
-              }}
-              color={dueDateOptions.color}
-              bordered={dueDateOptions.color !== 'default'}
-            >
-              {dueDateOptions.text}
-            </Tag>
-          )}
-          <Avatar name={'Samuel Gutmans'} color="black " round size="30" />
-          {/* {!!users?.length && (
+            {dueDateOptions && (
+              <Tag
+                icon={
+                  <ClockCircleOutlined
+                    style={{
+                      fontSize: '12px',
+                    }}
+                  />
+                }
+                style={{
+                  padding: '0 4px',
+                  marginInlineEnd: '0',
+                  backgroundColor:
+                    dueDateOptions.color === 'default'
+                      ? 'transparent'
+                      : 'unset',
+                }}
+                color={dueDateOptions.color}
+                bordered={dueDateOptions.color !== 'default'}
+              >
+                {dueDateOptions.text}
+              </Tag>
+            )}
+            <Avatar name={'Samuel Gutmans'} color="black " round size="30" />
+            {/* {!!users?.length && (
             <Space
               size={4}
               wrap
@@ -231,9 +240,22 @@ const BoardCard: FC<CardProps> = ({
               })}
             </Space>
           )} */}
-        </div>
-      </Card>
-    </ConfigProvider>
+          </div>
+        </Card>
+      </ConfigProvider>
+      {true && (
+        <EditBoardCardModal
+          visible={true}
+          card={card}
+          handleOnClose={() => {
+            setEditBoardCardModalVisible(false);
+          }}
+          handleOnSubmit={() => console.log('SUBMIT')}
+          handleOnRemove={() => console.log('REMOVE')}
+          userRole={user.role}
+        />
+      )}
+    </>
   );
 };
 

@@ -3,7 +3,7 @@ import { useCreateCard } from '@/hooks/projectHooks/useCreateCard';
 import { useCreateList } from '@/hooks/projectHooks/useCreateList';
 import { useGetCards } from '@/hooks/projectHooks/useGetCards';
 import { useGetLists } from '@/hooks/projectHooks/useGetLists';
-import { Card, List } from '@/types/project.types';
+import { Card, List, Project } from '@/types/project.types';
 import { UserPayload } from '@/types/user.types';
 import { DragOverlay } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
@@ -16,6 +16,7 @@ import BoardCard from '../boardComponents/BoardCard';
 import BoardColumn from '../boardComponents/BoardColumn';
 import BoardItem from '../boardComponents/BoardItem';
 import CreateBoardCardModal from '../modal/CreateBoardCardModal';
+import EditBoardCardModal from '../modal/EditBoardCardModal';
 
 const ProjectBoard = ({
   projectId,
@@ -30,6 +31,7 @@ const ProjectBoard = ({
   const [createdCardListId, setCreatedCardListId] = useState<string>('');
   const [createBoardCardModalVisible, setCreateBoardCardModalVisible] =
     useState<boolean>(false);
+ 
   const queryClient = useQueryClient();
   const { data: lists, isLoading: listIsLoading } = useGetLists(
     token,
@@ -106,6 +108,9 @@ const ProjectBoard = ({
       },
     });
   };
+
+  
+
   return (
     <>
       <div className="mx-8">
@@ -137,6 +142,7 @@ const ProjectBoard = ({
                           updatedAt={card.updatedAt}
                           dueDate={card.dueDate}
                           projectId={projectId}
+                          card={card}
                         />
                       </BoardItem>
                     ))}
@@ -211,6 +217,7 @@ const ProjectBoard = ({
           listId={createdCardListId}
         />
       )}
+      
     </>
   );
 };
