@@ -113,7 +113,7 @@ model ProjectCard {
   list ProjectList @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId String
 
-  projectCardMember ProjectCard_Assignee[]
+  projectCardAssignee ProjectCard_Assignee[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

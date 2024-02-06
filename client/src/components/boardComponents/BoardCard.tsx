@@ -243,15 +243,12 @@ const BoardCard: FC<CardProps> = ({
           </div>
         </Card>
       </ConfigProvider>
-      {true && (
+      {editBoardCardModalVisible && (
         <EditBoardCardModal
-          visible={true}
+          visible={editBoardCardModalVisible}
           card={card}
-          handleOnClose={() => {
-            setEditBoardCardModalVisible(false);
-          }}
-          handleOnSubmit={() => console.log('SUBMIT')}
-          handleOnRemove={() => console.log('REMOVE')}
+          handleOnClose={() => setEditBoardCardModalVisible(false)}
+          handleOnDelete={() => console.log('REMOVE')}
           userRole={user.role}
         />
       )}
