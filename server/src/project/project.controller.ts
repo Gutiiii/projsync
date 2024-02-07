@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { AcceptInvitationDto, CreateCardDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditListDto, EditMemberDto, MoveListDto, UpdateProjectDto } from './dto/project.dto';
+import { AcceptInvitationDto, CreateCardDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditCardDto, EditListDto, EditMemberDto, MoveListDto, UpdateProjectDto } from './dto/project.dto';
 import { ProjectService } from './project.service';
 
 @Controller('project')
@@ -128,6 +128,13 @@ export class ProjectController {
     @Post("card")
     async createCard(@Body() dto: CreateCardDto, @Req() request) {
         return await this.projectService.createCard(dto, request.user.id)
+    }
+
+    @UseGuards(JwtGuard)
+    @Patch("card/:cardId")
+    async editCard(@Param("cardId") cardId, @Body() dto: EditCardDto, @Req() request) {
+        console.log("CALLED")
+        return await this.projectService.editCard(cardId, dto, request.user.id)
     }
 
     @UseGuards(JwtGuard)

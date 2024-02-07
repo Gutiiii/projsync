@@ -1,3 +1,4 @@
+import { useEditCard } from '@/hooks/projectHooks/useEditCard';
 import { Card } from '@/types/project.types';
 import { getDateColor } from '@/utilities/getDateColor';
 import {
@@ -6,13 +7,25 @@ import {
   EditTwoTone,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
-import { Button, Divider, Textarea } from '@nextui-org/react';
-import { DatePicker, Input, Modal, Select, Tag, Tooltip } from 'antd';
+import { Button, Divider, Spinner, Textarea } from '@nextui-org/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  DatePicker,
+  DatePickerProps,
+  Input,
+  Modal,
+  Select,
+  Tag,
+  Tooltip,
+} from 'antd';
 import Link from 'antd/es/typography/Link';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { Trash2 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
+import { set } from 'react-hook-form';
+import { toast } from 'sonner';
 
 interface EditProjectMemberModalProps {
   visible: boolean;
@@ -20,6 +33,7 @@ interface EditProjectMemberModalProps {
   handleOnDelete: (cardId: string) => void;
   card: Card;
   userRole: string;
+  projectId: string;
 }
 
 const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
@@ -28,32 +42,34 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
   handleOnDelete,
   card,
   userRole,
+  projectId,
 }) => {
   const t = useTranslations('EditMemberModal');
+  const { data: session } = useSession();
+  const queryClient = useQueryClient();
+  const [editTitle, setEditTitle] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>(card.title);
+  const [description, setDescription] = useState<string>(card.description);
+  const [dueDate, setDueDate] = useState<string>(card.dueDate);
+  const [isRoleChanged, setIsRoleChanged] = useState<boolean>(false);
+  const [activeSection, setActiveSection] = useState<
+    'DESCRIPTION' | 'DUEDATE' | 'ASSIGN' | ''
+  >('');
 
-  const date = new Date(card.dueDate);
+  const mutation = useMutation({ mutationFn: useEditCard });
+
+  const date = new Date(dueDate);
   const day = date.getDate();
   const month = date.toLocaleString('en-US', { month: 'long' });
   const year = date.getFullYear();
   const hour = date.getHours();
   const minute = date.getMinutes();
   const ampm = hour >= 12 ? 'pm' : 'am';
-  const hour12 = hour % 12 || 12; // Convert 0 to 12
+  const hour12 = hour % 12 || 12;
 
   const dateWithoutWeekday = `${day} ${month} ${year} - ${hour12}:${minute
     .toString()
     .padStart(2, '0')} ${ampm}`;
-
-  const [role, setRole] = useState<string>(userRole);
-  const [editTitle, setEditTitle] = useState<boolean>(false);
-  const [isRoleChanged, setIsRoleChanged] = useState<boolean>(false);
-  const [activeSection, setActiveSection] = useState<
-    'DESCRIPTION' | 'DUEDATE' | 'ASSIGN' | ''
-  >('');
-
-  useEffect(() => {
-    setIsRoleChanged(role !== userRole);
-  }, [role, userRole]);
 
   // Function to handle click outside of title input
   const handleOutsideClick = (event: MouseEvent) => {
@@ -64,15 +80,15 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
   };
 
   const dueDateOptions = useMemo(() => {
-    if (!card.dueDate) return null;
+    if (!dueDate) return null;
 
-    const date = dayjs(card.dueDate);
+    const date = dayjs(dueDate);
 
     return {
-      color: getDateColor({ date: card.dueDate }) as string,
+      color: getDateColor({ date: dueDate }) as string,
       text: date.format('MMM D'),
     };
-  }, [card.dueDate]);
+  }, [dueDate]);
 
   useEffect(() => {
     if (editTitle) {
@@ -85,6 +101,28 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
     };
   }, [editTitle]);
 
+  const handleEdit = () => {
+    const values = {
+      id: card.id,
+      listId: card.listId,
+      projectId,
+      title,
+      description,
+      dueDate: new Date(dueDate).toISOString(),
+      token: session?.backendTokens.accessToken,
+    };
+    mutation.mutateAsync(values, {
+      onSuccess: () => {
+        toast.success('Card has been updated');
+        setActiveSection('');
+        queryClient.invalidateQueries({ queryKey: ['getCards'] });
+      },
+      onError: () => {
+        toast.error('Something went wrong');
+      },
+    });
+  };
+
   return (
     <Modal
       open={visible}
@@ -95,10 +133,20 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
       }}
       title={
         editTitle ? (
-          <Input value={card.title} id="title" />
+          <Input
+            value={title}
+            id="title"
+            onChange={(e: any) => setTitle(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setEditTitle(false);
+                handleEdit();
+              }
+            }}
+          />
         ) : (
           <div>
-            {card.title}
+            {title}
             <Tooltip title="Edit">
               <EditTwoTone
                 className="ml-3 cursor-pointer"
@@ -115,13 +163,16 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
     >
       <Divider className="" />
       <form onSubmit={() => console.log('SUBMIT')}>
+        {/* Description */}
         <div
           className={
             activeSection === 'DESCRIPTION'
               ? 'cursor-pointer items-center my-3'
               : 'cursor-pointer flex items-center my-3'
           }
-          onClick={() => setActiveSection('DESCRIPTION')}
+          onClick={() => {
+            if (userRole !== 'VIEWER') setActiveSection('DESCRIPTION');
+          }}
         >
           <AlignLeftOutlined className="mr-2 inline" size={15} />
           {activeSection === 'DESCRIPTION' ? (
@@ -130,70 +181,46 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
               <div className="justify-between ml-6 mt-4">
                 <div className="w-full ">
                   <Textarea
-                    defaultValue={card.description}
+                    defaultValue={description}
                     label="Description"
+                    onChange={(e: any) => setDescription(e.target.value)}
                   />
                 </div>
                 <div className="flex justify-end space-x-2 mt-4 ">
                   <Button size="sm" onClick={() => setActiveSection('')}>
                     Cancel
                   </Button>
-                  <Button size="sm" color="primary">
-                    Save
+                  <Button size="sm" color="primary" onClick={handleEdit}>
+                    {mutation.isLoading ? (
+                      <Spinner size="sm" color="white" />
+                    ) : (
+                      'Save'
+                    )}
                   </Button>
                 </div>
               </div>
             </>
           ) : (
             <div>
-              {card.description ? (
-                <p>{card.description}</p>
+              {description ? (
+                <p>{description}</p>
               ) : (
                 <Link className="text-md">Add task description</Link>
               )}
             </div>
           )}
         </div>
-        {/* <div
-          className={
-            activeSection === 'DESCRIPTION'
-              ? 'cursor-pointer items-center my-3'
-              : 'cursor-pointer flex items-center my-3'
-          }
-          onClick={() => setActiveSection('DESCRIPTION')}
-        >
-          <AlignLeftOutlined className="mr-2" size={15} />
-          {activeSection === 'DESCRIPTION' ? (
-            <>
-              <p className="font-bold text-sm ">Description</p>
-              <Textarea defaultValue={card.description} label="Description" />
-              <div className="space-x-2 flex justify-end mt-4">
-                <Button size="sm" onClick={() => setActiveSection('')}>
-                  Cancel
-                </Button>
-                <Button size="sm" color="primary">
-                  Save
-                </Button>
-              </div>
-            </>
-          ) : (
-            <div>
-              {card.description ? (
-                <p>{card.description}</p>
-              ) : (
-                <Link className="text-md">Add task description</Link>
-              )}
-            </div>
-          )}
-        </div> */}
         <Divider />
+        {/* Due Date */}
         <div
           className={
             activeSection === 'DUEDATE'
               ? 'cursor-pointer items-center my-3'
               : 'cursor-pointer flex items-center my-3'
           }
-          onClick={() => setActiveSection('DUEDATE')}
+          onClick={() => {
+            if (userRole !== 'VIEWER') setActiveSection('DUEDATE');
+          }}
         >
           <ClockCircleOutlined className="mr-2 inline" size={15} />
           {activeSection === 'DUEDATE' ? (
@@ -203,22 +230,31 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
                 <DatePicker
                   showTime
                   showSecond={false}
-                  defaultValue={dayjs(card.dueDate)}
+                  defaultValue={dayjs(dueDate)}
+                  onChange={(date, dateString) => setDueDate(dateString)}
                 />
                 <div className="space-x-2">
                   <Button size="sm" onClick={() => setActiveSection('')}>
                     Cancel
                   </Button>
-                  <Button size="sm" color="primary">
-                    Save
+                  <Button size="sm" color="primary" onClick={handleEdit}>
+                    {mutation.isLoading ? (
+                      <Spinner
+                        size="sm"
+                        color="white"
+                        className="items-center text-center p-0"
+                      />
+                    ) : (
+                      'Save'
+                    )}
                   </Button>
                 </div>
               </div>
             </>
           ) : (
             <div>
-              {card.dueDate && dueDateOptions ? (
-                <div className="flex">
+              {dueDate && dueDateOptions ? (
+                <div className="flex space-x-4">
                   <Tag
                     icon={
                       <ClockCircleOutlined
@@ -234,7 +270,6 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
                         dueDateOptions.color === 'default'
                           ? 'transparent'
                           : 'unset',
-                      margin: '0 px',
                     }}
                     color={dueDateOptions.color}
                     bordered={dueDateOptions.color !== 'default'}
@@ -250,13 +285,16 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
           )}
         </div>
         <Divider />
+        {/* Assign */}
         <div
           className={
             activeSection === 'ASSIGN'
               ? 'cursor-pointer items-center my-3'
               : 'cursor-pointer flex items-center my-3'
           }
-          onClick={() => setActiveSection('ASSIGN')}
+          onClick={() => {
+            if (userRole !== 'VIEWER') setActiveSection('ASSIGN');
+          }}
         >
           <UsergroupAddOutlined className="mr-2 inline" size={15} />
           {activeSection === 'ASSIGN' ? (
@@ -265,15 +303,19 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
               <div className="flex justify-between mt-4 ml-6">
                 <Select
                   mode="multiple"
-                  className="w-2/3"
+                  className="w-1/2 sm:w-2/3"
                   onChange={() => console.log('CHANGE')}
                 />
                 <div className="space-x-2">
                   <Button size="sm" onClick={() => setActiveSection('')}>
                     Cancel
                   </Button>
-                  <Button size="sm" color="primary">
-                    Save
+                  <Button size="sm" color="primary" onClick={handleEdit}>
+                    {mutation.isLoading ? (
+                      <Spinner size="sm" color="white" />
+                    ) : (
+                      'Save'
+                    )}
                   </Button>
                 </div>
               </div>
@@ -283,7 +325,7 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
               {false ? (
                 <p>{card.description}</p>
               ) : (
-                <Link className="text-md">Add due date</Link>
+                <Link className="text-md">Assign to users</Link>
               )}
             </div>
           )}

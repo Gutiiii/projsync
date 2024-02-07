@@ -31,7 +31,10 @@ const ProjectBoard = ({
   const [createdCardListId, setCreatedCardListId] = useState<string>('');
   const [createBoardCardModalVisible, setCreateBoardCardModalVisible] =
     useState<boolean>(false);
- 
+
+  const [editBoardCardModalVisible, setEditBoardCardModalVisible] =
+    useState<boolean>(false);
+
   const queryClient = useQueryClient();
   const { data: lists, isLoading: listIsLoading } = useGetLists(
     token,
@@ -109,8 +112,6 @@ const ProjectBoard = ({
     });
   };
 
-  
-
   return (
     <>
       <div className="mx-8">
@@ -129,20 +130,26 @@ const ProjectBoard = ({
                   count={cards.filter((card) => card.listId === list.id).length}
                   createdListId={createdListId}
                   onCreate={() => setCreatedListId('')}
+                  modalVisible={editBoardCardModalVisible}
                 >
                   {cards
                     .filter((card) => card.listId === list.id)
                     .map((card) => (
-                      <BoardItem id={card.id} key={card.id}>
+                      <BoardItem
+                        id={card.id}
+                        key={card.id}
+                        modalVisible={editBoardCardModalVisible}
+                      >
                         <BoardCard
                           user={user}
                           id={card.id}
-                          title={card.title}
-                          description={card.description}
-                          updatedAt={card.updatedAt}
-                          dueDate={card.dueDate}
                           projectId={projectId}
                           card={card}
+                          setModalVisible={() =>
+                            setEditBoardCardModalVisible(
+                              !editBoardCardModalVisible,
+                            )
+                          }
                         />
                       </BoardItem>
                     ))}
@@ -169,8 +176,8 @@ const ProjectBoard = ({
                           className="w-6 h-6"
                         >
                           <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                           />
                         </svg>
@@ -217,7 +224,6 @@ const ProjectBoard = ({
           listId={createdCardListId}
         />
       )}
-      
     </>
   );
 };

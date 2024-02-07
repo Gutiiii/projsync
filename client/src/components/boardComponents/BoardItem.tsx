@@ -10,12 +10,14 @@ import React from 'react';
 interface BoardItemProps {
   id: string;
   data?: UseDraggableArguments['data'];
+  modalVisible: boolean;
 }
 
 const BoardItem = ({
   children,
   id,
   data,
+  modalVisible,
 }: React.PropsWithChildren<BoardItemProps>) => {
   const { attributes, listeners, setNodeRef, active } = useSortable({
     id,
@@ -23,6 +25,7 @@ const BoardItem = ({
       type: 'Card',
       data,
     },
+    disabled: modalVisible,
   });
 
   return (

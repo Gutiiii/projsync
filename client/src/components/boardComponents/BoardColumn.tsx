@@ -25,6 +25,7 @@ interface BoardColumnProps {
   user: UserPayload;
   position: number;
   onCreate: () => void;
+  modalVisible: boolean;
 }
 
 const BoardColumn: FC<BoardColumnProps> = ({
@@ -37,6 +38,7 @@ const BoardColumn: FC<BoardColumnProps> = ({
   user,
   position,
   onCreate,
+  modalVisible,
 }) => {
   const { data: session } = useSession();
   const params = useParams<{ projectId: string }>();
@@ -47,6 +49,8 @@ const BoardColumn: FC<BoardColumnProps> = ({
   const [titleChange, setTitleChange] = useState<string>(title);
   const listEdit = useMutation({ mutationFn: useEditList });
   const listDelete = useMutation({ mutationFn: useDeleteList });
+
+  const dragDisabled = titleEdit || modalVisible;
 
   const {
     isOver,
@@ -62,7 +66,7 @@ const BoardColumn: FC<BoardColumnProps> = ({
       type: 'List',
       data,
     },
-    disabled: titleEdit,
+    disabled: dragDisabled,
   });
 
   const style = {

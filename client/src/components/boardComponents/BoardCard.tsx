@@ -36,24 +36,18 @@ import EditBoardCardModal from '../modal/EditBoardCardModal';
 
 interface CardProps {
   id: string;
-  title: string;
-  description: string;
-  updatedAt: string;
-  dueDate?: string;
   user: UserPayload;
   projectId: string;
   card: CardType;
+  setModalVisible: () => void;
 }
 
 const BoardCard: FC<CardProps> = ({
   id,
-  title,
-  description,
-  updatedAt,
-  dueDate,
   user,
   projectId,
   card,
+  setModalVisible,
 }) => {
   const queryClient = useQueryClient();
   const [editBoardCardModalVisible, setEditBoardCardModalVisible] =
@@ -71,6 +65,7 @@ const BoardCard: FC<CardProps> = ({
           icon: <EyeOutlined />,
           onClick: () => {
             setEditBoardCardModalVisible(true);
+            setModalVisible();
           },
         },
       ];
@@ -83,6 +78,7 @@ const BoardCard: FC<CardProps> = ({
           icon: <EyeOutlined />,
           onClick: () => {
             setEditBoardCardModalVisible(true);
+            setModalVisible();
           },
         },
         {
@@ -114,15 +110,15 @@ const BoardCard: FC<CardProps> = ({
   }, []);
 
   const dueDateOptions = useMemo(() => {
-    if (!dueDate) return null;
+    if (!card.dueDate) return null;
 
-    const date = dayjs(dueDate);
+    const date = dayjs(card.dueDate);
 
     return {
-      color: getDateColor({ date: dueDate }) as string,
+      color: getDateColor({ date: card.dueDate }) as string,
       text: date.format('MMM D'),
     };
-  }, [dueDate]);
+  }, [card.dueDate]);
 
   return (
     <>
@@ -140,7 +136,7 @@ const BoardCard: FC<CardProps> = ({
       >
         <Card
           size="small"
-          title={<Text ellipsis={{ tooltip: title }}>{title}</Text>}
+          title={<Text ellipsis={{ tooltip: card.title }}>{card.title}</Text>}
           // onClick={() => {
           //   edit('tasks', id, 'replace');
           // }}
@@ -246,6 +242,7 @@ const BoardCard: FC<CardProps> = ({
       {editBoardCardModalVisible && (
         <EditBoardCardModal
           visible={editBoardCardModalVisible}
+          projectId={projectId}
           card={card}
           handleOnClose={() => setEditBoardCardModalVisible(false)}
           handleOnDelete={() => console.log('REMOVE')}

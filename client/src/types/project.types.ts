@@ -155,3 +155,13 @@ export type Card = {
 export type CreateBoardCardFormData = {
     title: string
 }
+
+export type EditBoardCardFormData = {
+    id: string
+    listId: string
+    projectId: string
+    title?: string
+    description?: string
+    dueDate?: string
+    token?: string
+}
