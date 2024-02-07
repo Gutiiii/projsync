@@ -1,5 +1,5 @@
+import { useDeleteCard } from '@/hooks/projectHooks/useDeleteCard';
 import { useEditCard } from '@/hooks/projectHooks/useEditCard';
-import { Card } from '@/types/project.types';
 import { getDateColor } from '@/utilities/getDateColor';
 import {
   AlignLeftOutlined,
@@ -7,30 +7,53 @@ import {
   EditTwoTone,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
-import { Button, Divider, Spinner, Textarea } from '@nextui-org/react';
+import { Button, Divider, Spinner, Textarea, user } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  DatePicker,
-  DatePickerProps,
-  Input,
-  Modal,
-  Select,
-  Tag,
-  Tooltip,
-} from 'antd';
+import { DatePicker, Input, Modal, Select, Tag, Tooltip } from 'antd';
 import Link from 'antd/es/typography/Link';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { Trash2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useTranslations } from 'next-intl';
-import React, { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
-import { set } from 'react-hook-form';
+import React, { FC, useEffect, useMemo, useState } from 'react';
+import Avatar from 'react-avatar';
 import { toast } from 'sonner';
+
+interface User {
+  name: string;
+}
+
+interface UserProject {
+  id: string;
+  user: User;
+}
+
+interface Project {
+  userProject: UserProject[];
+}
+
+interface List {
+  project: Project;
+}
+
+interface ProjectCardAssignee {
+  userProject: UserProject[];
+}
+
+interface Card {
+  id: string;
+  title: string;
+  description: string;
+  position: number;
+  listId: string;
+  dueDate: string;
+  updatedAt: string;
+  list: List;
+  projectCardAssignee: any[];
+}
 
 interface EditProjectMemberModalProps {
   visible: boolean;
   handleOnClose: () => void;
-  handleOnDelete: (cardId: string) => void;
   card: Card;
   userRole: string;
   projectId: string;
@@ -39,24 +62,24 @@ interface EditProjectMemberModalProps {
 const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
   visible,
   handleOnClose,
-  handleOnDelete,
   card,
   userRole,
   projectId,
 }) => {
-  const t = useTranslations('EditMemberModal');
   const { data: session } = useSession();
   const queryClient = useQueryClient();
   const [editTitle, setEditTitle] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(card.title);
   const [description, setDescription] = useState<string>(card.description);
   const [dueDate, setDueDate] = useState<string>(card.dueDate);
-  const [isRoleChanged, setIsRoleChanged] = useState<boolean>(false);
+  const [assignees, setAssignees] = useState<any[]>(card.projectCardAssignee);
   const [activeSection, setActiveSection] = useState<
     'DESCRIPTION' | 'DUEDATE' | 'ASSIGN' | ''
   >('');
 
-  const mutation = useMutation({ mutationFn: useEditCard });
+  const editMutation = useMutation({ mutationFn: useEditCard });
+
+  const deleteMutation = useMutation({ mutationFn: useDeleteCard });
 
   const date = new Date(dueDate);
   const day = date.getDate();
@@ -71,14 +94,12 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
     .toString()
     .padStart(2, '0')} ${ampm}`;
 
-  // Function to handle click outside of title input
   const handleOutsideClick = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
     if (!target.matches('#title')) {
       setEditTitle(false);
     }
   };
-
   const dueDateOptions = useMemo(() => {
     if (!dueDate) return null;
 
@@ -89,6 +110,10 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
       text: date.format('MMM D'),
     };
   }, [dueDate]);
+
+  const isEmpty = (obj: any) => {
+    return Object.keys(obj).length === 0;
+  };
 
   useEffect(() => {
     if (editTitle) {
@@ -108,10 +133,11 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
       projectId,
       title,
       description,
-      dueDate: new Date(dueDate).toISOString(),
+      assignees,
+      dueDate: dueDate ? new Date(dueDate).toISOString() : dueDate,
       token: session?.backendTokens.accessToken,
     };
-    mutation.mutateAsync(values, {
+    editMutation.mutateAsync(values, {
       onSuccess: () => {
         toast.success('Card has been updated');
         setActiveSection('');
@@ -122,6 +148,13 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
       },
     });
   };
+
+  const selectOptions = card.list.project.userProject.map((user: any) => ({
+    value: user.id,
+    label: user.user.name,
+  }));
+
+  console.log(assignees);
 
   return (
     <Modal
@@ -162,7 +195,7 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
       footer={null}
     >
       <Divider className="" />
-      <form onSubmit={() => console.log('SUBMIT')}>
+      <form>
         {/* Description */}
         <div
           className={
@@ -191,7 +224,7 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
                     Cancel
                   </Button>
                   <Button size="sm" color="primary" onClick={handleEdit}>
-                    {mutation.isLoading ? (
+                    {editMutation.isLoading ? (
                       <Spinner size="sm" color="white" />
                     ) : (
                       'Save'
@@ -228,9 +261,8 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
               <p className="font-bold text-sm inline">Due Date</p>
               <div className="flex justify-between mt-4 ml-6">
                 <DatePicker
-                  showTime
-                  showSecond={false}
-                  defaultValue={dayjs(dueDate)}
+                  showTime={{ showSecond: false }}
+                  defaultValue={dueDate ? dayjs(dueDate) : undefined}
                   onChange={(date, dateString) => setDueDate(dateString)}
                 />
                 <div className="space-x-2">
@@ -238,7 +270,7 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
                     Cancel
                   </Button>
                   <Button size="sm" color="primary" onClick={handleEdit}>
-                    {mutation.isLoading ? (
+                    {editMutation.isLoading ? (
                       <Spinner
                         size="sm"
                         color="white"
@@ -304,14 +336,18 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
                 <Select
                   mode="multiple"
                   className="w-1/2 sm:w-2/3"
-                  onChange={() => console.log('CHANGE')}
+                  onChange={(value: any[]) => setAssignees(value)}
+                  options={selectOptions}
+                  defaultValue={assignees.map(
+                    (user) => user.userProject.user.name,
+                  )}
                 />
                 <div className="space-x-2">
                   <Button size="sm" onClick={() => setActiveSection('')}>
                     Cancel
                   </Button>
                   <Button size="sm" color="primary" onClick={handleEdit}>
-                    {mutation.isLoading ? (
+                    {editMutation.isLoading ? (
                       <Spinner size="sm" color="white" />
                     ) : (
                       'Save'
@@ -322,8 +358,25 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
             </>
           ) : (
             <div>
-              {false ? (
-                <p>{card.description}</p>
+              {!isEmpty(assignees) ? (
+                <div className="flex">
+                  {assignees.map((user) => {
+                    return (
+                      <Tag
+                        key={user.userProject.user.id}
+                        className="rounded-full p-1 pr-2 flex items-center flex-wrap space-x-2"
+                      >
+                        <Avatar
+                          name={user.userProject.user.name}
+                          round
+                          color="black"
+                          size="25"
+                        />
+                        <p>{user.userProject.user.name}</p>
+                      </Tag>
+                    );
+                  })}
+                </div>
               ) : (
                 <Link className="text-md">Assign to users</Link>
               )}
@@ -354,15 +407,35 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
         <Divider />
 
         <footer className="flex justify-end mx-6 mt-4">
-          <div className="flex items-center text-red-500 cursor-pointer hover:text-opacity-80 transition-opacity duration-200">
-            <Trash2 size={15} className="mr-2" />
-            <p className="text-sm">Delete card</p>
-            {/* {isRoleChanged && (
-                <Button color="primary" className="mr-3" type="submit">
-                  {t('safe')}
-                </Button>
-              )}
-              <Button onClick={handleOnClose}>{t('cancel')}</Button> */}
+          <div
+            className="flex items-center text-red-500 cursor-pointer hover:text-opacity-80 transition-opacity duration-200"
+            onClick={() => {
+              const values = {
+                id: card.id,
+                projectId,
+                token: session?.backendTokens.accessToken,
+              };
+              deleteMutation.mutateAsync(values, {
+                onSuccess: () => {
+                  toast.success('Card has been deleted');
+                  handleOnClose();
+                  queryClient.invalidateQueries({ queryKey: ['getCards'] });
+                },
+                onError: () => {
+                  toast.error('Something went wrong');
+                },
+              });
+            }}
+          >
+            {deleteMutation.isLoading ? (
+              <Spinner size="sm" />
+            ) : (
+              <>
+                {' '}
+                <Trash2 size={15} className="mr-2" />
+                <p className="text-sm">Delete card</p>
+              </>
+            )}
           </div>
         </footer>
       </form>

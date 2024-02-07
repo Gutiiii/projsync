@@ -57,8 +57,6 @@ export const Board = ({ children }: React.PropsWithChildren) => {
 
       const prevList = queryClient.getQueryData(['getLists']);
 
-      console.log('UPDATED LISTS: ', values.updatedLists);
-
       queryClient.setQueryData(['getLists'], values.updatedLists);
 
       return { prevList };
@@ -86,8 +84,6 @@ export const Board = ({ children }: React.PropsWithChildren) => {
 
   const onDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
-
-    console.log(active, over);
 
     if (!over) return;
 

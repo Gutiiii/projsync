@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { connect } from 'http2';
 import { LogService } from 'src/log/log.service';
 import { PrismaService } from 'src/prisma.service';
 import { CreateCardDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditCardDto, EditListDto, EditMemberDto, MoveListDto, UpdateProjectDto } from './dto/project.dto';
@@ -348,34 +349,41 @@ export class ProjectService {
             })
 
             if (!hasRight) throw new UnauthorizedException("Unauthorized")
-
             const cards = await this.prismaService.projectCard.findMany({
                 where: {
                     list: {
                         projectId: projectId
                     }
-                }, orderBy: {
+                },
+                orderBy: {
                     position: "asc"
-                }, include: {
+                },
+                include: {
                     list: {
                         include: {
                             project: {
                                 include: {
                                     userProject: {
                                         include: {
-                                            user: {
-                                                select: {
-                                                    name: true
-                                                }
-                                            }
+                                            user: true
                                         }
                                     }
                                 }
                             }
                         }
+                    },
+                    projectCardAssignee: {
+                        include: {
+                            userProject: {
+                                include: {
+                                    user: true
+                                }
+                            }
+                        }
                     }
                 }
-            })
+            });
+            if (!cards) throw new BadRequestException("Something went wrong")
             return cards
         } catch (error) {
             throw new BadRequestException("Something went wrong")
@@ -629,6 +637,13 @@ export class ProjectService {
                     title: dto.title,
                     description: dto.description,
                     dueDate: dto.dueDate,
+                    projectCardAssignee: {
+                        createMany: {
+                            data: dto.assignees.map((assignee: any) => ({
+                                userProjectId: assignee,
+                            })),
+                        }
+                    }
                 }
             })
             if (!card) throw new BadRequestException("Something went wrong")

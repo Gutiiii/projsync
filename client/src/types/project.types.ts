@@ -162,6 +162,7 @@ export type EditBoardCardFormData = {
     projectId: string
     title?: string
     description?: string
+    assignees: string[]
     dueDate?: string
     token?: string
 }

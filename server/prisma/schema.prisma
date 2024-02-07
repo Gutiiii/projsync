@@ -63,7 +63,7 @@ model User_Project {
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
 
-  projectCardMember ProjectCard_Assignee[]
+  projectCardAssignee ProjectCard_Assignee[]
   comments Comment[]
   
   createdAt DateTime @default(now())

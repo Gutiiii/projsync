@@ -20,10 +20,9 @@ import {
 } from '@ant-design/icons';
 
 import { useDeleteCard } from '@/hooks/projectHooks/useDeleteCard';
-import { Card as CardType, Project } from '@/types/project.types';
+import { Card as CardType } from '@/types/project.types';
 import { UserPayload } from '@/types/user.types';
 import { getDateColor } from '@/utilities/getDateColor';
-import { Input } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { TextIcon, Trash2 } from 'lucide-react';
@@ -31,14 +30,35 @@ import { useSession } from 'next-auth/react';
 import React, { FC, useMemo, useState } from 'react';
 import Avatar from 'react-avatar';
 import { toast } from 'sonner';
-import UserAvatar from '../auth/UserAvatar';
 import EditBoardCardModal from '../modal/EditBoardCardModal';
+
+interface User {
+  name: string;
+}
+
+interface UserProject {
+  id: string;
+  user: User;
+}
+
+interface Project {
+  userProject: UserProject[];
+}
+
+interface List {
+  project: Project;
+}
+
+interface CardTypeProps extends CardType {
+  list: List;
+  projectCardAssignee: any[];
+}
 
 interface CardProps {
   id: string;
   user: UserPayload;
   projectId: string;
-  card: CardType;
+  card: CardTypeProps;
   setModalVisible: () => void;
 }
 
@@ -135,6 +155,10 @@ const BoardCard: FC<CardProps> = ({
         }}
       >
         <Card
+          onClick={() => {
+            setEditBoardCardModalVisible(true);
+            setModalVisible();
+          }}
           size="small"
           title={<Text ellipsis={{ tooltip: card.title }}>{card.title}</Text>}
           // onClick={() => {
@@ -213,29 +237,17 @@ const BoardCard: FC<CardProps> = ({
                 {dueDateOptions.text}
               </Tag>
             )}
-            <Avatar name={'Samuel Gutmans'} color="black " round size="30" />
-            {/* {!!users?.length && (
-            <Space
-              size={4}
-              wrap
-              direction="horizontal"
-              align="center"
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                marginLeft: 'auto',
-                marginRight: '0',
-              }}
-            >
-              {users.map((user) => {
-                return (
-                  <Tooltip key={user.id} title={user.name}>
-                    <CustomAvatar name={user.name} src={user.avatarUrl} />
-                  </Tooltip>
-                );
-              })}
-            </Space>
-          )} */}
+            {card.projectCardAssignee.map((assignee) => {
+              return (
+                <Avatar
+                  key={assignee.userProject.id}
+                  name={assignee.userProject.user.name}
+                  color="black"
+                  round
+                  size="23"
+                />
+              );
+            })}
           </div>
         </Card>
       </ConfigProvider>
@@ -245,7 +257,6 @@ const BoardCard: FC<CardProps> = ({
           projectId={projectId}
           card={card}
           handleOnClose={() => setEditBoardCardModalVisible(false)}
-          handleOnDelete={() => console.log('REMOVE')}
           userRole={user.role}
         />
       )}

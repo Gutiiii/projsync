@@ -133,7 +133,6 @@ export class ProjectController {
     @UseGuards(JwtGuard)
     @Patch("card/:cardId")
     async editCard(@Param("cardId") cardId, @Body() dto: EditCardDto, @Req() request) {
-        console.log("CALLED")
         return await this.projectService.editCard(cardId, dto, request.user.id)
     }
 
