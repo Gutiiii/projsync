@@ -18,6 +18,11 @@ import BoardItem from '../boardComponents/BoardItem';
 import CreateBoardCardModal from '../modal/CreateBoardCardModal';
 import EditBoardCardModal from '../modal/EditBoardCardModal';
 
+interface CardExtend extends Card {
+  list: any;
+  projectCardAssignee: any;
+}
+
 const ProjectBoard = ({
   projectId,
   token,
@@ -52,7 +57,7 @@ const ProjectBoard = ({
   //TODO Add Skeleton
   if (listIsLoading || cardIsLoading) return <div>Hello</div>;
 
-  const cards: Card[] = card?.data;
+  const cards: CardExtend[] = card?.data;
 
   const createList = () => {
     const maxPosition = Math.max(
