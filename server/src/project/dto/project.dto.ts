@@ -61,7 +61,7 @@ const EditCardSchema = z.object({
     title: z.string().optional().nullable(),
     description: z.string().optional().nullable(),
     dueDate: z.string().optional().nullable(),
-    assignees: z.array(z.string()).optional().nullable(),
+    assignees: z.array(z.any()).optional().nullable(),
 })
 
 export class CreateProjectDto extends createZodDto(CreateProjectSchema) { }

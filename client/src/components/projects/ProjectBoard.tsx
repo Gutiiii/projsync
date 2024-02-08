@@ -106,7 +106,7 @@ const ProjectBoard = ({
     };
 
     mutationCreateCard.mutateAsync(values, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['getCards'] });
         toast.success('Card has been Created');
         setCreatedCardListId('');

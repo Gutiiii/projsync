@@ -638,10 +638,21 @@ export class ProjectService {
                     description: dto.description,
                     dueDate: dto.dueDate,
                     projectCardAssignee: {
+                        deleteMany: {},
                         createMany: {
                             data: dto.assignees.map((assignee: any) => ({
                                 userProjectId: assignee,
                             })),
+                        }
+                    }
+                }, include: {
+                    projectCardAssignee: {
+                        include: {
+                            userProject: {
+                                include: {
+                                    user: true
+                                }
+                            }
                         }
                     }
                 }

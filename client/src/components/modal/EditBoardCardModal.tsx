@@ -7,7 +7,7 @@ import {
   EditTwoTone,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
-import { Button, Divider, Spinner, Textarea, user } from '@nextui-org/react';
+import { Button, Divider, Spinner, Textarea } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DatePicker, Input, Modal, Select, Tag, Tooltip } from 'antd';
 import Link from 'antd/es/typography/Link';
@@ -94,6 +94,8 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
     .toString()
     .padStart(2, '0')} ${ampm}`;
 
+  console.log(assignees);
+
   const handleOutsideClick = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
     if (!target.matches('#title')) {
@@ -126,19 +128,45 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
     };
   }, [editTitle]);
 
+  console.log(card.projectCardAssignee);
   const handleEdit = () => {
+    // Normalize assignees to contain only userProjectIds
+    let newAssignees = assignees.map((assignee: any) => {
+      let newAssignee = assignee;
+      card.projectCardAssignee.forEach((projAssignee: any) => {
+        if (assignee === projAssignee.userProject.user.name) {
+          newAssignee = projAssignee.userProject.id;
+        }
+      });
+      return newAssignee;
+    });
+
+    let assigneeValues = newAssignees
+      .map((assignee) => {
+        if (typeof assignee === 'string') {
+          return assignee; // If already userProjectId, keep it as is
+        } else if (assignee.hasOwnProperty('userProjectId')) {
+          return assignee.userProjectId; // If object with userProjectId, extract it
+        } else {
+          return null; // If object structure is not recognized, ignore
+        }
+      })
+      .filter((id) => id !== null); // Filter out null values
+
     const values = {
       id: card.id,
       listId: card.listId,
       projectId,
       title,
       description,
-      assignees,
+      assignees: assigneeValues,
       dueDate: dueDate ? new Date(dueDate).toISOString() : dueDate,
       token: session?.backendTokens.accessToken,
     };
+
     editMutation.mutateAsync(values, {
-      onSuccess: () => {
+      onSuccess: (data: any) => {
+        setAssignees(data.data.projectCardAssignee);
         toast.success('Card has been updated');
         setActiveSection('');
         queryClient.invalidateQueries({ queryKey: ['getCards'] });
@@ -153,8 +181,6 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
     value: user.id,
     label: user.user.name,
   }));
-
-  console.log(assignees);
 
   return (
     <Modal
@@ -339,11 +365,24 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
                   onChange={(value: any[]) => setAssignees(value)}
                   options={selectOptions}
                   defaultValue={assignees.map(
-                    (user) => user.userProject.user.name,
+                    (user) => user.userProject?.user?.name,
                   )}
+                  onDeselect={(value: any[]) => {
+                    setAssignees(
+                      assignees.filter(
+                        (user) => user.userProject.user.name !== value,
+                      ),
+                    );
+                  }}
                 />
                 <div className="space-x-2">
-                  <Button size="sm" onClick={() => setActiveSection('')}>
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      setAssignees(card.projectCardAssignee);
+                      setActiveSection('');
+                    }}
+                  >
                     Cancel
                   </Button>
                   <Button size="sm" color="primary" onClick={handleEdit}>
@@ -363,16 +402,20 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
                   {assignees.map((user) => {
                     return (
                       <Tag
-                        key={user.userProject.user.id}
+                        key={user.userProject?.user?.id}
                         className="rounded-full p-1 pr-2 flex items-center flex-wrap space-x-2"
                       >
                         <Avatar
-                          name={user.userProject.user.name}
+                          name={
+                            user.userProject?.user?.name
+                              ? user.userProject?.user?.name
+                              : ''
+                          }
                           round
                           color="black"
                           size="25"
                         />
-                        <p>{user.userProject.user.name}</p>
+                        <p>{user.userProject?.user?.name}</p>
                       </Tag>
                     );
                   })}
@@ -383,27 +426,6 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
             </div>
           )}
         </div>
-        {/* <div
-          className="flex items-center my-3"
-          onClick={() => setActiveSection('ASSIGN')}
-        >
-          <UsergroupAddOutlined className="mr-2" size={15} />
-          {activeSection === 'ASSIGN' ? (
-            <div>
-              {true ? (
-                <Select
-                  mode="multiple"
-                  style={{ width: '100%' }}
-                  onChange={() => console.log('CHANGE')}
-                />
-              ) : (
-                <Link className="text-md">Assign to users</Link>
-              )}
-            </div>
-          ) : (
-            <Link className="text-md">Assign to users</Link>
-          )}
-        </div> */}
         <Divider />
 
         <footer className="flex justify-end mx-6 mt-4">

@@ -237,17 +237,19 @@ const BoardCard: FC<CardProps> = ({
                 {dueDateOptions.text}
               </Tag>
             )}
-            {card.projectCardAssignee.map((assignee) => {
-              return (
-                <Avatar
-                  key={assignee.userProject.id}
-                  name={assignee.userProject.user.name}
-                  color="black"
-                  round
-                  size="23"
-                />
-              );
-            })}
+            <div className="space-x-0.5">
+              {card.projectCardAssignee.map((assignee) => {
+                return (
+                  <Avatar
+                    key={assignee.userProject.id}
+                    name={assignee.userProject.user.name}
+                    color="black"
+                    round
+                    size="23"
+                  />
+                );
+              })}
+            </div>
           </div>
         </Card>
       </ConfigProvider>
