@@ -546,6 +546,18 @@ export class ProjectService {
 
             const list = await this.prismaService.projectList.delete({ where: { id: listId } })
 
+            const lists = await this.prismaService.projectList.updateMany({
+                where: {
+                    position: {
+                        gt: list.position
+                    }
+                }, data: {
+                    position: {
+                        decrement: 1
+                    }
+                }
+            })
+
             if (!list) throw new BadRequestException("Something went wrong")
 
             return list
@@ -606,6 +618,20 @@ export class ProjectService {
                 }
             })
 
+            const cards = await this.prismaService.projectCard.updateMany({
+                where: {
+                    listId: card.listId,
+                    position: {
+                        gt: card.position
+                    },
+                },
+                data: {
+                    position: {
+                        decrement: 1
+                    }
+                }
+            })
+
             if (!card) throw new BadRequestException("Something went wrong")
 
             return card
@@ -629,7 +655,7 @@ export class ProjectService {
             })
 
             if (!hasRight) throw new UnauthorizedException("Unauthorized")
-
+            console.log(dto.assignees)
             const card = await this.prismaService.projectCard.update({
                 where: {
                     id: cardId
@@ -642,7 +668,7 @@ export class ProjectService {
                         createMany: {
                             data: dto.assignees.map((assignee: any) => ({
                                 userProjectId: assignee,
-                            })),
+                            }))
                         }
                     }
                 }, include: {
