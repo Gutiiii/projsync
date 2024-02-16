@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { connect } from 'http2';
 import { LogService } from 'src/log/log.service';
 import { PrismaService } from 'src/prisma.service';
 import { CreateCardDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditCardDto, EditListDto, EditMemberDto, MoveListDto, UpdateProjectDto } from './dto/project.dto';
@@ -655,7 +654,7 @@ export class ProjectService {
             })
 
             if (!hasRight) throw new UnauthorizedException("Unauthorized")
-            console.log(dto.assignees)
+            const uniqueAssignees = [...new Set(dto.assignees)]
             const card = await this.prismaService.projectCard.update({
                 where: {
                     id: cardId
@@ -666,7 +665,7 @@ export class ProjectService {
                     projectCardAssignee: {
                         deleteMany: {},
                         createMany: {
-                            data: dto.assignees.map((assignee: any) => ({
+                            data: uniqueAssignees.map((assignee: any) => ({
                                 userProjectId: assignee,
                             }))
                         }

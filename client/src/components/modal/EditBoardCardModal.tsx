@@ -93,9 +93,6 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
   const dateWithoutWeekday = `${day} ${month} ${year} - ${hour12}:${minute
     .toString()
     .padStart(2, '0')} ${ampm}`;
-
-  console.log(assignees);
-
   const handleOutsideClick = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
     if (!target.matches('#title')) {
@@ -127,8 +124,6 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
       document.removeEventListener('click', handleOutsideClick);
     };
   }, [editTitle]);
-
-  console.log(card.projectCardAssignee);
   const handleEdit = () => {
     // Normalize assignees to contain only userProjectIds
     let newAssignees = assignees.map((assignee: any) => {
@@ -144,14 +139,14 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
     let assigneeValues = newAssignees
       .map((assignee) => {
         if (typeof assignee === 'string') {
-          return assignee; // If already userProjectId, keep it as is
+          return assignee;
         } else if (assignee.hasOwnProperty('userProjectId')) {
-          return assignee.userProjectId; // If object with userProjectId, extract it
+          return assignee.userProjectId;
         } else {
-          return null; // If object structure is not recognized, ignore
+          return null;
         }
       })
-      .filter((id) => id !== null); // Filter out null values
+      .filter((id) => id !== null);
 
     const values = {
       id: card.id,
