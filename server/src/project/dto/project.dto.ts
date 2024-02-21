@@ -1,4 +1,3 @@
-
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'nestjs-zod/z';
 
@@ -64,6 +63,12 @@ const EditCardSchema = z.object({
     assignees: z.array(z.any()).optional().nullable(),
 })
 
+const CreateCommentSchema = z.object({
+    cardId: z.string(),
+    projectId: z.string(),
+    content: z.string().max(250)
+})
+
 export class CreateProjectDto extends createZodDto(CreateProjectSchema) { }
 export class UpdateProjectDto extends createZodDto(UpdateProjectSchema) { }
 export class CreateInvitationDto extends createZodDto(CreateInvitationSchema) { }
@@ -74,3 +79,4 @@ export class EditListDto extends createZodDto(EditListSchema) { }
 export class MoveListDto extends createZodDto(MoveListSchema) { }
 export class CreateCardDto extends createZodDto(CreateCardSchema) { }
 export class EditCardDto extends createZodDto(EditCardSchema) { }
+export class CreateCommentDto extends createZodDto(CreateCommentSchema) { }

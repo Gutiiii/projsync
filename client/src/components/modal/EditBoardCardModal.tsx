@@ -17,6 +17,7 @@ import { useSession } from 'next-auth/react';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import Avatar from 'react-avatar';
 import { toast } from 'sonner';
+import BoardComments from '../boardComponents/BoardComments';
 
 interface User {
   name: string;
@@ -191,7 +192,7 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
             value={title}
             id="title"
             onChange={(e: any) => setTitle(e.target.value)}
-            onKeyDown={(e) => {
+            onKeyDown={(e: any) => {
               if (e.key === 'Enter') {
                 setEditTitle(false);
                 handleEdit();
@@ -284,7 +285,9 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
                 <DatePicker
                   showTime={{ showSecond: false }}
                   defaultValue={dueDate ? dayjs(dueDate) : undefined}
-                  onChange={(date, dateString) => setDueDate(dateString)}
+                  onChange={(date: any, dateString: any) =>
+                    setDueDate(dateString)
+                  }
                 />
                 <div className="space-x-2">
                   <Button size="sm" onClick={() => setActiveSection('')}>
@@ -456,6 +459,8 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
           </div>
         </footer>
       </form>
+      <Divider className="my-3" />
+      <BoardComments projectId={projectId} cardId={card.id} />
     </Modal>
   );
 };

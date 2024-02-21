@@ -114,6 +114,7 @@ model ProjectCard {
   listId String
 
   projectCardAssignee ProjectCard_Assignee[]
+  comments Comment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -133,6 +134,8 @@ model Comment {
   id String @id @default(uuid())
   content String
 
+  card ProjectCard @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  cardId String
   author User_Project @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String
 

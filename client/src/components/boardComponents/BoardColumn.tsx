@@ -2,10 +2,10 @@
 import { useDeleteList } from '@/hooks/projectHooks/useDeleteList';
 import { useEditList } from '@/hooks/projectHooks/useEditList';
 import { UserPayload } from '@/types/user.types';
-import { UseDroppableArguments, useDroppable } from '@dnd-kit/core';
+import { UseDroppableArguments } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Button, Input, Spinner } from '@nextui-org/react';
+import { Input, Spinner } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge, Space } from 'antd';
 import { Trash2 } from 'lucide-react';
@@ -119,7 +119,7 @@ const BoardColumn: FC<BoardColumnProps> = ({
   return (
     <div
       ref={setNodeRef}
-      className="flex flex-col p-4 "
+      className="flex flex-col p-4 touch-manipulation"
       style={style}
       {...attributes}
       {...listeners}

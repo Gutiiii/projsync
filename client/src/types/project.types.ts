@@ -166,3 +166,23 @@ export type EditBoardCardFormData = {
     dueDate?: string
     token?: string
 }
+
+export type CreateCommentFormData = {
+    cardId: string
+    projectId: string
+    comment: string
+    token?: string
+}
+
+export type Comment = {
+    id: string
+    content: string
+    cardId: string
+    createdAt: string
+    updatedAt: string
+    author: {
+        user: {
+            name: string
+        }
+    }
+}
