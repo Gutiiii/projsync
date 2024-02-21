@@ -1,12 +1,15 @@
 import { useCreateComment } from '@/hooks/projectHooks/useCreateComment';
 import { useGetComments } from '@/hooks/projectHooks/useGetComments';
 import { Comment } from '@/types/project.types';
+import { Skeleton as ChakraSkeleton } from '@chakra-ui/react';
+import { Skeleton as NextUiSkeleton, Spinner } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Input, Skeleton } from 'antd';
 import { formatDistanceToNow } from 'date-fns';
 import { useSession } from 'next-auth/react';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import Avatar from 'react-avatar';
+import { toast } from 'sonner';
 
 interface BoardCommentsProps {
   projectId: string;
@@ -16,14 +19,10 @@ interface BoardCommentsProps {
 const BoardComments: FC<BoardCommentsProps> = ({ projectId, cardId }) => {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
+  const [content, setContent] = useState<string>('');
 
-  const { mutate } = useMutation({
+  const { mutate, isLoading: createCommentIsLoading } = useMutation({
     mutationFn: useCreateComment,
-    onMutate: async (values) => {
-      await queryClient.cancelQueries(['getComments']);
-      const prevComments = queryClient.getQueryData(['getComments']);
-      queryClient.setQueryData(['getComments'], [...prevComment, values]);
-    },
   });
 
   const {
@@ -39,6 +38,25 @@ const BoardComments: FC<BoardCommentsProps> = ({ projectId, cardId }) => {
 
   const comments: Comment[] = commentsData.data;
 
+  const submit = () => {
+    const values = {
+      cardId,
+      projectId,
+      content,
+      token: session?.backendTokens.accessToken,
+    };
+    mutate(values, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['getComments']);
+        toast.success('Comment created!');
+        setContent('');
+      },
+      onError: () => {
+        toast.error('Something went wrong! Please try again later');
+        setContent('');
+      },
+    });
+  };
   return (
     <div className="max-h-[300px] overflow-y-auto mt-2">
       <div className="flex space-x-2 mb-3">
@@ -62,9 +80,32 @@ const BoardComments: FC<BoardCommentsProps> = ({ projectId, cardId }) => {
       </div>
       <div className="flex space-x-2 mb-3">
         <Avatar name={session?.user.name} round size="30" color="black" />
-        <Input placeholder="Write a comment..." />
+        <Input
+          placeholder="Write a comment..."
+          onChange={(e) => setContent(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              submit();
+            }
+          }}
+          value={content}
+        />
+        {createCommentIsLoading && <Spinner className="mr-2" />}
       </div>
       <div>
+        {createCommentIsLoading && (
+          <div className="my-2">
+            <div className="flex">
+              <ChakraSkeleton className="rounded-full w-8 h-7 mr-2" />
+              <div className="grid grid-rows-2 w-full -space-y-1 -mt-1">
+                <div className="flex space-x-2">
+                  <ChakraSkeleton className="w-1/2 h-6 rounded-md mb-2" />
+                </div>
+                <ChakraSkeleton className="w-full h-6 rounded-md" />
+              </div>
+            </div>
+          </div>
+        )}
         {comments.map((comment) => {
           const timestamp = new Date(comment.createdAt);
           const timeAgo = formatDistanceToNow(timestamp, {
@@ -85,10 +126,16 @@ const BoardComments: FC<BoardCommentsProps> = ({ projectId, cardId }) => {
                     <p className="font-bold">{comment.author.user.name}</p>
                     <p>{timeAgo}</p>
                   </div>
-
-                  <p className="bg-gray-200 rounded-sm p-1">
+                  <p className="bg-gray-200 rounded-sm p-1 shadow-md">
                     {comment.content}
                   </p>
+                  {comment.author.user.id === session?.user.id && (
+                    <div className="flex space-x-1 pt-2">
+                      <p className="underline cursor-pointer">Edit</p>
+                      <p>·</p>
+                      <p className="underline cursor-pointer">Delete</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

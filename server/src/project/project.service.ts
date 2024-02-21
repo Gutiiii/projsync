@@ -695,13 +695,20 @@ export class ProjectService {
                 where: {
                     userId: userId,
                     projectId: dto.projectId
-                }, select: {
-                    id: true
                 }
             })
-            console.log(userProjectId)
+            if (!userProjectId) throw new UnauthorizedException("Unauthorized")
+            const comment = await this.prismaService.comment.create({
+                data: {
+                    content: dto.content,
+                    cardId: dto.cardId,
+                    authorId: userProjectId.id
+                }
+            })
+            if (!comment) throw new BadRequestException("Something went wrong")
+            return comment
         } catch (error) {
-
+            throw new BadRequestException("Something went wrong")
         }
     }
 
@@ -716,6 +723,9 @@ export class ProjectService {
                             user: true
                         }
                     }
+                }, orderBy: {
+                    createdAt: "desc"
+
                 }
             })
             if (!comments) throw new BadRequestException("Something went wrong!")

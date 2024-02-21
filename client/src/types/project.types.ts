@@ -170,7 +170,7 @@ export type EditBoardCardFormData = {
 export type CreateCommentFormData = {
     cardId: string
     projectId: string
-    comment: string
+    content: string
     token?: string
 }
 
@@ -182,6 +182,7 @@ export type Comment = {
     updatedAt: string
     author: {
         user: {
+            id: string
             name: string
         }
     }
