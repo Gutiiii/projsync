@@ -16,11 +16,13 @@ export const sendPasswordEmail = async () => {
     const res = await fetch(
       BACKEND_URL + '/auth/addpasswordresetcode/' + session?.user.email,
     );
-    //TODO Change to to email
+    if (!session?.user.email) throw new Error('No email');
+
+    //TODO Change Sender Email
     const result = await res.json();
     const send = await resend.emails.send({
-      from: 'Acme <onboarding@resend.dev>',
-      to: ['samuel.gutmans@gmail.com'],
+      from: 'help@samuel-gutmans.ch',
+      to: [session?.user.email],
       subject: 'Reset Password',
       react: <ChangePasswordEmail code={result.code} />,
     });
@@ -33,17 +35,17 @@ export const sendPasswordEmail = async () => {
 
 export const sendPasswordEmailForgot = async (email: string) => {
   try {
+    console.log('CALLED');
     const res = await axios.get(
       BACKEND_URL + '/auth/addpasswordresetcode/' + email,
     );
-    //TODO Change to to email
+    //TODO Change Sender Email
     await resend.emails.send({
-      from: 'Acme <onboarding@resend.dev>',
-      to: ['samuel.gutmans@gmail.com'],
+      from: 'help@samuel-gutmans.ch',
+      to: [email],
       subject: 'Reset Password',
       react: <ChangePasswordEmail code={res.data.code} />,
     });
-
     return { status: 200 };
   } catch (error) {
     return { status: 400 };
@@ -57,10 +59,10 @@ export const sendProjectInvitation = async (
   invitationId: any,
 ) => {
   try {
-    //TODO Change to to email
+    //TODO Change Sender Email
     await resend.emails.send({
-      from: 'Acme <onboarding@resend.dev>',
-      to: ['samuel.gutmans@gmail.com'],
+      from: 'help@samuel-gutmans.ch',
+      to: [email],
       subject: 'Project Invitation',
       react: (
         <ProjectInvitationEmail
@@ -75,3 +77,5 @@ export const sendProjectInvitation = async (
     return { status: 400 };
   }
 };
+
+//TODO Add ACtion for new Comment

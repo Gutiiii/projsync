@@ -2,7 +2,7 @@ import { useCreateComment } from '@/hooks/projectHooks/useCreateComment';
 import { useGetComments } from '@/hooks/projectHooks/useGetComments';
 import { Comment } from '@/types/project.types';
 import { Skeleton as ChakraSkeleton } from '@chakra-ui/react';
-import { Skeleton as NextUiSkeleton, Spinner } from '@nextui-org/react';
+import { Spinner } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Input, Skeleton } from 'antd';
 import { formatDistanceToNow } from 'date-fns';
@@ -14,9 +14,14 @@ import { toast } from 'sonner';
 interface BoardCommentsProps {
   projectId: string;
   cardId: string;
+  userRole: string;
 }
 
-const BoardComments: FC<BoardCommentsProps> = ({ projectId, cardId }) => {
+const BoardComments: FC<BoardCommentsProps> = ({
+  projectId,
+  cardId,
+  userRole,
+}) => {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
   const [content, setContent] = useState<string>('');
@@ -34,7 +39,7 @@ const BoardComments: FC<BoardCommentsProps> = ({ projectId, cardId }) => {
   if (commentsIsLoading) return <Skeleton />;
 
   if (commentsIsError)
-    return <div>Something went wrong! Please try again later</div>;
+    return <div>Something went wrong! Please refresh Page</div>;
 
   const comments: Comment[] = commentsData.data;
 
@@ -58,7 +63,7 @@ const BoardComments: FC<BoardCommentsProps> = ({ projectId, cardId }) => {
     });
   };
   return (
-    <div className="max-h-[300px] overflow-y-auto mt-2">
+    <div className="max-h-[300px] overflow-y-auto overflow-x-hidden mt-2">
       <div className="flex space-x-2 mb-3">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -129,10 +134,16 @@ const BoardComments: FC<BoardCommentsProps> = ({ projectId, cardId }) => {
                   <p className="bg-gray-200 rounded-sm p-1 shadow-md">
                     {comment.content}
                   </p>
-                  {comment.author.user.id === session?.user.id && (
+                  {(comment.author.user.id === session?.user.id ||
+                    userRole === 'CREATOR') && (
                     <div className="flex space-x-1 pt-2">
-                      <p className="underline cursor-pointer">Edit</p>
-                      <p>·</p>
+                      {comment.author.user.id === session?.user.id && (
+                        <>
+                          <p className="underline cursor-pointer">Edit</p>
+                          <p>·</p>
+                        </>
+                      )}
+
                       <p className="underline cursor-pointer">Delete</p>
                     </div>
                   )}
