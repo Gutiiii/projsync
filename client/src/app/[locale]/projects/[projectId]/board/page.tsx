@@ -20,11 +20,13 @@ const ProjectBoardPage = async ({
   const auth = await useAuthForProjects(params.projectId);
 
   return (
-    <ProjectBoard
-      user={auth.data}
-      projectId={params.projectId}
-      token={session?.backendTokens.accessToken}
-    />
+    <>
+      <ProjectBoard
+        user={auth.data}
+        projectId={params.projectId}
+        token={session?.backendTokens.accessToken}
+      />
+    </>
   );
 };
 

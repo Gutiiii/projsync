@@ -35,7 +35,6 @@ export const sendPasswordEmail = async () => {
 
 export const sendPasswordEmailForgot = async (email: string) => {
   try {
-    console.log('CALLED');
     const res = await axios.get(
       BACKEND_URL + '/auth/addpasswordresetcode/' + email,
     );

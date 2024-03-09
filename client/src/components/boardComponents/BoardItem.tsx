@@ -1,11 +1,8 @@
 'use client';
-import {
-  DragOverlay,
-  useDraggable,
-  UseDraggableArguments,
-} from '@dnd-kit/core';
+import { DragOverlay, UseDraggableArguments } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import React from 'react';
+import { CSS } from '@dnd-kit/utilities';
 
 interface BoardItemProps {
   id: string;
@@ -19,26 +16,30 @@ const BoardItem = ({
   data,
   modalVisible,
 }: React.PropsWithChildren<BoardItemProps>) => {
-  const { attributes, listeners, setNodeRef, active } = useSortable({
-    id,
-    data: {
-      type: 'Card',
-      data,
-    },
-    disabled: modalVisible,
-  });
+  const { attributes, listeners, setNodeRef, active, transition, transform } =
+    useSortable({
+      id,
+      data: {
+        type: 'Card',
+        data,
+      },
+      disabled: modalVisible,
+    });
+
+  const style = {
+    transition,
+    transform: CSS.Transform.toString(transform),
+  };
 
   return (
     <div
-      style={{
-        position: 'relative',
-      }}
-      className="ml-3"
+      style={style}
+      className="ml-3 relative"
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
     >
       <div
-        ref={setNodeRef}
-        {...listeners}
-        {...attributes}
         style={{
           opacity: active ? (active.id === id ? 1 : 0.5) : 1,
           borderRadius: '8px',
@@ -49,7 +50,6 @@ const BoardItem = ({
         {children}
       </div>
       {active?.id === id && (
-        // antd sider has z-index of 999
         <DragOverlay zIndex={1000}>
           <div
             style={{

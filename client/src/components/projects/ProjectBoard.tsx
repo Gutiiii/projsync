@@ -3,12 +3,12 @@ import { useCreateCard } from '@/hooks/projectHooks/useCreateCard';
 import { useCreateList } from '@/hooks/projectHooks/useCreateList';
 import { useGetCards } from '@/hooks/projectHooks/useGetCards';
 import { useGetLists } from '@/hooks/projectHooks/useGetLists';
-import { Card, List, Project } from '@/types/project.types';
+import { Card, List } from '@/types/project.types';
 import { UserPayload } from '@/types/user.types';
-import { DragOverlay } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
 import { Button, Spinner } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Skeleton } from 'antd';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { Board } from '../boardComponents/Board';
@@ -16,7 +16,6 @@ import BoardCard from '../boardComponents/BoardCard';
 import BoardColumn from '../boardComponents/BoardColumn';
 import BoardItem from '../boardComponents/BoardItem';
 import CreateBoardCardModal from '../modal/CreateBoardCardModal';
-import EditBoardCardModal from '../modal/EditBoardCardModal';
 
 interface CardExtend extends Card {
   list: any;
@@ -55,7 +54,12 @@ const ProjectBoard = ({
 
   const mutationCreateCard = useMutation({ mutationFn: useCreateCard });
   //TODO Add Skeleton
-  if (listIsLoading || cardIsLoading) return <div>Hello</div>;
+  if (listIsLoading || cardIsLoading)
+    return (
+      <div className="mx-12 mt-12">
+        <Skeleton className="" />
+      </div>
+    );
 
   const cards: CardExtend[] = card?.data;
 
@@ -142,6 +146,7 @@ const ProjectBoard = ({
                     .map((card) => (
                       <BoardItem
                         id={card.id}
+                        data={card}
                         key={card.id}
                         modalVisible={editBoardCardModalVisible}
                       >
