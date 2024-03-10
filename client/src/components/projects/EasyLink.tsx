@@ -50,18 +50,7 @@ const EasyLink = () => {
               isReadOnly
               key="profile"
               className="h-14 gap-2 opacity-100"
-            >
-              <div
-                classNames={{
-                  name: 'text-default-600',
-                  description: 'text-default-500',
-                }}
-                avatarProps={{
-                  size: 'sm',
-                  src: 'https://avatars.githubusercontent.com/u/30373425?v=4',
-                }}
-              />
-            </DropdownItem>
+            ></DropdownItem>
             <DropdownItem key="dashboard">Dashboard</DropdownItem>
             <DropdownItem key="settings">Settings</DropdownItem>
           </DropdownSection>
