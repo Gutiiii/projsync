@@ -461,6 +461,7 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
       </form>
       <Divider className="my-3" />
       <BoardComments
+        key={card.id}
         projectId={projectId}
         cardId={card.id}
         userRole={userRole}

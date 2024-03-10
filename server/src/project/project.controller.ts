@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { AcceptInvitationDto, CreateCardDto, CreateCommentDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditCardDto, EditListDto, EditMemberDto, MoveListDto, UpdateProjectDto } from './dto/project.dto';
+import { AcceptInvitationDto, CreateCardDto, CreateCommentDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditCardDto, EditCommentDto, EditListDto, EditMemberDto, MoveListDto, UpdateProjectDto } from './dto/project.dto';
 import { ProjectService } from './project.service';
 
 @Controller('project')
@@ -152,5 +152,17 @@ export class ProjectController {
     @Get("comment/:cardId")
     async getComments(@Param("cardId") cardId, @Req() request) {
         return await this.projectService.getComments(cardId, request.user.id)
+    }
+
+    @UseGuards(JwtGuard)
+    @Patch("comment/:commentId")
+    async editComment(@Param("commentId") commentId, @Body() dto: EditCommentDto, @Req() request) {
+        return await this.projectService.editComment(commentId, dto, request.user.id)
+    }
+
+    @UseGuards(JwtGuard)
+    @Delete("comment/:commentId")
+    async deleteComment(@Param("commentId") commentId, @Req() request) {
+        return await this.projectService.deleteComment(commentId)
     }
 }

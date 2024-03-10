@@ -69,6 +69,10 @@ const CreateCommentSchema = z.object({
     content: z.string().max(250)
 })
 
+const EditCommentSchema = z.object({
+    content: z.string().max(250)
+})
+
 export class CreateProjectDto extends createZodDto(CreateProjectSchema) { }
 export class UpdateProjectDto extends createZodDto(UpdateProjectSchema) { }
 export class CreateInvitationDto extends createZodDto(CreateInvitationSchema) { }
@@ -80,3 +84,4 @@ export class MoveListDto extends createZodDto(MoveListSchema) { }
 export class CreateCardDto extends createZodDto(CreateCardSchema) { }
 export class EditCardDto extends createZodDto(EditCardSchema) { }
 export class CreateCommentDto extends createZodDto(CreateCommentSchema) { }
+export class EditCommentDto extends createZodDto(EditCommentSchema) { }

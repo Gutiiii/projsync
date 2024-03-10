@@ -187,3 +187,14 @@ export type Comment = {
         }
     }
 }
+
+export type EditCommentFormData = {
+    commentId: string
+    content: string
+    token?: string
+}
+
+export type DeleteCommentFormData = {
+    commentId: string
+    token?: string
+}

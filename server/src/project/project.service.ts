@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { LogService } from 'src/log/log.service';
 import { PrismaService } from 'src/prisma.service';
-import { CreateCardDto, CreateCommentDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditCardDto, EditListDto, EditMemberDto, MoveListDto, UpdateProjectDto } from './dto/project.dto';
+import { CreateCardDto, CreateCommentDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditCardDto, EditCommentDto, EditListDto, EditMemberDto, MoveListDto, UpdateProjectDto } from './dto/project.dto';
 
 @Injectable()
 export class ProjectService {
@@ -734,6 +734,38 @@ export class ProjectService {
             throw new BadRequestException("Something went wrong!")
         }
 
+    }
+
+    async editComment(commentId: string, dto: EditCommentDto, userId: string) {
+        console.log(commentId, dto.content)
+        try {
+            const comment = await this.prismaService.comment.update({
+                where: {
+                    id: commentId
+                },
+                data: {
+                    content: dto.content
+                }
+            })
+            if (!comment) throw new BadRequestException("Something went wrong")
+        } catch (error) {
+            throw new BadRequestException("Something went wrong")
+        }
+
+    }
+
+    async deleteComment(commentId: string) {
+        try {
+            const comment = await this.prismaService.comment.delete({
+                where: {
+                    id: commentId
+                }
+            })
+            if (!comment) throw new BadRequestException("Something went wrong")
+
+        } catch (error) {
+            throw new BadRequestException("Something went wrong")
+        }
     }
 }
 

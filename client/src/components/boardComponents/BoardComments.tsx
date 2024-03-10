@@ -1,4 +1,6 @@
 import { useCreateComment } from '@/hooks/projectHooks/useCreateComment';
+import { useDeleteComment } from '@/hooks/projectHooks/useDeleteComment';
+import { useEditComment } from '@/hooks/projectHooks/useEditComment';
 import { useGetComments } from '@/hooks/projectHooks/useGetComments';
 import { Comment } from '@/types/project.types';
 import { Skeleton as ChakraSkeleton } from '@chakra-ui/react';
@@ -25,6 +27,33 @@ const BoardComments: FC<BoardCommentsProps> = ({
   const { data: session } = useSession();
   const queryClient = useQueryClient();
   const [content, setContent] = useState<string>('');
+  const [commentEditId, setCommentEditId] = useState<string>('');
+  const [commentEditValue, setCommentEditValue] = useState<string>('');
+  const { mutate: editMutate, isLoading: editIsLoading } = useMutation({
+    mutationFn: useEditComment,
+    onMutate: () => {},
+    onSuccess: () => {
+      setCommentEditId('');
+      toast.success('Comment Edited');
+      queryClient.invalidateQueries({ queryKey: ['getComments'] });
+    },
+    onError: () => {
+      toast.error('Something went wrong');
+    },
+  });
+
+  const { mutate: deleteMutate, isLoading: deleteIsLoading } = useMutation({
+    mutationFn: useDeleteComment,
+    onMutate: () => {},
+    onSuccess: () => {
+      setCommentEditId('');
+      toast.success('Comment Deleted');
+      queryClient.invalidateQueries({ queryKey: ['getComments'] });
+    },
+    onError: () => {
+      toast.error('Something went wrong');
+    },
+  });
 
   const { mutate, isLoading: createCommentIsLoading } = useMutation({
     mutationFn: useCreateComment,
@@ -39,7 +68,9 @@ const BoardComments: FC<BoardCommentsProps> = ({
   if (commentsIsLoading) return <Skeleton />;
 
   if (commentsIsError)
-    return <div>Something went wrong! Please refresh Page</div>;
+    return (
+      <p className="text-center">Something went wrong! Please refresh Page</p>
+    );
 
   const comments: Comment[] = commentsData.data;
 
@@ -61,6 +92,23 @@ const BoardComments: FC<BoardCommentsProps> = ({
         setContent('');
       },
     });
+  };
+
+  const edit = (commentId: string) => {
+    const values = {
+      commentId,
+      content: commentEditValue,
+      token: session?.backendTokens.accessToken,
+    };
+    editMutate(values);
+  };
+
+  const deleteComment = (commentId: string) => {
+    const values = {
+      commentId,
+      token: session?.backendTokens.accessToken,
+    };
+    deleteMutate(values);
   };
   return (
     <div className="max-h-[300px] overflow-y-auto overflow-x-hidden mt-2">
@@ -117,7 +165,7 @@ const BoardComments: FC<BoardCommentsProps> = ({
             addSuffix: true,
           });
           return (
-            <div key={comment.id} className="my-2">
+            <div key={comment.id} className="my-2 relative">
               <div className="flex">
                 <Avatar
                   name={comment.author.user.name}
@@ -131,20 +179,58 @@ const BoardComments: FC<BoardCommentsProps> = ({
                     <p className="font-bold">{comment.author.user.name}</p>
                     <p>{timeAgo}</p>
                   </div>
-                  <p className="bg-gray-200 rounded-sm p-1 shadow-md">
-                    {comment.content}
-                  </p>
+                  {commentEditId !== comment.id && (
+                    <p className="bg-gray-200 rounded-sm p-1 shadow-md w-full">
+                      {comment.content}
+                    </p>
+                  )}
+                  {editIsLoading && commentEditId === comment.id && (
+                    <div>
+                      <Spinner className="absolute top-5 left-1/2" />
+                    </div>
+                  )}
                   {(comment.author.user.id === session?.user.id ||
                     userRole === 'CREATOR') && (
                     <div className="flex space-x-1 pt-2">
                       {comment.author.user.id === session?.user.id && (
                         <>
-                          <p className="underline cursor-pointer">Edit</p>
-                          <p>·</p>
+                          {commentEditId === comment.id &&
+                          editIsLoading === false ? (
+                            <Input
+                              className="-mt-2"
+                              defaultValue={comment.content}
+                              onChange={(e: any) =>
+                                setCommentEditValue(e.target.value)
+                              }
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  edit(comment.id);
+                                }
+                              }}
+                            ></Input>
+                          ) : (
+                            <>
+                              <p
+                                className="underline cursor-pointer"
+                                onClick={() => setCommentEditId(comment.id)}
+                              >
+                                Edit
+                              </p>
+                              <p>·</p>
+                            </>
+                          )}
                         </>
                       )}
-
-                      <p className="underline cursor-pointer">Delete</p>
+                      {commentEditId !== comment.id &&
+                        deleteIsLoading === false && (
+                          <p
+                            className="underline cursor-pointer"
+                            onClick={() => deleteComment(comment.id)}
+                          >
+                            Delete
+                          </p>
+                        )}
+                      {deleteIsLoading && <Spinner size="sm" />}
                     </div>
                   )}
                 </div>
