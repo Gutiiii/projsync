@@ -28,6 +28,7 @@ const BoardComments: FC<BoardCommentsProps> = ({
   const queryClient = useQueryClient();
   const [content, setContent] = useState<string>('');
   const [commentEditId, setCommentEditId] = useState<string>('');
+  const [commentDeleteId, setCommentDeleteId] = useState<string>('');
   const [commentEditValue, setCommentEditValue] = useState<string>('');
   const { mutate: editMutate, isLoading: editIsLoading } = useMutation({
     mutationFn: useEditComment,
@@ -38,19 +39,23 @@ const BoardComments: FC<BoardCommentsProps> = ({
       queryClient.invalidateQueries({ queryKey: ['getComments'] });
     },
     onError: () => {
+      setCommentEditId('');
       toast.error('Something went wrong');
     },
   });
 
   const { mutate: deleteMutate, isLoading: deleteIsLoading } = useMutation({
     mutationFn: useDeleteComment,
-    onMutate: () => {},
+    onMutate: (data) => {
+      setCommentDeleteId(data.commentId);
+    },
     onSuccess: () => {
-      setCommentEditId('');
       toast.success('Comment Deleted');
       queryClient.invalidateQueries({ queryKey: ['getComments'] });
+      setCommentDeleteId('');
     },
     onError: () => {
+      setCommentDeleteId('');
       toast.error('Something went wrong');
     },
   });
@@ -184,11 +189,6 @@ const BoardComments: FC<BoardCommentsProps> = ({
                       {comment.content}
                     </p>
                   )}
-                  {editIsLoading && commentEditId === comment.id && (
-                    <div>
-                      <Spinner className="absolute top-5 left-1/2" />
-                    </div>
-                  )}
                   {(comment.author.user.id === session?.user.id ||
                     userRole === 'CREATOR') && (
                     <div className="flex space-x-1 pt-2">
@@ -210,19 +210,25 @@ const BoardComments: FC<BoardCommentsProps> = ({
                             ></Input>
                           ) : (
                             <>
-                              <p
-                                className="underline cursor-pointer"
-                                onClick={() => setCommentEditId(comment.id)}
-                              >
-                                Edit
-                              </p>
+                              {commentEditId !== comment.id && (
+                                <p
+                                  className="underline cursor-pointer"
+                                  onClick={() => setCommentEditId(comment.id)}
+                                >
+                                  Edit
+                                </p>
+                              )}
+                              {editIsLoading &&
+                                commentEditId === comment.id && (
+                                  <Spinner size="sm" />
+                                )}
                               <p>·</p>
                             </>
                           )}
                         </>
                       )}
-                      {commentEditId !== comment.id &&
-                        deleteIsLoading === false && (
+                      {commentDeleteId !== comment.id &&
+                        commentEditId !== comment.id && (
                           <p
                             className="underline cursor-pointer"
                             onClick={() => deleteComment(comment.id)}
@@ -230,7 +236,9 @@ const BoardComments: FC<BoardCommentsProps> = ({
                             Delete
                           </p>
                         )}
-                      {deleteIsLoading && <Spinner size="sm" />}
+                      {deleteIsLoading && commentDeleteId === comment.id && (
+                        <Spinner size="sm" />
+                      )}
                     </div>
                   )}
                 </div>

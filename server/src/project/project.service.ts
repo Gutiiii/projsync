@@ -737,7 +737,6 @@ export class ProjectService {
     }
 
     async editComment(commentId: string, dto: EditCommentDto, userId: string) {
-        console.log(commentId, dto.content)
         try {
             const comment = await this.prismaService.comment.update({
                 where: {

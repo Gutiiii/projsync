@@ -4,6 +4,7 @@ import { Card, List } from '@/types/project.types';
 import {
   DndContext,
   DragEndEvent,
+  DragOverEvent,
   DragStartEvent,
   PointerSensor,
   useSensor,
@@ -93,91 +94,109 @@ export const Board = ({ children }: React.PropsWithChildren) => {
 
     if (!over) return;
 
-    console.log(event.active.data.current?.type);
+    const isActiveAList = active.data.current?.type === 'List';
 
-    if (event.active.data.current?.type === 'List') {
-      const activeListId = active.id;
-      const overListId = over.id;
+    if (!isActiveAList) return;
 
-      if (activeListId === overListId) return;
+    console.log('DRAG END');
+    const activeListId = active.id;
+    const overListId = over.id;
 
-      const activeListPosition = active.data.current?.data.position;
+    if (activeListId === overListId) return;
 
-      const overListPosition = over.data.current?.data.position;
-      const updatedLists = lists.map((list) => {
-        if (activeListPosition > overListPosition) {
-          if (
-            list.position >= overListPosition &&
-            list.position < activeListPosition
-          ) {
-            return { ...list, position: list.position + 1 };
-          } else if (list.id === activeListId) {
-            return { ...list, position: overListPosition };
-          }
-        } else if (activeListPosition < overListPosition) {
-          if (
-            list.position <= overListPosition &&
-            list.position > activeListPosition
-          ) {
-            return { ...list, position: list.position - 1 };
-          } else if (list.id === activeListId) {
-            return { ...list, position: overListPosition };
-          }
+    const activeListPosition = active.data.current?.data.position;
+
+    const overListPosition = over.data.current?.data.position;
+    const updatedLists = lists.map((list) => {
+      if (activeListPosition > overListPosition) {
+        if (
+          list.position >= overListPosition &&
+          list.position < activeListPosition
+        ) {
+          return { ...list, position: list.position + 1 };
+        } else if (list.id === activeListId) {
+          return { ...list, position: overListPosition };
         }
-        return list;
-      });
+      } else if (activeListPosition < overListPosition) {
+        if (
+          list.position <= overListPosition &&
+          list.position > activeListPosition
+        ) {
+          return { ...list, position: list.position - 1 };
+        } else if (list.id === activeListId) {
+          return { ...list, position: overListPosition };
+        }
+      }
+      return list;
+    });
 
-      const values = {
-        projectId,
-        activeListId,
-        overListId,
-        activeListPosition,
-        overListPosition,
-        token,
-        updatedLists,
-      };
+    const values = {
+      projectId,
+      activeListId,
+      overListId,
+      activeListPosition,
+      overListPosition,
+      token,
+      updatedLists,
+    };
 
-      mutate(values);
+    mutate(values);
+  };
+
+  const onDragOver = (event: DragOverEvent) => {
+    const { active, over } = event;
+
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    if (activeId === overId) return;
+
+    console.log(over);
+
+    const isActiveACard = active.data.current?.type === 'Card';
+    const isOverACard = over.data.current?.type === 'Card';
+
+    if (!isActiveACard) return;
+
+    //Check if is Dropped in same List
+    if (isActiveACard && isOverACard) {
+      console.log('SAME LIST');
     }
-
-    if (event.active.data.current?.type === 'Card') {
-      const activeCardId = active.id;
-      const overCardId = over.id;
-
-      console.log('ACTIVE: ', active);
-
-      console.log('OVER:', over);
-
-      if (activeCardId === overCardId) return;
-
-      const activeCardPosition = active.data.current?.data.position;
-      console.log('ACTIVEPOSS:', activeCardPosition);
-
-      const overCardPosition = over.data.current?.data.position;
-      console.log('O>VERPOS: ', overCardPosition);
-      //   const updatedLists = lists.map((list) => {
-      //     if (activeListPosition > overListPosition) {
-      //       if (
-      //         list.position >= overListPosition &&
-      //         list.position < activeListPosition
-      //       ) {
-      //         return { ...list, position: list.position + 1 };
-      //       } else if (list.id === activeCardId) {
-      //         return { ...list, position: overListPosition };
-      //       }
-      //     } else if (activeListPosition < overListPosition) {
-      //       if (
-      //         list.position <= overListPosition &&
-      //         list.position > activeListPosition
-      //       ) {
-      //         return { ...list, position: list.position - 1 };
-      //       } else if (list.id === activeCardId) {
-      //         return { ...list, position: overListPosition };
-      //       }
-      //     }
-      //     return list;
-      // }
-    }
+    // if (event.active.data.current?.type === 'Card') {
+    //   const activeCardId = active.id;
+    //   const overCardId = over.id;
+    //   console.log('ACTIVE: ', active);
+    //   console.log('OVER:', over);
+    //   if (activeCardId === overCardId) return;
+    //   const activeCardPosition = active.data.current?.data.position;
+    //   console.log('ACTIVEPOSS:', activeCardPosition);
+    //   const overCardPosition = over.data.current?.data.position;
+    //   console.log('OVERPOS: ', overCardPosition);
+    //   //   const updatedLists = lists.map((list) => {
+    //   //     if (activeListPosition > overListPosition) {
+    //   //       if (
+    //   //         list.position >= overListPosition &&
+    //   //         list.position < activeListPosition
+    //   //       ) {
+    //   //         return { ...list, position: list.position + 1 };
+    //   //       } else if (list.id === activeCardId) {
+    //   //         return { ...list, position: overListPosition };
+    //   //       }
+    //   //     } else if (activeListPosition < overListPosition) {
+    //   //       if (
+    //   //         list.position <= overListPosition &&
+    //   //         list.position > activeListPosition
+    //   //       ) {
+    //   //         return { ...list, position: list.position - 1 };
+    //   //       } else if (list.id === activeCardId) {
+    //   //         return { ...list, position: overListPosition };
+    //   //       }
+    //   //     }
+    //   //     return list;
+    //   // }
+    // }
   };
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -191,6 +210,7 @@ export const Board = ({ children }: React.PropsWithChildren) => {
       onDragStart={onDragStart}
       sensors={sensors}
       onDragEnd={onDragEnd}
+      onDragOver={onDragOver}
     >
       <BoardContainer>{children}</BoardContainer>
     </DndContext>

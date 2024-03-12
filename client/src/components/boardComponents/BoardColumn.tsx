@@ -3,7 +3,11 @@ import { useDeleteList } from '@/hooks/projectHooks/useDeleteList';
 import { useEditList } from '@/hooks/projectHooks/useEditList';
 import { UserPayload } from '@/types/user.types';
 import { UseDroppableArguments } from '@dnd-kit/core';
-import { useSortable } from '@dnd-kit/sortable';
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Input, Spinner } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -14,6 +18,7 @@ import { useParams, useRouter } from 'next/navigation';
 import React, { FC, useState } from 'react';
 import { toast } from 'sonner';
 import { Text } from '../text';
+import { Card } from '@/types/project.types';
 
 interface BoardColumnProps {
   children: React.ReactNode;
@@ -26,6 +31,7 @@ interface BoardColumnProps {
   position: number;
   onCreate: () => void;
   modalVisible: boolean;
+  cards: Card[];
 }
 
 const BoardColumn: FC<BoardColumnProps> = ({
@@ -39,6 +45,7 @@ const BoardColumn: FC<BoardColumnProps> = ({
   position,
   onCreate,
   modalVisible,
+  cards,
 }) => {
   const { data: session } = useSession();
   const params = useParams<{ projectId: string }>();
@@ -218,7 +225,7 @@ const BoardColumn: FC<BoardColumnProps> = ({
             gap: '8px',
           }}
         >
-          {children}
+          <SortableContext items={cards}>{children}</SortableContext>
         </div>
       </div>
     </div>

@@ -140,14 +140,15 @@ const ProjectBoard = ({
                   createdListId={createdListId}
                   onCreate={() => setCreatedListId('')}
                   modalVisible={editBoardCardModalVisible}
+                  cards={cards}
                 >
                   {cards
                     .filter((card) => card.listId === list.id)
                     .map((card) => (
                       <BoardItem
+                        key={card.id}
                         id={card.id}
                         data={card}
-                        key={card.id}
                         modalVisible={editBoardCardModalVisible}
                       >
                         <BoardCard
