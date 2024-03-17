@@ -5,11 +5,22 @@ import {
   AlignLeftOutlined,
   ClockCircleOutlined,
   EditTwoTone,
+  UploadOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
 import { Button, Divider, Spinner, Textarea } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { DatePicker, Input, Modal, Select, Tag, Tooltip } from 'antd';
+import {
+  DatePicker,
+  Input,
+  Modal,
+  Select,
+  Tag,
+  Tooltip,
+  Upload,
+  UploadProps,
+  Button as AntdButton,
+} from 'antd';
 import Link from 'antd/es/typography/Link';
 import dayjs from 'dayjs';
 import { Trash2 } from 'lucide-react';
@@ -77,6 +88,7 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
   const [activeSection, setActiveSection] = useState<
     'DESCRIPTION' | 'DUEDATE' | 'ASSIGN' | ''
   >('');
+  const [uploadLoading, setUploadLoading] = useState<boolean>(false);
 
   const editMutation = useMutation({ mutationFn: useEditCard });
 
@@ -126,28 +138,27 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
     };
   }, [editTitle]);
   const handleEdit = () => {
-    // Normalize assignees to contain only userProjectIds
-    let newAssignees = assignees.map((assignee: any) => {
-      let newAssignee = assignee;
-      card.projectCardAssignee.forEach((projAssignee: any) => {
-        if (assignee === projAssignee.userProject.user.name) {
-          newAssignee = projAssignee.userProject.id;
-        }
-      });
-      return newAssignee;
+    let assigneeValues = assignees.map((assignee: any) => {
+      if (typeof assignee === 'string') {
+        let newAssignee = assignee;
+        card.list.project.userProject.map((user: any) => {
+          if (user.user.name === assignee) {
+            newAssignee = user.id;
+          }
+        });
+        return newAssignee;
+      } else if (assignee.hasOwnProperty('userProjectId')) {
+        let newAssignee = assignee;
+        card.list.project.userProject.map((user: any) => {
+          if (user.user.name === assignee.userProject.user.name) {
+            newAssignee = user.id;
+          } else {
+            return;
+          }
+        });
+        return newAssignee;
+      }
     });
-
-    let assigneeValues = newAssignees
-      .map((assignee) => {
-        if (typeof assignee === 'string') {
-          return assignee;
-        } else if (assignee.hasOwnProperty('userProjectId')) {
-          return assignee.userProjectId;
-        } else {
-          return null;
-        }
-      })
-      .filter((id) => id !== null);
 
     const values = {
       id: card.id,
@@ -174,9 +185,27 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
   };
 
   const selectOptions = card.list.project.userProject.map((user: any) => ({
-    value: user.id,
+    value: user.user.name,
     label: user.user.name,
   }));
+
+  const props: UploadProps = {
+    name: 'file',
+    action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
+    headers: {
+      authorization: 'authorization-text',
+    },
+    onChange(info) {
+      if (info.file.status !== 'uploading') {
+        setUploadLoading(true);
+      }
+      if (info.file.status === 'done') {
+        toast.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        toast.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
 
   return (
     <Modal
@@ -423,6 +452,15 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
               )}
             </div>
           )}
+        </div>
+        <Divider />
+        <div>
+          <Upload {...props} listType="picture" multiple>
+            {' '}
+            <AntdButton icon={<UploadOutlined />} className="my-2">
+              Click to Upload
+            </AntdButton>
+          </Upload>
         </div>
         <Divider />
 
