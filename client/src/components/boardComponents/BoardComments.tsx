@@ -185,9 +185,17 @@ const BoardComments: FC<BoardCommentsProps> = ({
                     <p>{timeAgo}</p>
                   </div>
                   {commentEditId !== comment.id && (
-                    <p className="bg-gray-200 rounded-sm p-1 shadow-md w-full">
-                      {comment.content}
-                    </p>
+                    <div className="bg-gray-200 rounded-sm p-1 shadow-md w-full flex items-center">
+                      <p>{comment.content}</p>
+                      {comment.updatedAt !== comment.createdAt && (
+                        <p
+                          className="text-gray-600 ml-1.5"
+                          style={{ fontSize: '0.7rem' }}
+                        >
+                          (edited)
+                        </p>
+                      )}
+                    </div>
                   )}
                   {(comment.author.user.id === session?.user.id ||
                     userRole === 'CREATOR') && (

@@ -23,9 +23,9 @@ const layout: FC<layoutProps> = async ({ children, params }) => {
     <div>
       {session?.user.role === 'ADMIN' ? <AdminNavbar /> : <UserNavbar />}
       {/* <Sidebar /> */}
-      <div className="absolute right-24 top-24">
+      {/* <div className="absolute right-24 top-24">
         <EasyLink />
-      </div>
+      </div> */}
 
       <ProjectNavbar projectId={params.projectId} />
       {children}

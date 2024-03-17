@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { AcceptInvitationDto, CreateCardDto, CreateCommentDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditCardDto, EditCommentDto, EditListDto, EditMemberDto, MoveListDto, UpdateProjectDto } from './dto/project.dto';
+import { AcceptInvitationDto, CreateCardDto, CreateCommentDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditCardDto, EditCommentDto, EditListDto, EditMemberDto, MoveCardDto, MoveListDto, UpdateProjectDto } from './dto/project.dto';
 import { ProjectService } from './project.service';
 
 @Controller('project')
@@ -113,6 +113,12 @@ export class ProjectController {
     }
 
     @UseGuards(JwtGuard)
+    @Patch("card/move/:projectId")
+    async moveCard(@Body() dto: MoveCardDto, @Param('projectId') projectId, @Req() request) {
+        return await this.projectService.moveList(dto, projectId, request.user.id)
+    }
+
+    @UseGuards(JwtGuard)
     @Delete("list/:listId/:projectId")
     async deleteList(@Param("listId") listId, @Param("projectId") projectId, @Req() request) {
         return await this.projectService.deleteList(listId, projectId, request.user.id)
@@ -165,4 +171,6 @@ export class ProjectController {
     async deleteComment(@Param("commentId") commentId, @Req() request) {
         return await this.projectService.deleteComment(commentId)
     }
+
+
 }

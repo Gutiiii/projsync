@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { LogService } from 'src/log/log.service';
 import { PrismaService } from 'src/prisma.service';
-import { CreateCardDto, CreateCommentDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditCardDto, EditCommentDto, EditListDto, EditMemberDto, MoveListDto, UpdateProjectDto } from './dto/project.dto';
+import { CreateCardDto, CreateCommentDto, CreateInvitationDto, CreateListDto, CreateProjectDto, EditCardDto, EditCommentDto, EditListDto, EditMemberDto, MoveCardDto, MoveListDto, UpdateProjectDto } from './dto/project.dto';
 
 @Injectable()
 export class ProjectService {
@@ -524,6 +524,87 @@ export class ProjectService {
                 if (!list) throw new BadRequestException("Something went wrong")
                 return list
             }
+        } catch (error) {
+            throw new BadRequestException("Something went wrong")
+        }
+    }
+
+    async moveCard(dto: MoveCardDto, projectId: string, userId: string) {
+        try {
+            const hasRight = await this.prismaService.user_Project.findFirst({
+                where: {
+                    userId: userId,
+                    projectId: projectId,
+                }
+            })
+
+            if (!hasRight) throw new UnauthorizedException("Unauthorized")
+
+            // if (dto.activeListPosition > dto.overListPosition) {
+            //     const list = await this.prismaService.$transaction(
+            //         [
+            //             this.prismaService.projectList.updateMany({
+            //                 where: {
+            //                     position: {
+            //                         gte: dto.overListPosition,
+            //                     }, AND: {
+            //                         position: {
+            //                             not: dto.activeListPosition
+            //                         }
+            //                     }
+            //                 },
+            //                 data: {
+            //                     position: {
+            //                         increment: 1
+            //                     }
+            //                 }
+            //             }),
+            //             this.prismaService.projectList.update({
+            //                 where: {
+            //                     id: dto.activeListId
+            //                 },
+            //                 data: {
+            //                     position: dto.overListPosition
+            //                 }
+            //             })
+
+            //         ]
+            //     )
+            //     if (!list) throw new BadRequestException("Something went wrong")
+            //     return list
+            // } else if (dto.activeListPosition < dto.overListPosition) {
+            //     const list = await this.prismaService.$transaction(
+            //         [
+            //             this.prismaService.projectList.updateMany({
+            //                 where: {
+            //                     position: {
+            //                         lte: dto.overListPosition,
+            //                     }, AND: {
+            //                         position: {
+            //                             not: dto.activeListPosition
+            //                         }
+            //                     }
+            //                 },
+            //                 data: {
+            //                     position: {
+            //                         decrement: 1
+            //                     }
+            //                 }
+            //             }),
+            //             this.prismaService.projectList.update({
+            //                 where: {
+            //                     id: dto.activeListId
+            //                 },
+            //                 data: {
+            //                     position: dto.overListPosition
+            //                 }
+            //             }),
+
+            //         ]
+            //     )
+            //     if (!list) throw new BadRequestException("Something went wrong")
+            //     return list
+            // }
         } catch (error) {
             throw new BadRequestException("Something went wrong")
         }

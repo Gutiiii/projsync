@@ -1,10 +1,13 @@
 'use client';
+import { useMoveCard } from '@/hooks/projectHooks/useMoveCard';
 import { useMoveList } from '@/hooks/projectHooks/useMoveList';
 import { Card, List } from '@/types/project.types';
+import { list } from '@chakra-ui/react';
 import {
   DndContext,
   DragEndEvent,
   DragOverEvent,
+  DragOverlay,
   DragStartEvent,
   PointerSensor,
   useSensor,
@@ -15,32 +18,6 @@ import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-
-export const BoardContainer = ({ children }: React.PropsWithChildren) => {
-  return (
-    <div
-      style={{
-        width: 'calc(100% + 64px)',
-        height: 'calc(100vh - 64px)',
-        display: 'flex',
-        justifyContent: 'column',
-        margin: '-32px',
-      }}
-    >
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          padding: '32px',
-          overflow: 'scroll',
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  );
-};
 
 export const Board = ({ children }: React.PropsWithChildren) => {
   const [activeList, setActiveList] = useState<List[] | null>(null);
@@ -76,16 +53,33 @@ export const Board = ({ children }: React.PropsWithChildren) => {
     },
   });
 
+  const { mutate: cardMutate } = useMutation({
+    mutationFn: useMoveCard,
+    onMutate: async (values) => {
+      await queryClient.cancelQueries(['getCards']);
+
+      const prevList = queryClient.getQueryData(['getCards']);
+
+      console.log(values.updatedCards);
+
+      queryClient.setQueryData(['getCards'], values.updatedCards);
+
+      return { prevList };
+    },
+  });
+
   const onDragStart = (event: DragStartEvent) => {
-    const data: any = queryClient.getQueryData(['getLists']);
+    const lists: any = queryClient.getQueryData(['getLists']);
+    const cards: any = queryClient.getQueryData(['getCards']);
     if (event.active.data.current?.type === 'List') {
       setActiveList(event.active.data.current.list);
-      setLists(data);
+      setLists(lists);
       return;
     }
     if (event.active.data.current?.type === 'Card') {
       setActiveCard(event.active.data.current.card);
-      setCards(data);
+      setCards(cards);
+      return;
     }
   };
 
@@ -98,7 +92,6 @@ export const Board = ({ children }: React.PropsWithChildren) => {
 
     if (!isActiveAList) return;
 
-    console.log('DRAG END');
     const activeListId = active.id;
     const overListId = over.id;
 
@@ -153,8 +146,6 @@ export const Board = ({ children }: React.PropsWithChildren) => {
 
     if (activeId === overId) return;
 
-    console.log(over);
-
     const isActiveACard = active.data.current?.type === 'Card';
     const isOverACard = over.data.current?.type === 'Card';
 
@@ -162,41 +153,71 @@ export const Board = ({ children }: React.PropsWithChildren) => {
 
     //Check if is Dropped in same List
     if (isActiveACard && isOverACard) {
-      console.log('SAME LIST');
+      const activeCardPosition = active.data.current?.data.position;
+      const activeCardId = active.id;
+      const overCardPosition = over.data.current?.data.position;
+      const overCardId = over.id;
+      const activeListId = active.data.current?.data.listId;
+      const overListId = over.data.current?.data.listId;
+      const activeIndex = cards.findIndex((card) => card.id === activeId);
+      console.log('HELLO', activeIndex);
+      let updatedCards = [];
+
+      if (activeListId === overListId) {
+        updatedCards = cards.map((card) => {
+          if (activeCardPosition > overCardPosition) {
+            if (
+              card.position >= overCardPosition &&
+              card.position < activeCardPosition
+            ) {
+              return { ...card, position: card.position + 1 };
+            } else if (card.id === activeCardId) {
+              return { ...card, position: overCardPosition };
+            }
+          } else if (activeCardPosition < overCardPosition) {
+            if (
+              card.position <= overCardPosition &&
+              card.position > activeCardPosition
+            ) {
+              return { ...card, position: card.position - 1 };
+            } else if (card.id === activeCardId) {
+              return { ...card, position: overCardPosition };
+            }
+          }
+          return card;
+        });
+      } else {
+        updatedCards = cards.map((card) => {
+          if (
+            activeCardPosition < card.position &&
+            activeListId === card.listId &&
+            activeCardId !== card.id
+          ) {
+            return { ...card, position: card.position - 1 };
+          } else if (
+            activeCardPosition >= overCardPosition &&
+            overListId === card.listId
+          ) {
+            return { ...card, position: card.position + 1 };
+          } else if (activeCardId === card.id) {
+            return { ...card, listId: overListId };
+          }
+          return card;
+        });
+      }
+      const values = {
+        projectId,
+        activeCardId: activeId,
+        activeListId,
+        overListId,
+        overCardId: overId,
+        activeCardPosition,
+        overCardPosition,
+        updatedCards,
+        token: session?.backendTokens.accessToken,
+      };
+      cardMutate(values);
     }
-    // if (event.active.data.current?.type === 'Card') {
-    //   const activeCardId = active.id;
-    //   const overCardId = over.id;
-    //   console.log('ACTIVE: ', active);
-    //   console.log('OVER:', over);
-    //   if (activeCardId === overCardId) return;
-    //   const activeCardPosition = active.data.current?.data.position;
-    //   console.log('ACTIVEPOSS:', activeCardPosition);
-    //   const overCardPosition = over.data.current?.data.position;
-    //   console.log('OVERPOS: ', overCardPosition);
-    //   //   const updatedLists = lists.map((list) => {
-    //   //     if (activeListPosition > overListPosition) {
-    //   //       if (
-    //   //         list.position >= overListPosition &&
-    //   //         list.position < activeListPosition
-    //   //       ) {
-    //   //         return { ...list, position: list.position + 1 };
-    //   //       } else if (list.id === activeCardId) {
-    //   //         return { ...list, position: overListPosition };
-    //   //       }
-    //   //     } else if (activeListPosition < overListPosition) {
-    //   //       if (
-    //   //         list.position <= overListPosition &&
-    //   //         list.position > activeListPosition
-    //   //       ) {
-    //   //         return { ...list, position: list.position - 1 };
-    //   //       } else if (list.id === activeCardId) {
-    //   //         return { ...list, position: overListPosition };
-    //   //       }
-    //   //     }
-    //   //     return list;
-    //   // }
-    // }
   };
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -212,7 +233,27 @@ export const Board = ({ children }: React.PropsWithChildren) => {
       onDragEnd={onDragEnd}
       onDragOver={onDragOver}
     >
-      <BoardContainer>{children}</BoardContainer>
+      <div
+        style={{
+          width: 'calc(100% + 64px)',
+          height: 'calc(100vh - 64px)',
+          display: 'flex',
+          justifyContent: 'column',
+          margin: '-32px',
+        }}
+      >
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            padding: '32px',
+            overflow: 'scroll',
+          }}
+        >
+          {children}
+        </div>
+      </div>
     </DndContext>
   );
 };

@@ -3,18 +3,14 @@ import { useDeleteList } from '@/hooks/projectHooks/useDeleteList';
 import { useEditList } from '@/hooks/projectHooks/useEditList';
 import { UserPayload } from '@/types/user.types';
 import { UseDroppableArguments } from '@dnd-kit/core';
-import {
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Input, Spinner } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge, Space } from 'antd';
 import { Trash2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import React, { FC, useState } from 'react';
 import { toast } from 'sonner';
 import { Text } from '../text';
@@ -123,6 +119,8 @@ const BoardColumn: FC<BoardColumnProps> = ({
     });
   };
 
+  const cardsId = cards.filter((card) => card.id);
+
   return (
     <div
       ref={setNodeRef}
@@ -225,7 +223,7 @@ const BoardColumn: FC<BoardColumnProps> = ({
             gap: '8px',
           }}
         >
-          <SortableContext items={cards}>{children}</SortableContext>
+          <SortableContext items={cardsId}>{children}</SortableContext>
         </div>
       </div>
     </div>

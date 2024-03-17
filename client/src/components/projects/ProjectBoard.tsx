@@ -5,7 +5,12 @@ import { useGetCards } from '@/hooks/projectHooks/useGetCards';
 import { useGetLists } from '@/hooks/projectHooks/useGetLists';
 import { Card, List } from '@/types/project.types';
 import { UserPayload } from '@/types/user.types';
-import { SortableContext } from '@dnd-kit/sortable';
+import {
+  SortableContext,
+  horizontalListSortingStrategy,
+  rectSortingStrategy,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { Button, Spinner } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Skeleton } from 'antd';
@@ -61,7 +66,7 @@ const ProjectBoard = ({
       </div>
     );
 
-  const cards: CardExtend[] = card?.data;
+  const cards: CardExtend[] = card;
 
   const createList = () => {
     const maxPosition = Math.max(
@@ -140,10 +145,11 @@ const ProjectBoard = ({
                   createdListId={createdListId}
                   onCreate={() => setCreatedListId('')}
                   modalVisible={editBoardCardModalVisible}
-                  cards={cards}
+                  cards={cards.filter((card) => card.listId === list.id)}
                 >
                   {cards
                     .filter((card) => card.listId === list.id)
+                    .sort((a: Card, b: Card) => a.position - b.position)
                     .map((card) => (
                       <BoardItem
                         key={card.id}

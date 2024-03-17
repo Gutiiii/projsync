@@ -198,3 +198,15 @@ export type DeleteCommentFormData = {
     commentId: string
     token?: string
 }
+
+export type MoveCardFormData = {
+    projectId: string
+    activeCardId: UniqueIdentifier
+    overCardId: UniqueIdentifier,
+    activeListId: UniqueIdentifier,
+    overListId: UniqueIdentifier
+    activeCardPosition: number
+    overCardPosition: number
+    updatedCards: object
+    token?: string
+}

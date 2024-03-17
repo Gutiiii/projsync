@@ -7,13 +7,14 @@ export const useGetCards = (token: string | undefined, projectId: string) => {
     return useQuery({
         queryKey: ["getCards"],
         queryFn: async () => {
-            return await axios.get(BACKEND_URL + '/project/card/' + projectId, {
+            const res = await axios.get(BACKEND_URL + '/project/card/' + projectId, {
                 headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
                     Authorization: "Bearer " + token
                 },
             });
+            return res.data
         },
     });
 }

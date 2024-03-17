@@ -4,11 +4,8 @@ import {
   ConfigProvider,
   Dropdown,
   MenuProps,
-  Skeleton,
-  Space,
   Tag,
   theme,
-  Tooltip,
 } from 'antd';
 
 import { Text } from '../text';
