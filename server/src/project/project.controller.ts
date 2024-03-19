@@ -115,7 +115,7 @@ export class ProjectController {
     @UseGuards(JwtGuard)
     @Patch("card/move/:projectId")
     async moveCard(@Body() dto: MoveCardDto, @Param('projectId') projectId, @Req() request) {
-        return await this.projectService.moveList(dto, projectId, request.user.id)
+        return await this.projectService.moveCard(dto, projectId, request.user.id)
     }
 
     @UseGuards(JwtGuard)

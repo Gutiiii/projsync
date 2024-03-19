@@ -7,6 +7,7 @@ import axios from 'axios';
 import { getServerSession } from 'next-auth';
 import { Resend } from 'resend';
 import { authOptions } from './api/auth/[...nextauth]/options';
+import CardAssignEmail from '@/components/emails/CardAssignEmail';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -78,3 +79,35 @@ export const sendProjectInvitation = async (
 };
 
 //TODO Add ACtion for new Comment
+
+export const sendAssignedCard = async (
+  projectId: string,
+  projectTitle: string,
+  cardTitle: string,
+  email: string[],
+  cardId: string,
+) => {
+  try {
+    await Promise.all(
+      email.map(async (email: string) => {
+        await resend.emails.send({
+          from: 'help@samuel-gutmans.ch',
+          to: [email],
+          subject: 'You have been Assigned',
+          react: (
+            <CardAssignEmail
+              projectId={projectId}
+              projectTitle={projectTitle}
+              cardTitle={cardTitle}
+              cardId={cardId}
+            />
+          ),
+        });
+      }),
+    );
+
+    return { status: 200 };
+  } catch (error) {
+    return { status: 400 };
+  }
+};

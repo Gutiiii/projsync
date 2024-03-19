@@ -29,6 +29,7 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import Avatar from 'react-avatar';
 import { toast } from 'sonner';
 import BoardComments from '../boardComponents/BoardComments';
+import { sendAssignedCard } from '@/app/actions';
 
 interface User {
   name: string;
@@ -40,6 +41,7 @@ interface UserProject {
 }
 
 interface Project {
+  title: string;
   userProject: UserProject[];
 }
 
@@ -177,6 +179,18 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
         toast.success('Card has been updated');
         setActiveSection('');
         queryClient.invalidateQueries({ queryKey: ['getCards'] });
+        const emails = data.data.projectCardAssignee.map(
+          (item: any) => item.userProject.user.email,
+        );
+        if (emails.length > 0) {
+          sendAssignedCard(
+            projectId,
+            card.list.project.title,
+            card.title,
+            emails,
+            card.id,
+          );
+        }
       },
       onError: () => {
         toast.error('Something went wrong');
@@ -454,8 +468,8 @@ const EditBoardCardModal: FC<EditProjectMemberModalProps> = ({
           )}
         </div>
         <Divider />
-        <div>
-          <Upload {...props} listType="picture" multiple>
+        <div className="flex items-center justify-between max-h-[300px] overflow-y-auto overflow-x-hidden">
+          <Upload {...props} listType="picture" multiple className="mt-1">
             {' '}
             <AntdButton icon={<UploadOutlined />} className="my-2">
               Click to Upload

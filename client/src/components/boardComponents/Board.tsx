@@ -2,12 +2,10 @@
 import { useMoveCard } from '@/hooks/projectHooks/useMoveCard';
 import { useMoveList } from '@/hooks/projectHooks/useMoveList';
 import { Card, List } from '@/types/project.types';
-import { list } from '@chakra-ui/react';
 import {
   DndContext,
   DragEndEvent,
   DragOverEvent,
-  DragOverlay,
   DragStartEvent,
   PointerSensor,
   useSensor,
@@ -60,11 +58,19 @@ export const Board = ({ children }: React.PropsWithChildren) => {
 
       const prevList = queryClient.getQueryData(['getCards']);
 
-      console.log(values.updatedCards);
-
       queryClient.setQueryData(['getCards'], values.updatedCards);
 
       return { prevList };
+    },
+    onError: (_, __, context) => {
+      toast.error('Failed');
+      queryClient.setQueryData(['getCards'], () => context?.prevList);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['getCards'] });
+    },
+    onSuccess: () => {
+      toast.success('Moved');
     },
   });
 
@@ -156,11 +162,8 @@ export const Board = ({ children }: React.PropsWithChildren) => {
       const activeCardPosition = active.data.current?.data.position;
       const activeCardId = active.id;
       const overCardPosition = over.data.current?.data.position;
-      const overCardId = over.id;
       const activeListId = active.data.current?.data.listId;
       const overListId = over.data.current?.data.listId;
-      const activeIndex = cards.findIndex((card) => card.id === activeId);
-      console.log('HELLO', activeIndex);
       let updatedCards = [];
 
       if (activeListId === overListId) {

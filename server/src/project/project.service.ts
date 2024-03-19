@@ -539,72 +539,73 @@ export class ProjectService {
             })
 
             if (!hasRight) throw new UnauthorizedException("Unauthorized")
+            if (dto.activeListId === dto.overListId) {
+                if (dto.activeCardPosition > dto.overCardPosition) {
+                    const card = await this.prismaService.$transaction(
+                        [
+                            this.prismaService.projectCard.updateMany({
+                                where: {
+                                    listId: {
+                                        equals: dto.activeListId
+                                    }, AND: {
+                                        position: {
+                                            gte: dto.overCardPosition
+                                        }, AND: {
+                                            position: {
+                                                not: dto.activeCardPosition
+                                            }
+                                        }
+                                    }
+                                }, data: {
+                                    position: {
+                                        increment: 1
+                                    }
+                                }
+                            }),
+                            this.prismaService.projectCard.update({
+                                where: {
+                                    id: dto.activeCardId
+                                }, data: {
+                                    position: dto.overCardPosition
+                                }
+                            })
+                        ]
+                    )
+                } else if (dto.activeCardPosition < dto.overCardPosition) {
+                    const card = await this.prismaService.$transaction(
+                        [
+                            this.prismaService.projectCard.updateMany({
+                                where: {
+                                    listId: {
+                                        equals: dto.activeListId
+                                    },
+                                    position: {
+                                        gte: dto.overCardPosition,
+                                    }, AND: {
+                                        position: {
+                                            not: dto.activeCardPosition
+                                        }
+                                    }
+                                },
+                                data: {
+                                    position: {
+                                        increment: 1
+                                    }
+                                }
+                            }),
+                            this.prismaService.projectList.update({
+                                where: {
+                                    id: dto.activeListId
+                                },
+                                data: {
+                                    position: dto.overCardPosition
+                                }
+                            })
+                        ]
+                    )
+                }
 
-            // if (dto.activeListPosition > dto.overListPosition) {
-            //     const list = await this.prismaService.$transaction(
-            //         [
-            //             this.prismaService.projectList.updateMany({
-            //                 where: {
-            //                     position: {
-            //                         gte: dto.overListPosition,
-            //                     }, AND: {
-            //                         position: {
-            //                             not: dto.activeListPosition
-            //                         }
-            //                     }
-            //                 },
-            //                 data: {
-            //                     position: {
-            //                         increment: 1
-            //                     }
-            //                 }
-            //             }),
-            //             this.prismaService.projectList.update({
-            //                 where: {
-            //                     id: dto.activeListId
-            //                 },
-            //                 data: {
-            //                     position: dto.overListPosition
-            //                 }
-            //             })
-
-            //         ]
-            //     )
-            //     if (!list) throw new BadRequestException("Something went wrong")
-            //     return list
-            // } else if (dto.activeListPosition < dto.overListPosition) {
-            //     const list = await this.prismaService.$transaction(
-            //         [
-            //             this.prismaService.projectList.updateMany({
-            //                 where: {
-            //                     position: {
-            //                         lte: dto.overListPosition,
-            //                     }, AND: {
-            //                         position: {
-            //                             not: dto.activeListPosition
-            //                         }
-            //                     }
-            //                 },
-            //                 data: {
-            //                     position: {
-            //                         decrement: 1
-            //                     }
-            //                 }
-            //             }),
-            //             this.prismaService.projectList.update({
-            //                 where: {
-            //                     id: dto.activeListId
-            //                 },
-            //                 data: {
-            //                     position: dto.overListPosition
-            //                 }
-            //             }),
-
-            //         ]
-            //     )
-            //     if (!list) throw new BadRequestException("Something went wrong")
-            //     return list
-            // }
+            }
         } catch (error) {
             throw new BadRequestException("Something went wrong")
         }

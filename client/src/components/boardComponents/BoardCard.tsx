@@ -24,10 +24,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { TextIcon, Trash2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import Avatar from 'react-avatar';
 import { toast } from 'sonner';
 import EditBoardCardModal from '../modal/EditBoardCardModal';
+import { useSearchParams } from 'next/navigation';
 
 interface User {
   name: string;
@@ -72,6 +73,12 @@ const BoardCard: FC<CardProps> = ({
   const deleteCardMutation = useMutation({ mutationFn: useDeleteCard });
   const { data: session } = useSession();
   const { token } = theme.useToken();
+  const searchParams = useSearchParams();
+  const defaultOpen = searchParams.get('defaultOpen');
+
+  useEffect(() => {
+    if (defaultOpen === card.id) setEditBoardCardModalVisible(true);
+  }, [defaultOpen, card.id]);
 
   const dropdownItems = useMemo(() => {
     if (user.role === 'VIEWER') {
@@ -252,7 +259,7 @@ const BoardCard: FC<CardProps> = ({
       </ConfigProvider>
       {editBoardCardModalVisible && (
         <EditBoardCardModal
-          visible={editBoardCardModalVisible}
+          visible={editBoardCardModalVisible || defaultOpen === card.id}
           projectId={projectId}
           card={card}
           handleOnClose={() => setEditBoardCardModalVisible(false)}

@@ -50,6 +50,7 @@ const MoveListSchema = z.object({
 const MoveCardSchema = z.object({
     activeCardId: z.string(),
     overCardId: z.string(),
+    activeListId: z.string(),
     overListId: z.string(),
     activeCardPosition: z.number(),
     overCardPosition: z.number()
