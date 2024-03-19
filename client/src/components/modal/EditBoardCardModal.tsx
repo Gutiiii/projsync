@@ -68,7 +68,7 @@ interface Card {
 interface EditProjectMemberModalProps {
   visible: boolean;
   handleOnClose: () => void;
-  card: Card;
+  card: Card | any;
   userRole: string;
   projectId: string;
 }
