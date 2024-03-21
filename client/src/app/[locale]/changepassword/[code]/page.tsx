@@ -4,6 +4,8 @@ import HomeComponent from '@/components/helpers/HomeComponent';
 import { Metadata } from 'next';
 import { FC } from 'react';
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
   title: 'Change Password · ProjSync',
   description:

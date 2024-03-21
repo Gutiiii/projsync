@@ -5,6 +5,8 @@ import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import React from 'react';
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
   title: 'Board · ProjSync',
   description:

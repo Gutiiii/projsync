@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import React from 'react';
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
   title: 'Chat · ProjSync',
   description:
