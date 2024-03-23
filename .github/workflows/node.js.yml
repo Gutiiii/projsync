@@ -14,14 +14,7 @@ jobs:
       matrix:
         node-version: [14.x, 16.x, 18.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-    env:
-      GOOGLE_CLIENT_ID="1078850648022-1cj6pcjqcjkab6pab9u0pivll6d7etf1.apps.googleusercontent.com"
-      GOOGLE_CLIENT_SECRET="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"
-      NEXTAUTH_SECRET="l+SyClido0pG5wSx/wIUCl1WP2qB6/BzS1CnUm0R2gI="
-      NEXTAUTH_URL="https://projsync.up.railway.app/"
-      NEXT_PUBLIC_BACKEND_URL="https://projsync-production.up.railway.app"
-      NEXT_PUBLIC_FRONTEND_URL="https://projsync.up.railway.app"
-      RESEND_API_KEY="re_VpbXW5PF_FJr8JXqXjpGTpfybWwnwYgBe"
+
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
