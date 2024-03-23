@@ -22,6 +22,12 @@ jobs:
    
     steps:
       - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            client:
+              - 'client/**'    
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
