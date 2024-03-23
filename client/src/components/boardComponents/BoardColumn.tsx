@@ -54,7 +54,8 @@ const BoardColumn: FC<BoardColumnProps> = ({
   const listDelete = useMutation({ mutationFn: useDeleteList });
 
   const dragDisabled = titleEdit || modalVisible;
-
+  if (user.role !== 'VIEWER') {
+  }
   const {
     isOver,
     setNodeRef,

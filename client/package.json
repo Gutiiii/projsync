@@ -29,6 +29,7 @@
     "@refinedev/antd": "^5.37.4",
     "@tanstack/react-query": "^4.36.1",
     "@tanstack/react-query-devtools": "^5.17.21",
+    "@tremor/react": "^3.14.1",
     "antd": "^5.13.2",
     "axios": "^1.6.5",
     "class-variance-authority": "^0.7.0",

@@ -1,4 +1,5 @@
 import AdminUsers from '@/components/adminComponents/AdminUsers';
+import AdminNavbar from '@/components/navbar/admin/AdminNavbar';
 import { useSigninRequiredServer } from '@/hooks/authHooks/useSigninRequiredServer';
 import { useUserRole } from '@/hooks/authHooks/useUserRole';
 import { Metadata } from 'next';
@@ -14,7 +15,7 @@ const Users = async () => {
   await useSigninRequiredServer();
   const role = await useUserRole();
 
-  if (role === 'ADMIN') return <AdminUsers />;
+  if (role === 'ADMIN') return <AdminNavbar />;
 
   return redirect('/dashboard');
 };

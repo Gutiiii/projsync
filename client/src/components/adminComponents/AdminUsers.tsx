@@ -1,11 +1,11 @@
 import AdminNavbar from '../navbar/admin/AdminNavbar';
+import { AreaChart, Card, List, ListItem } from '@tremor/react';
 
 const AdminUsers = () => {
   return (
     <>
       <AdminNavbar />
-      <div>Admin</div>
-      
+      <div>Admin Users</div>
     </>
   );
 };
