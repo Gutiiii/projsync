@@ -39,6 +39,6 @@ jobs:
         run: pnpm install
         working-directory: ./client
 
-      - name: Build NextJS
+      - name: Build NextJS Application
         run: pnpm build
         working-directory: ./client
