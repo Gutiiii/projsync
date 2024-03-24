@@ -93,7 +93,7 @@ jobs:
           run: pnpm install
           working-directory: ./server
   
-        - name: Build Nest Application
+        - name: Build NestJS Application
           run: pnpm build
           working-directory: ./server
 
