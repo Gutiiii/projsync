@@ -38,3 +38,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
         working-directory: ./client
+
+      - name: Build NextJS
+        run: pnpm build
+        working-directory: ./client
