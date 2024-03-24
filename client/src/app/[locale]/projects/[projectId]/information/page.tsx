@@ -9,7 +9,6 @@ import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import React from 'react';
 
-export const runtime = 'edge';
 
 export const metadata: Metadata = {
   title: 'Information · ProjSync',
