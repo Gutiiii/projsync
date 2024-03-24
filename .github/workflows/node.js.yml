@@ -4,10 +4,7 @@ on:
   - push
 
 jobs:
-
-  Frontend: 
-  name: Frontend
-    cache-and-install:
+  frontend: 
       runs-on: self-hosted
   
       env:
@@ -55,9 +52,7 @@ jobs:
           run: pnpm build
           working-directory: ./client
 
-    Backend: 
-    name: Backend
-    cache-and-install:
+  backend: 
       runs-on: self-hosted
   
       env:
