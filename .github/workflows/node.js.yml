@@ -1,24 +1,38 @@
-name: Frontend
+name: CI
 
 on:
   push:
     branches: ['main']
 
 jobs:
-  build:
-    runs-on: self-hosted
-
-    strategy:
-      matrix:
-        node-version: [20.11.1]
-        dir: ["client"]
-   
+  client:
+    runs-on: self-hosted  # Adjust based on your runner environment
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '20.11.1'  # Update if needed
+          cache: 'npm'  # Enable caching for efficiency
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+      - name: Build client code
+        working-directory: ./client
+        run: npm run build --if-present
+
+  server:  # Add a similar job for the server directory
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.11.1'  # Update if needed
           cache: 'npm'
-      - run: cd ${{ matrix.dir }} && npm ci && npm run build --if-present
-        working-directory: ${{ matrix.dir }}
+      - name: Install dependencies (server-specific)
+        working-directory: ./server
+        run: npm ci  # Customize for server dependencies
+      - name: Build server code (server-specific)
+        working-directory: ./server
+        run: npm run build --if-present  # Customize for server build command
