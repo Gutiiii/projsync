@@ -102,9 +102,9 @@ jobs:
           run: pnpm build
           working-directory: ./server
 
-        - name: Run NextJS Application
+        - name: Run NestJS Application
           run: screen -dmS nestjs pnpm start:prod
-          working-directory: ./client
+          working-directory: ./server
 
 
 
