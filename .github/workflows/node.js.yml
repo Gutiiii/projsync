@@ -106,7 +106,7 @@ jobs:
         - name: Run NestJS Application
           run: |
             screen -S nestjs -d -m sh -c "pnpm start:prod; sleep 10"
-            working-directory: ./server
+          working-directory: ./server
 
 
 
