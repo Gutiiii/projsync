@@ -53,8 +53,9 @@ jobs:
           working-directory: ./client
 
         - name: Run NextJS Application
-          run: nohup pnpm start &
+          run: screen -dmS nextjs pnpm start
           working-directory: ./client
+
 
   backend: 
       runs-on: self-hosted
@@ -101,9 +102,10 @@ jobs:
           run: pnpm build
           working-directory: ./server
 
-        - name: Run NestJS Application
-          run: nohup pnpm start:prod &
-          working-directory: ./server
+        - name: Run NextJS Application
+          run: screen -dmS nestjs pnpm start:prod
+          working-directory: ./client
+
 
 
 
