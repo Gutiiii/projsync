@@ -91,11 +91,11 @@ jobs:
   
         - name: Install dependencies
           run: pnpm install
-          working-directory: ./client
+          working-directory: ./server
   
         - name: Build NextJS Application
           run: pnpm build
-          working-directory: ./client
+          working-directory: ./server
 
 
 
