@@ -29,5 +29,5 @@
     ".next/types/**/*.ts",
     "src/app/[locale]/projects/[projectId]/chat"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "./src/components/ui/button.tsx"]
 }
