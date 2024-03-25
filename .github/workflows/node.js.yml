@@ -17,35 +17,22 @@ jobs:
   
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20.11.1
-
-      - uses: pnpm/action-setup@v3
-        name: Install pnpm
-        with:
-          version: 8
-          run_install: false
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v1
 
       - name: Install dependencies
-        run: pnpm install
+        run: bun install
         working-directory: ./client
 
       - name: Build NextJS Application
-        run: pnpm build
+        run: bun run build
         working-directory: ./client
 
       - name: Run NextJS 
         run: |
-          screen -dmS nextjs pnpm start
+          screen -dmS nextjs bun run start
         working-directory: ./client
 
 
@@ -60,33 +47,20 @@ jobs:
   
       steps:
         - name: Checkout
-          uses: actions/checkout@v3
-  
-        - name: Install Node.js
-          uses: actions/setup-node@v3
-          with:
-            node-version: 20.11.1
-  
-        - uses: pnpm/action-setup@v3
-          name: Install pnpm
-          with:
-            version: 8
-            run_install: false
-  
-        - name: Get pnpm store directory
-          shell: bash
-          run: |
-            echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+          uses: actions/checkout@v4
+
+        - name: Install Bun
+          uses: oven-sh/setup-bun@v1
   
         - name: Install Dependencies
-          run: pnpm install
+          run: bun install
           working-directory: ./server
 
         - name: Build NestJS Application
-          run: pnpm build
+          run: bun run build
           working-directory: ./server
 
         - name: Run NestJS Application
           run: |
-            screen -dmS nestjs pnpm start:prod
+            screen -dmS nestjs bun run start:prod
           working-directory: ./server
