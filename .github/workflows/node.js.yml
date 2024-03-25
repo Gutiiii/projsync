@@ -68,7 +68,7 @@ jobs:
 
       - name: Run NextJS 
         run: |
-          screen -S nextjs -d -m sh -c "pnpm start; sleep 10"
+          screen -S nextjs -dm sh -c pnpm start
         working-directory: ./client
 
 
@@ -119,7 +119,7 @@ jobs:
 
         - name: Run NestJS Application
           run: |
-            screen -S nestjs -d -m sh -c "pnpm start:prod; sleep 10"
+            screen -S nestjs -dm sh -c pnpm start:prod
           working-directory: ./server
 
 
