@@ -91,7 +91,7 @@ export const sendAssignedCard = async (
     await Promise.all(
       email.map(async (email: string) => {
         await resend.emails.send({
-          from: 'help@samuel-gutmans.ch',
+          from: 'no-reply@projsync.app',
           to: [email],
           subject: 'You have been Assigned',
           react: (
