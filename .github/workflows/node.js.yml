@@ -1,10 +1,9 @@
 name: Build
-
 on:
   - push
 
 jobs:
-  frontend: 
+  frontend:
     runs-on: self-hosted
   
     env:
@@ -36,31 +35,9 @@ jobs:
         run: |
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
       - name: Install dependencies
         run: pnpm install
         working-directory: ./client
-
-      - uses: actions/cache@v4
-        with:
-          # Adjust the paths for pnpm cache directories
-          path: |
-            ~/.pnpm-store
-            ${{ github.workspace }}/.pnpm-store
-            ${{ github.workspace }}/.pnpm
-          # Generate a new cache whenever packages or source files change.
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
-          # If source files changed but packages didn't, rebuild from a prior cache.
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
-
 
       - name: Build NextJS Application
         run: pnpm build
@@ -101,18 +78,10 @@ jobs:
           run: |
             echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
   
-        - uses: actions/cache@v3
-          name: Setup pnpm cache
-          with:
-            path: ${{ env.STORE_PATH }}
-            key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-            restore-keys: |
-              ${{ runner.os }}-pnpm-store-
-  
         - name: Install Dependencies
           run: pnpm install
           working-directory: ./server
-  
+
         - name: Build NestJS Application
           run: pnpm build
           working-directory: ./server
@@ -121,7 +90,3 @@ jobs:
           run: |
             screen -dmS nestjs pnpm start:prod
           working-directory: ./server
-
-
-
-
