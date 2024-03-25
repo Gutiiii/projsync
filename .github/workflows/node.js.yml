@@ -52,7 +52,7 @@ jobs:
           run: pnpm build
           working-directory: ./client
 
-        - name: Run NextJS Application
+        - name: Run NextJS 
           run: |
               screen -S nextjs -d -m sh -c "pnpm start; sleep 10"
           working-directory: ./client
