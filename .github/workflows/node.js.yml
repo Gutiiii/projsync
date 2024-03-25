@@ -1,66 +1,29 @@
-name: Build
+name: Deploy Application
+
 on:
-  - push
+  push:
+    branches:
+      - main # or your default branch
 
 jobs:
-  frontend:
-    runs-on: self-hosted
-  
-    env:
-      NEXTAUTH_URL: ${{secrets.NEXTAUTH_URL}}
-      GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
-      GOOGLE_CLIENT_SECRET: ${{secrets.GOOGLE_CLIENT_SECRET}}
-      NEXTAUTH_SECRET: ${{secrets.NEXTAUTH_SECRET}}
-      NEXT_PUBLIC_BACKEND_URL: ${{secrets.NEXT_PUBLIC_BACKEND_URL}}
-      NEXT_PUBLIC_FRONTEND_URL: ${{secrets.NEXT_PUBLIC_FRONTEND_URL}}
-      RESEND_API_KEY: ${{secrets.RESEND_API_KEY}}
-  
+  deploy:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Install Bun
-        uses: oven-sh/setup-bun@v1
-
-      - name: Install dependencies
-        run: bun install
-        working-directory: ./client
-
-      - name: Build NextJS Application
-        run: bun run build
-        working-directory: ./client
-
-      - name: Run NextJS 
-        run: |
-          screen -dmS nextjs bun run start
-        working-directory: ./client
-
-
-  backend: 
-      runs-on: self-hosted
-  
-      env:
-        DATABASE_URL: ${{secrets.DATABASE_URL}}
-        ORIGIN: ${{secrets.ORIGIN}}
-        PORT: ${{secrets.PORT}}
-        jwtSecretKey: ${{secrets.jwtSecretKey}}
-  
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v4
-
-        - name: Install Bun
-          uses: oven-sh/setup-bun@v1
-  
-        - name: Install Dependencies
-          run: bun install
-          working-directory: ./server
-
-        - name: Build NestJS Application
-          run: bun run build
-          working-directory: ./server
-
-        - name: Run NestJS Application
-          run: |
-            screen -dmS nestjs bun run start:prod
-          working-directory: ./server
+    - name: SSH and Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          killall screen
+          cd  /root/projsync/projsync # Change this to your repository path on the server
+          git fetch --all
+          git reset --hard origin/main
+          cd client
+          pnpm install # Assuming you want to install dependencies
+          pnpm build
+          screen -dmS app-session sh -c 'pnpm start; exec sh'
