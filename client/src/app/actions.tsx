@@ -22,7 +22,7 @@ export const sendPasswordEmail = async () => {
     //TODO Change Sender Email
     const result = await res.json();
     const send = await resend.emails.send({
-      from: 'help@samuel-gutmans.ch',
+      from: 'no-reply@projsync.app',
       to: [session?.user.email],
       subject: 'Reset Password',
       react: <ChangePasswordEmail code={result.code} />,
@@ -41,7 +41,7 @@ export const sendPasswordEmailForgot = async (email: string) => {
     );
     //TODO Change Sender Email
     await resend.emails.send({
-      from: 'help@samuel-gutmans.ch',
+      from: 'no-reply@projsync.app',
       to: [email],
       subject: 'Reset Password',
       react: <ChangePasswordEmail code={res.data.code} />,
@@ -61,7 +61,7 @@ export const sendProjectInvitation = async (
   try {
     //TODO Change Sender Email
     await resend.emails.send({
-      from: 'help@samuel-gutmans.ch',
+      from: 'no-reply@projsync.app',
       to: [email],
       subject: 'Project Invitation',
       react: (
