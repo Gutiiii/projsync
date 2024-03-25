@@ -24,6 +24,6 @@ jobs:
           git fetch --all
           git reset --hard origin/main
           cd client
-          pnpm install # Assuming you want to install dependencies
-          pnpm build
-          screen -dmS app-session sh -c 'pnpm start; exec sh'
+          /root/.nvm/versions/node/v20.11.1/bin/pnpm install # Assuming you want to install dependencies
+          /root/.nvm/versions/node/v20.11.1/bin/pnpm build
+          screen -dmS app-session sh -c '/root/.nvm/versions/node/v20.11.1/bin/pnpm start'
