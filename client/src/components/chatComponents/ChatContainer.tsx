@@ -89,8 +89,7 @@ const ChatContainer: FC<ChatContainerProps> = ({ projectId, sessionToken }) => {
                 key={chat.id}
                 isCurrentSender={chat.user.user.id === session?.user.id}
                 message={chat.content}
-                socket={socket}
-                projectId={projectId}
+                userName={chat.user.user.name}
               />
             );
           })}

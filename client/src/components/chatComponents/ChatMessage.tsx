@@ -6,15 +6,13 @@ import { Socket } from 'socket.io-client';
 interface ChatMessageProps {
   isCurrentSender: boolean;
   message: string;
-  socket: Socket;
-  projectId: string;
+  userName: string;
 }
 
 const ChatMessage: FC<ChatMessageProps> = ({
   isCurrentSender,
   message,
-  socket,
-  projectId,
+  userName,
 }) => {
   if (isCurrentSender) {
     return (
