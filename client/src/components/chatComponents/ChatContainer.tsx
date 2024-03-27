@@ -8,6 +8,7 @@ import { io } from 'socket.io-client';
 import { useGetMessages } from '@/hooks/projectHooks/useGetMessages';
 import { Spinner } from '@nextui-org/react';
 import { useQueryClient } from '@tanstack/react-query';
+import { BACKEND_URL } from '@/lib/constants';
 
 interface ChatContainerProps {
   projectId: string;
@@ -50,7 +51,7 @@ const ChatContainer: FC<ChatContainerProps> = ({ projectId, sessionToken }) => {
 
   useEffect(() => {
     console.log('CONNECT');
-    const newSocket = io('http://localhost:8000');
+    const newSocket = io(BACKEND_URL);
     setSocket(newSocket);
 
     // chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
