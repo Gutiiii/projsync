@@ -66,7 +66,8 @@ const ChatContainer: FC<ChatContainerProps> = ({ projectId, sessionToken }) => {
       socket.on('onMessage', async (data: any) => {
         await queryClient.cancelQueries(['getMessages']);
 
-        const prevList = queryClient.getQueryData(['getMessages']);
+        const prevList: Chat[] =
+          queryClient.getQueryData(['getMessages']) || [];
 
         queryClient.setQueryData(['getMessages'], [...prevList, data.object]);
 
