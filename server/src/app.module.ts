@@ -9,20 +9,25 @@ import { AuthModule } from './auth/auth.module';
 import { LogModule } from './log/log.module';
 import { ProjectModule } from './project/project.module';
 import { UserModule } from './user/user.module';
+import { PrismaService } from './prisma.service';
+import { EventsGateway } from './events/events.gateway';
+import { EventsModule } from './events/events.module';
+import { EventsService } from './events/events.service';
 @Module({
   imports: [ConfigModule.forRoot(), AuthModule, UserModule, ProjectModule, LogModule, ThrottlerModule.forRoot([{
     ttl: 30000,
     limit: 20,
-  }]), LogModule],
+  }]), LogModule, EventsModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: APP_PIPE,
     useClass: ZodValidationPipe,
-  },
+  }, PrismaService, EventsService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard
     },
+    EventsGateway,
 
   ],
 })

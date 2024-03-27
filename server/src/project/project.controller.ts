@@ -172,5 +172,10 @@ export class ProjectController {
         return await this.projectService.deleteComment(commentId)
     }
 
+    @UseGuards(JwtGuard)
+    @Get("chats/:projectId")
+    async getAllMessages(@Param("projectId") projectId) {
+        return await this.projectService.getAllMessages(projectId)
+    }
 
 }

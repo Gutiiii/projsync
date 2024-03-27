@@ -848,5 +848,24 @@ export class ProjectService {
             throw new BadRequestException("Something went wrong")
         }
     }
+
+    async getAllMessages(projectId: string) {
+        try {
+            const messages = await this.prismaService.chat.findMany({
+                where: {
+                    projectId: projectId
+                }, include: {
+                    user: {
+                        include: {
+                            user: true
+                        }
+                    }
+                }
+            })
+            return messages
+        } catch (error) {
+            throw new BadRequestException("Something went wrong")
+        }
+    }
 }
 
