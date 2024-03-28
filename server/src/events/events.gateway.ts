@@ -18,12 +18,12 @@ export class EventsGateway implements OnModuleInit {
 
   onModuleInit() {
     this.server.on("connection", (socket) => {
-      console.log(socket.id)
     })
   }
 
   @SubscribeMessage('newMessage')
   async onNewMessage(@MessageBody() body: any) {
+
     const newMessage = await this.eventsService.newMessage(body)
 
     this.server.emit("onMessage", {

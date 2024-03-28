@@ -7,6 +7,7 @@ import { CreateChatDto } from './dto/events.dto';
 export class EventsService {
     constructor(private readonly prismaService: PrismaService) { }
 
+
     async newMessage(dto: CreateChatDto) {
         try {
 
@@ -16,6 +17,7 @@ export class EventsService {
                     userId: dto.authorId
                 }
             })
+
             const message = await this.prismaService.chat.create({
                 data: {
                     content: dto.content,

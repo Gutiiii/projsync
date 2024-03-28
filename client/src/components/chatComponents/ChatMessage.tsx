@@ -1,7 +1,6 @@
 'use client';
 import React, { FC } from 'react';
 import Avatar from 'react-avatar';
-import { Socket } from 'socket.io-client';
 
 interface ChatMessageProps {
   isCurrentSender: boolean;
@@ -22,7 +21,7 @@ const ChatMessage: FC<ChatMessageProps> = ({
             {message}
           </p>
           <Avatar
-            name="Samuel Gutmans"
+            name={userName}
             color="black "
             round
             size="40"
@@ -35,8 +34,8 @@ const ChatMessage: FC<ChatMessageProps> = ({
     return (
       <div className="flex items-start justify-start ml-4">
         <Avatar
-          name="Sanmuel Gutmans"
-          color="black "
+          name={userName}
+          color="black"
           round
           size="40"
           className="mt-[3px]"

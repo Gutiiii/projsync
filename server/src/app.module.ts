@@ -14,10 +14,10 @@ import { EventsGateway } from './events/events.gateway';
 import { EventsModule } from './events/events.module';
 import { EventsService } from './events/events.service';
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, UserModule, ProjectModule, LogModule, ThrottlerModule.forRoot([{
+  imports: [ConfigModule.forRoot(), AuthModule, UserModule, ProjectModule, EventsModule, LogModule, ThrottlerModule.forRoot([{
     ttl: 30000,
     limit: 20,
-  }]), LogModule, EventsModule],
+  }]), LogModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: APP_PIPE,
@@ -26,9 +26,7 @@ import { EventsService } from './events/events.service';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard
-    },
-    EventsGateway,
-
+    }
   ],
 })
 export class AppModule { }

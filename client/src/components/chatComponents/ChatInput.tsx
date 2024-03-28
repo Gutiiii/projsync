@@ -2,7 +2,7 @@
 import { Button, Spinner } from '@nextui-org/react';
 import { useSession } from 'next-auth/react';
 import React, { FC, useEffect, useState } from 'react';
-import io, { Socket } from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 import { toast } from 'sonner';
 
 interface ChatInputProps {
@@ -15,6 +15,7 @@ const ChatInput: FC<ChatInputProps> = ({ socket, projectId }) => {
   const { data: session, status } = useSession();
 
   const sendMessage = () => {
+    if (!socket) return;
     if (message.trim() !== '' && session) {
       // Check if session is available
       socket.emit('newMessage', {
@@ -25,26 +26,6 @@ const ChatInput: FC<ChatInputProps> = ({ socket, projectId }) => {
       setMessage('');
     }
   };
-
-  // useEffect(() => {
-  //   if (socket && session) {
-  //     socket.on('onMessage', (data: any) => {
-  //       if (data.sender !== session.user.id) {
-  //         toast.info(data.content);
-  //       }
-  //     });
-
-  //     socket.on('onWriting', () => {
-  //       toast.info('Someone is writing');
-  //     });
-  //   }
-
-  //   return () => {
-  //     if (socket) {
-  //       socket.off('messageReceived');
-  //     }
-  //   };
-  // }, [socket, session]);
 
   if (status === 'loading') {
     // Show loading indicator while session data is being fetched
